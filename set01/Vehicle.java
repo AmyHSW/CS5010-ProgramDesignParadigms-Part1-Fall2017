@@ -18,8 +18,8 @@ public class Vehicle {
      * @param direction Direction of the new object, where 1 represents eastbound direction, and 2 westbound direction.
      */
     public Vehicle(double velocity, int direction) {
-        velocity = velocity;
-        direction = int;
+        this.velocity = velocity;
+        this.direction = direction;
     }
 
     /**

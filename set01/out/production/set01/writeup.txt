@@ -1,0 +1,5 @@
+Assignment 1 
+Shuwan Huang
+
+**Problem 4
+	Created a RandomHomework class to select a random course name from a list of 4 courses. To select a random course, a random number generator is declared and used to output a random entry of the courses array.
