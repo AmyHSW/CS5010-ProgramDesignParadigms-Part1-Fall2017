@@ -1,0 +1,11 @@
+# Compiled source #
+*.class
+
+# Output directories #
+/out
+
+# IntelliJ config files #
+.idea/workspace.xml
+
+# OS generated files #
+.DS_Store
