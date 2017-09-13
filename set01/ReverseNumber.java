@@ -9,10 +9,20 @@ import java.util.Scanner;
 public class ReverseNumber {
 
     /**
-     * @param n the integer to be reversed
-     * @return the reversed number
+     * Reads in an integer using a Scanner object and computes its reverse.
+     * If the integer is negative, return its negative reverse.
+     *
+     * @param sc a Scanner object that reads in an integer
+     * @return the reverse of the integer read by <var>sc</var>
      */
-    public int getReversedOf(int n) {
+    public int getReverseNumber(Scanner sc) {
+        if (!sc.hasNextLine()) {
+            throw new IllegalArgumentException("No input number is given.");
+        }
+        if (!sc.hasNextInt()) {
+            throw new IllegalArgumentException("The input is not an integer.");
+        }
+        int n = sc.nextInt();
         if (n < 0) {
             return -reverse(-n);
         } else {
@@ -31,17 +41,14 @@ public class ReverseNumber {
     }
 
     /**
-     * Reads in an integer number from system input and prints out its reversed number to console.
+     * Reads in an integer from system input using a Scanner object and prints the reversed number to console.
      *
      * @param args the command-line arguments
      */
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
         ReverseNumber rn = new ReverseNumber();
-
-        // read integer and print the reversed number
-        while (sc.hasNextInt()) {
-            System.out.println(rn.getReversedOf(sc.nextInt()));
+        try (Scanner sc = new Scanner(System.in)) {
+            System.out.println(rn.getReverseNumber(sc));
         }
     }
 }
