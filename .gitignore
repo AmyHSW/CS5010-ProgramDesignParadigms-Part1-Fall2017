@@ -2,10 +2,11 @@
 *.class
 
 # Output directories #
-/out
+set01/out/
 
 # IntelliJ config files #
-.idea/workspace.xml
+set01/.idea/
 
 # OS generated files #
 .DS_Store
+set01/.DS_Store

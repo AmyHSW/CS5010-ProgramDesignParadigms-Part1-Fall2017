@@ -1,27 +1,25 @@
 package Assignment1;
-
 import java.util.Random;
 
 /**
- * RandomHomework selects a random course name to display to the user.
+ * The <code>RandomHomework</code> class selects a random course name and prints to the console.
+ *
+ * @author Shuwan Huang
  */
 public class RandomHomework {
 
-    // number of courses
     private static final int N_COURSES = 4;
-    // array of courses
-    private static final String[] COURSES = new String[N_COURSES];
+    private static final String[] COURSES = {
+            "Programming Design Paradigms",
+            "Object Oriented Design",
+            "Data Structures and Algorithms",
+            "Data Mining"
+    };
 
     /**
-     * Initializes a new randomhomework generator
-     * with the courses' names defined.
+     * Constructs a RandomHomework object.
      */
-    public RandomHomework() {
-        COURSES[0] = "Programming Design Paradigms";
-        COURSES[1] = "Object Oriented Design";
-        COURSES[2] = "Data Structures and Algorithms";
-        COURSES[3] = "Data Mining";
-    }
+    public RandomHomework() { }
 
     /**
      * @return a random course name from a list of four possible courses.
@@ -32,8 +30,9 @@ public class RandomHomework {
     }
 
     /**
-     * Uses a RandomHomework object to print
-     * a random course name to the console.
+     * Uses a RandomHomework object to print a random course name to the console.
+     *
+     * @param args the command-line arguments
      */
     public static void main(String[] args) {
         RandomHomework randomHomework = new RandomHomework();
