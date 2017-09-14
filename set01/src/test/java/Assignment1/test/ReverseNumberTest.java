@@ -1,5 +1,6 @@
 package Assignment1.test;
-import Assignment1.*;
+
+import Assignment1.ReverseNumber;
 import java.util.Scanner;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +26,7 @@ public class ReverseNumberTest {
     /**
      * Tests that ReverseNumber throws an IllegalArgumentException when input is null
      */
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void expectedIllegalArgumentExceptionForNullInput() {
         rn.getReverseNumber(null);
     }
@@ -33,7 +34,7 @@ public class ReverseNumberTest {
     /**
      * Tests that ReverseNumber throws an IllegalArgumentException for a character
      */
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void expectedIllegalArgumentExceptionForCharacter() {
         rn.getReverseNumber("x");
     }
@@ -41,7 +42,7 @@ public class ReverseNumberTest {
     /**
      * Tests that ReverseNumber throws an IllegalArgumentException for a blank character
      */
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void expectedIllegalArgumentExceptionForBlank() {
         rn.getReverseNumber(" ");
     }
@@ -49,7 +50,7 @@ public class ReverseNumberTest {
     /**
      * Tests that ReverseNumber throws an IllegalArgumentException for a float number
      */
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void expectedIllegalArgumentExceptionForFloatNumber() {
         rn.getReverseNumber("1.0");
     }
