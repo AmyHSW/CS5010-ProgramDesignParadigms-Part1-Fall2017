@@ -2,7 +2,6 @@
  * This is part of Assignment 1: Environment Setup and Review of Java for PDP, Fall 2017
  */
 package Assignment1;
-
 import java.lang.Iterable;
 import java.util.Set;
 import java.util.LinkedHashSet;

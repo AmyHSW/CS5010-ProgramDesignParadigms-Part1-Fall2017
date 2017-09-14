@@ -1,7 +1,8 @@
+package Assignment1;
+
 /**
 * This is part of Assignment 1 - Environment Setup and Review of Java for PDP, Fall 2017.
 */
-package Assignment1;
 
 /**
  * Fibonacci calculates the <var>n</var>th term in the Fibonacci sequence.

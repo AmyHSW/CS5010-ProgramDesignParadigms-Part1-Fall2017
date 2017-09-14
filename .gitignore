@@ -3,9 +3,12 @@
 
 # Output directories #
 set01/out/
+set01/target/
 
 # IntelliJ config files #
 set01/.idea/
+set01/set01.iml
+set01/pom.xml
 
 # OS generated files #
 .DS_Store

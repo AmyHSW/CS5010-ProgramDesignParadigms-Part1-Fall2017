@@ -2,7 +2,6 @@
  * This is part of Assignment 1: Environment Setup and Review of Java for PDP, Fall 2017.
  */
 package Assignment1;
-
 /**
  * Vehicle is a simple object that has a velocity and a direction.
  */
