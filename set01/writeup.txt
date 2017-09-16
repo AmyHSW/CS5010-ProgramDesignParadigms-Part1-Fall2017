@@ -1,12 +1,22 @@
 Assignment 1 
 Shuwan Huang
 
-**Problem 4**
+** Problem 4 **
 	Created a RandomHomework class to select a random course name from a list of 4 courses. To select a random course, a random number generator is declared and used to output a random entry of the courses array.
 
-**Problem 5**
-	The original Fibonacci.java failed 3 tests, which are all corrected in the modified Fibonacci.java —- 
+** Problem 5 **
+	The original Fibonacci.java failed 3 tests, which are all fixed in the modified Fibonacci.java —- 
 1) Fixed the error that IllegalArgumentException is thrown when 0 is the argument; now exception is not thrown when 0 is passed.
 2) Fixed the error that for n = 2, program returns 1; now it returns 2.
 3) Fixed the error that for n > 2, program returns (getFibTerm(n - 1) - getFibTerm(n - 2)); now for n >= 2, program returns the sum of getFibTerm(n - 1) and getFibTerm(n - 1).
+
+** Problem 6 **
+	For ReverseNumber class, implements a method getReversedNumber(String str) that returns the reverse of an integer, where the parameter str is String that contains the integer to be reversed. Throws IllegalArgumentException if str contains wrong format, for instance, a float number or a character. Uses a Scanner object to check if str contains integer.
+	The ReverseNumberTest tests that ReverseNumber throws proper exceptions if no input given, or if input is not an integer. Also tests that ReverseNumber returns correct reverse of the integer given.
+
+** Problem 7 **
+	For Vehicle class, fixed some errors existed in original file. Creates a private class that implements Comparator so that Vehicles can be sorted by velocity.
+	For Highway class, use one LinkedHashSet to store all Vehicles on Highway, two TreeMap to store Vehicles in east and west direction, and an integer to record number of westbound Vehicles. The key in TreeMap is Vehicles that are sorted by velocity, and value is the number of Vehicles at the same velocity. When a Vehicle is added or removed, also add or remove the Vehicle in the corresponding TreeMap. To get eastbound/westbound velocity, simply find the first key in TreeMap and return the velocity of that.
+	For ScenicRoad class, most methods reuse the code in Highway except constructor and add(). When add a Vehicle to the road, first check if the number of Vehicles in that direction is greater or equal to the bandwidth, if yes, slow down all Vehicles in that direction to 5mph. 
+	All methods in the above classes are tested in the corresponding test files. 
 

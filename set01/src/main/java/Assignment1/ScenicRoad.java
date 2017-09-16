@@ -71,8 +71,9 @@ public class ScenicRoad {
     // slows down all eastbound Vehicles to 5mph.
     private void slowdownEastVehicles(Vehicle v) {
         if (hw.numberVehiclesEastbound() == bandwidth) {
-            for (Vehicle w : hw)
-                w.setVelocity(5);
+            for (Vehicle w : hw) {
+                if (w.getDirection() == 1) w.setVelocity(5);
+            }
         } else {
             v.setVelocity(5);
         }
@@ -81,8 +82,9 @@ public class ScenicRoad {
     // slows down all westbound Vehicles to 5mph.
     private void slowdownWestVehicles(Vehicle v) {
         if (hw.numberVehiclesWestbound() == bandwidth) {
-            for (Vehicle w : hw)
-                w.setVelocity(5);
+            for (Vehicle w : hw) {
+                if (w.getDirection() == 2) w.setVelocity(5);
+            }
         } else {
             v.setVelocity(5);
         }
