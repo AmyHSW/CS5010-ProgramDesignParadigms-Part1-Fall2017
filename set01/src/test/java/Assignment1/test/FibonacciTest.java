@@ -3,7 +3,7 @@
  */
 package Assignment1.test;
 
-import Assignment1.*;
+import Assignment1.Fibonacci;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

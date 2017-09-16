@@ -2,7 +2,7 @@ package Assignment1.test;
 
 import Assignment1.ReverseNumber;
 import java.util.Scanner;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -18,8 +18,8 @@ public class ReverseNumberTest {
 
     private static ReverseNumber rn = null;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeClass
+    public static void setUp() throws Exception {
         rn = new ReverseNumber();
     }
 

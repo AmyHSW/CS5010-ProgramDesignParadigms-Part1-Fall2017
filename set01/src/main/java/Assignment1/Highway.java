@@ -3,9 +3,9 @@
  */
 package Assignment1;
 
-import java.lang.Iterable;
 import java.util.Set;
 import java.util.LinkedHashSet;
+import java.util.TreeMap;
 import java.util.Iterator;
 import java.util.Collections;
 
@@ -16,18 +16,24 @@ import java.util.Collections;
 public class Highway implements Iterable<Vehicle> {
 
     // Contents of the Highway.
-    private Set<Vehicle> contents;
+    private final Set<Vehicle> contents;
+    private final TreeMap<Vehicle, Integer> west;
+    private final TreeMap<Vehicle, Integer> east;
+    private int nWestVehicle;
 
     /**
      * Constructor that creates a new Highway.
      */
     public Highway() {
-            contents = new LinkedHashSet<Vehicle>();
+        contents = new LinkedHashSet<Vehicle>();
+        west = new TreeMap<Vehicle, Integer>(Vehicle.BY_VELOCITY);
+        east = new TreeMap<Vehicle, Integer>(Vehicle.BY_VELOCITY);
+        nWestVehicle = 0;
     }
 
    /**
      * Implements the Iterable interface for this container.
-          * @return an Iterator over the Vehicle objects contained
+     * @return an Iterator over the Vehicle objects contained
      * in this container.
      */
     public Iterator<Vehicle> iterator() {
@@ -51,10 +57,31 @@ public class Highway implements Iterable<Vehicle> {
      * @return true if vehicle was successfully added on the highway,
      * i.e. vehicle is not already on the highway. Returns false, if vehicle is
      * already on the highway.
+     * @throws IllegalArgumentException if input is null.
      */
     public boolean add(Vehicle v) {
-        // Your code goes here.  Remove the exception after you're done.
-        throw new RuntimeException("Method not implemented");
+        if (v == null) {
+            throw new IllegalArgumentException("v is null.");
+        }
+        if (!contents.add(v)) return false;
+        switch (v.getDirection()) {
+            case 1:
+                if (east.containsKey(v)) {
+                    east.put(v, east.get(v) + 1);
+                } else {
+                    east.put(v, 1);
+                }
+                return true;
+            case 2:
+                if (west.containsKey(v)) {
+                    west.put(v, west.get(v) + 1);
+                } else {
+                    west.put(v, 1);
+                }
+                nWestVehicle++;
+                return true;
+            default: return false;
+        }
     }
 
     /**
@@ -68,28 +95,49 @@ public class Highway implements Iterable<Vehicle> {
      * @return true if vehicle was successfully removed from the Highway,
      * i.e. vehicle is actually on the highway. Returns false, if vehicle is not
      * on the highway.
+     * @throws IllegalArgumentException if input is null.
      */
     public boolean remove(Vehicle v) {
-        // Your code goes here.  Remove the exception after you're done.
-        throw new RuntimeException("Method not implemented");
+        if (v == null) {
+            throw new IllegalArgumentException("v is null.");
+        }
+        if (!contents.remove(v)) return false;
+        switch (v.getDirection()) {
+            case 1:
+                if (east.get(v) > 1) {
+                    east.put(v, east.get(v) - 1);
+                } else {
+                    east.remove(v);
+                }
+                return true;
+            case 2:
+                if (west.get(v) > 1) {
+                    west.put(v, west.get(v) - 1);
+                } else {
+                    west.remove(v);
+                }
+                nWestVehicle--;
+                return true;
+            default: return false;
+        }
     }
 
     /**
      * Each Vehicle has a velocity. This method returns the velocity of the slowest vehicle in the Eastbound direction of the highway.
-     * @return the velocity of the slowest eastbound vehicle
+     * @return the velocity of the slowest eastbound vehicle; returns -1 if no eastbound vehicle.
      */
     public double getVelocityEastbound() {
-        // Your code goes here.  Remove the exception after you're done.
-        throw new RuntimeException("Method not implemented");
+        if (east.isEmpty()) return -1;
+        return east.firstKey().getVelocity();
     }
     
     /**
      * Each Vehicle has a velocity. This method returns the velocity of the slowest vehicle in the Westbound direction of the highway.
-     * @return the velocity of the slowest westbound vehicle
+     * @return the velocity of the slowest westbound vehicle; returns -1 if no westbound vehicle.
      */
     public double getVelocityWestbound() {
-        // Your code goes here.  Remove the exception after you're done.
-        throw new RuntimeException("Method not implemented");
+        if (west.isEmpty()) return -1;
+        return west.firstKey().getVelocity();
     }
 
     /**
@@ -97,8 +145,7 @@ public class Highway implements Iterable<Vehicle> {
      * @return the number of Vehicles headed Eastbound on the highway
      */
     public int numberVehiclesEastbound() {
-        // Your code goes here.  Remove the exception after you're done.
-        throw new RuntimeException("Method not implemented");
+        return contents.size() - nWestVehicle;
     }
     
      /**
@@ -106,8 +153,7 @@ public class Highway implements Iterable<Vehicle> {
      * @return the number of Vehicles headed Westbound on the highway
      */
     public int numberVehiclesWestbound() {
-        // Your code goes here.  Remove the exception after you're done.
-        throw new RuntimeException("Method not implemented");
+        return nWestVehicle;
     }
 
     /**
@@ -117,10 +163,13 @@ public class Highway implements Iterable<Vehicle> {
      * @requires v != null.
      * @return true if this vehicle is on the Highway. Returns
      * false, otherwise.
+     * @throws IllegalArgumentException if input is null.
      */
     public boolean contains(Vehicle v) {
-       // Your code goes here.  Remove the exception after you're done.
-        throw new RuntimeException("Method not implemented");
+        if (v == null) {
+            throw new IllegalArgumentException("v is null.");
+        }
+        return contents.contains(v);
     }
 
 }
