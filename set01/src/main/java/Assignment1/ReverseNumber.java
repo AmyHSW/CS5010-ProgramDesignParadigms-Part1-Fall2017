@@ -1,4 +1,5 @@
 package Assignment1;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
@@ -9,23 +10,13 @@ import java.util.Scanner;
 public class ReverseNumber {
 
     /**
-     * Reads in an integer from a String using a Scanner object and computes its reverse.
+     * Reads in an integer, computes its reverse and returns the reverse.
      * If the integer is negative, return its negative reverse.
      *
-     * @param str a String that contains one integer number
-     * @return the reverse of the integer contained in <var>str</var>
-     * @throws IllegalArgumentException() if <var>str</var> is null
-     * @throws IllegalArgumentException() if no integer in <var>str</var>
+     * @param n an integer to be reversed.
+     * @return the reverse of n.
      */
-    public int getReverseNumber(String str) {
-        if (str == null) {
-            throw new IllegalArgumentException("No input number is given");
-        }
-        Scanner sc = new Scanner(str);
-        if (!sc.hasNextInt()) {
-            throw new IllegalArgumentException("The input is not an integer.");
-        }
-        int n = sc.nextInt();
+    public int getReverseNumber(int n) {
         if (n < 0) {
             return -reverse(-n);
         } else {
@@ -33,7 +24,7 @@ public class ReverseNumber {
         }
     }
 
-    // a helper method to compute the reversed number of a positive integer
+    // a helper method to compute the reversed number of a positive integer.
     private int reverse(int n) {
         int rev = 0;
         while (n > 0) {
@@ -44,17 +35,19 @@ public class ReverseNumber {
     }
 
     /**
-     * Reads one command-line integer; creates a <code>ReverseNumber</code> object;
-     * computes the reverse of that integer; and prints it to console.
+     * Reads in an integer from system input using a Scanner object, and prints the reverse of
+     * that integer to console.
      *
-     * @param args the command-line arguments
-     * @throws IllegalArgumentException() if args length is greater than 1
+     * @param args the command-line arguments.
      */
     public static void main(String[] args) {
-        if (args.length > 1) {
-            throw new IllegalArgumentException("Please give only one integer.");
-        }
         ReverseNumber rn = new ReverseNumber();
-        System.out.println(rn.getReverseNumber(args[0]));
+        Scanner sc = new Scanner(System.in);
+        try {
+            System.out.print("Please enter an integer: ");
+            System.out.println("The reverse number is " + rn.getReverseNumber(sc.nextInt()));
+        } catch (InputMismatchException e) {
+            System.out.println("This is not an integer.");
+        }
     }
 }

@@ -1,7 +1,6 @@
 package Assignment1.test;
 
 import Assignment1.ReverseNumber;
-import java.util.Scanner;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -23,38 +22,6 @@ public class ReverseNumberTest {
         rn = new ReverseNumber();
     }
 
-    /**
-     * Tests that ReverseNumber throws an IllegalArgumentException when input is null
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void expectedIllegalArgumentExceptionForNullInput() {
-        rn.getReverseNumber(null);
-    }
-
-    /**
-     * Tests that ReverseNumber throws an IllegalArgumentException for a character
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void expectedIllegalArgumentExceptionForCharacter() {
-        rn.getReverseNumber("x");
-    }
-
-    /**
-     * Tests that ReverseNumber throws an IllegalArgumentException for a blank character
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void expectedIllegalArgumentExceptionForBlank() {
-        rn.getReverseNumber(" ");
-    }
-
-    /**
-     * Tests that ReverseNumber throws an IllegalArgumentException for a float number
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void expectedIllegalArgumentExceptionForFloatNumber() {
-        rn.getReverseNumber("1.0");
-    }
-
     /** Tests to see if ReverseNumber returns the correct reverse values of integer inputs */
     @Test
     public void testCase() {
@@ -67,7 +34,7 @@ public class ReverseNumberTest {
         };
         for (int i = 0; i < cases.length; i++) {
             assertEquals("getReverseNumber(" + cases[i][0] + ")",
-                         cases[i][1], rn.getReverseNumber(Integer.toString(cases[i][0])));
+                         cases[i][1], rn.getReverseNumber(cases[i][0]));
         }
     }
 }
