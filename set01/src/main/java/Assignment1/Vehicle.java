@@ -17,7 +17,7 @@ public class Vehicle {
 
     private double velocity;
     private final int direction;
-   
+
     /**
      * Constructor that creates a new vehicle object with the specified velocity and direction.
      * @param velocity Velocity of the new object.
@@ -25,23 +25,14 @@ public class Vehicle {
      * @throws IllegalArgumentException if direction is neither 1 or 2.
      */
     public Vehicle(double velocity, int direction) {
-        if (velocity < 0) {
-            throw new IllegalArgumentException("velocity " + velocity + " is not positive.");
-        }
         if (direction < 1 || direction > 2) {
             throw new IllegalArgumentException("direction " + direction + " is neither 1 nor 2.");
         }
-        this.velocity = velocity;
-        this.direction = direction;
-    }
 
-    /**
-     * Constructor that throws an exception when no inputs is given.
-     *
-     * @throws IllegalArgumentException
-     */
-    public Vehicle() {
-        throw new IllegalArgumentException("No inputs is given.");
+        this.velocity = Math.abs(velocity);
+
+        if (velocity >= 0) { this.direction = direction; }
+        else { this.direction = direction == 1 ? 2 : 1; }
     }
 
     /**

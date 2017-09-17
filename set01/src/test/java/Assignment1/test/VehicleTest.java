@@ -18,7 +18,7 @@ public class VehicleTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        car = new Vehicle(35, 1);
+        car = new Vehicle(-35, 1);
     }
 
     /**
@@ -36,7 +36,7 @@ public class VehicleTest {
      */
     @Test
     public void getDirection() throws Exception {
-        assertEquals("getDirection()", 1, car.getDirection(), 0);
+        assertEquals("getDirection()", 2, car.getDirection(), 0);
     }
 
     /**
@@ -45,25 +45,9 @@ public class VehicleTest {
      */
     @Test
     public void setVelocity() throws Exception {
-        Vehicle v = new Vehicle(25, 2);
+        Vehicle v = new Vehicle(25, 1);
         v.setVelocity(45);
         assertEquals("setVelocity(45)", 45, v.getVelocity(), 0);
-    }
-
-    /**
-     * Tests that Vehicle throws an IllegalArgumentException for no input given.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void throwsIllegalArgumentExceptionForNoInput() {
-        Vehicle v = new Vehicle();
-    }
-
-    /**
-     * Tests that Vehicle throws an IllegalArgumentException for negative velocity.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void throwsIllegalArgumentExceptionForNegativeVelocity() {
-        Vehicle v = new Vehicle(-1, 1);
     }
 
     /**
@@ -73,4 +57,5 @@ public class VehicleTest {
     public void throwsIllegalArgumentExceptionForInvalidDirection() {
         Vehicle v = new Vehicle(35, 0);
     }
+
 }
