@@ -31,6 +31,7 @@ public class Vehicle {
 
         this.velocity = Math.abs(velocity);
 
+        // change the direction to the other direction if the given velocity is negative.
         if (velocity >= 0) { this.direction = direction; }
         else { this.direction = direction == 1 ? 2 : 1; }
     }

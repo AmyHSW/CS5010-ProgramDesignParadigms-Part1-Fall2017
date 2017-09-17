@@ -2,14 +2,13 @@
 *.class
 
 # Output directories #
-set01/out/
-set01/target/
+Assignment1/target/
 
 # IntelliJ config files #
-set01/.idea/
-set01/set01.iml
-set01/pom.xml
+Assignment1/.idea/
+Assignment1/Assignment1.iml
+Assignment1/pom.xml
 
 # OS generated files #
 .DS_Store
-set01/.DS_Store
+Assignment1/.DS_Store

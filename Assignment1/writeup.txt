@@ -11,8 +11,7 @@ Shuwan Huang
 3) Fixed the error that for n > 2, program returns (getFibTerm(n - 1) - getFibTerm(n - 2)); now for n >= 2, program returns the sum of getFibTerm(n - 1) and getFibTerm(n - 1).
 
 ** Problem 6 **
-	For ReverseNumber class, implements a method getReversedNumber(String str) that returns the reverse of an integer, where the parameter str is String that contains the integer to be reversed. Throws IllegalArgumentException if str contains wrong format, for instance, a float number or a character. Uses a Scanner object to check if str contains integer.
-	The ReverseNumberTest tests that ReverseNumber throws proper exceptions if no input given, or if input is not an integer. Also tests that ReverseNumber returns correct reverse of the integer given.
+	For ReverseNumber class, implements a method getReversedNumber(int n) that returns the reverse of the given integer n. Uses a Scanner object to reads in an integer from system input, and prints the reverse number to console.		The ReverseNumberTest tests that ReverseNumber returns correct reverse of the integer given.
 
 ** Problem 7 **
 	For Vehicle class, fixed some errors existed in original file. Creates a private class that implements Comparator so that Vehicles can be sorted by velocity.
