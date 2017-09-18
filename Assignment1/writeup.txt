@@ -11,12 +11,13 @@ Shuwan Huang
 3) Fixed the error that for n > 2, program returns (getFibTerm(n - 1) - getFibTerm(n - 2)); now for n >= 2, program returns the sum of getFibTerm(n - 1) and getFibTerm(n - 1).
 
 ** Problem 6 **
-	For ReverseNumber class, implements a method getReversedNumber(int n) that returns the reverse of the given integer n. Uses a Scanner object to reads in an integer from system input, and prints the reverse number to console.		The ReverseNumberTest tests that ReverseNumber returns correct reverse of the integer given.
+	For ReverseNumber class, implements a method getReversedNumber(int n) that returns the reverse of the given integer n. Uses a Scanner object to reads in an integer from system input, and prints the reverse number to console.		
+	The ReverseNumberTest tests that ReverseNumber returns correct reverse of the integer given.
 
 ** Problem 7 **
-	For Vehicle class, fixed some errors existed in original file. Creates a private class that implements Comparator so that Vehicles can be sorted by velocity.
+	For Vehicle class, fixed some errors existed in original file. Creates a private class that implements Comparator so that Vehicles can be sorted by velocity. (*Note: equals() and hashcode() are not overwritten for Vehicle. The reason is that we don’t want to assign two Vehicles having the same direction and velocity as equal.)
 	For Highway class, use one LinkedHashSet to store all Vehicles on Highway, two TreeMap to store Vehicles in east and west direction, and an integer to record number of westbound Vehicles. The key in TreeMap is Vehicles that are sorted by velocity, and value is the number of Vehicles at the same velocity. When a Vehicle is added or removed, also add or remove the Vehicle in the corresponding TreeMap. To get eastbound/westbound velocity, simply find the first key in TreeMap and return the velocity of that.
 	For ScenicRoad class, most methods reuse the code in Highway except constructor and add(). When add a Vehicle to the road, first check if the number of Vehicles in that direction is greater or equal to the bandwidth, if yes, slow down all Vehicles in that direction to 5mph. 
-	All methods in the above classes are tested in the corresponding test files. 
+	All methods in the above classes are tested in the corresponding test files. Specifically, they test if proper exceptions are thrown for invalid inputs, and if correct results are returned from the methods.
 	* cons in ScenicRoad: After the number of Vehicles reaches the bandwidth in one direction and Vehicles are all slowed down to 5mph, if we remove some Vehicles from the road so that number of Vehicles falls within the threshold, the Vehicles will still maintain the 5mph velocity and will not be able to go back to their original velocity.
 

@@ -51,6 +51,12 @@ public class VehicleTest {
     }
 
     /**
+     * Tests that Vehicle throws an IllegalArgumentException for no inputs given to constructor.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void throwsIllegalArgumentExceptionForNoInputs() { Vehicle v = new Vehicle(); }
+
+    /**
      * Tests that Vehicle throws an IllegalArgumentException for invalid direction.
      */
     @Test(expected = IllegalArgumentException.class)
