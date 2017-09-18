@@ -158,4 +158,30 @@ public class ScenicRoad {
         }
         return hw.contains(v);
     }
+
+    /**
+     * Compares the specified object with this ScenicRoad for equality.
+     * @param o the object to compare with this ScenicRoad.
+     * @return true if the specified object is equal to this ScenicRoad.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ScenicRoad that = (ScenicRoad) o;
+
+        if (bandwidth != that.bandwidth) return false;
+        return hw != null ? hw.equals(that.hw) : that.hw == null;
+    }
+
+    /**
+     * @return the hash code value for this ScenicRoad.
+     */
+    @Override
+    public int hashCode() {
+        int result = bandwidth;
+        result = 31 * result + (hw != null ? hw.hashCode() : 0);
+        return result;
+    }
 }

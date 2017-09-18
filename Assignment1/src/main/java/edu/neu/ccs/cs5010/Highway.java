@@ -173,4 +173,33 @@ public class Highway implements Iterable<Vehicle> {
         return contents.contains(v);
     }
 
+    /**
+     * Compares the specified object with this Highway for equality.
+     * @param o the object to compare with this Highway.
+     * @return true if the specified object is equal to this Highway.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Highway vehicles = (Highway) o;
+
+        if (nWestVehicle != vehicles.nWestVehicle) return false;
+        if (contents != null ? !contents.equals(vehicles.contents) : vehicles.contents != null) return false;
+        if (west != null ? !west.equals(vehicles.west) : vehicles.west != null) return false;
+        return east != null ? east.equals(vehicles.east) : vehicles.east == null;
+    }
+
+    /**
+     * @return the hash code value for this Highway.
+     */
+    @Override
+    public int hashCode() {
+        int result = contents != null ? contents.hashCode() : 0;
+        result = 31 * result + (west != null ? west.hashCode() : 0);
+        result = 31 * result + (east != null ? east.hashCode() : 0);
+        result = 31 * result + nWestVehicle;
+        return result;
+    }
 }
