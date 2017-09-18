@@ -1,9 +1,9 @@
 /**
  * This is part of Assignment 1: Environment Setup and Review of Java for PDP, Fall 2017.
  */
-package Assignment1.test;
+package edu.neu.ccs.cs5010;
 
-import Assignment1.Fibonacci;
+import edu.neu.ccs.cs5010.Fibonacci;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
  * The first 1 in the sequence is considered the "0th" term,
  * so the indices that <code>Assignment1.Fibonacci</code> uses are 0-based.
  *
- * @see Assignment1.Fibonacci
+ * @see edu.neu.ccs.cs5010.Fibonacci
  *
  * @author PDP staff
  */

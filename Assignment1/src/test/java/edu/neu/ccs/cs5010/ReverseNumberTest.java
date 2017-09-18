@@ -1,6 +1,6 @@
-package Assignment1.test;
+package edu.neu.ccs.cs5010;
 
-import Assignment1.ReverseNumber;
+import edu.neu.ccs.cs5010.ReverseNumber;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
 /**
  * The <code>ReverseNumberTest</code> class is a glassbox test of <code>ReverseNumber</code> class.
  *
- * @see Assignment1.ReverseNumber
+ * @see edu.neu.ccs.cs5010.ReverseNumber
  *
  * @author Shuwan Huang
  */

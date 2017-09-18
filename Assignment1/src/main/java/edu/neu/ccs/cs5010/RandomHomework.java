@@ -1,4 +1,5 @@
-package Assignment1;
+package edu.neu.ccs.cs5010;
+
 import java.util.Random;
 
 /**

@@ -1,7 +1,7 @@
-package Assignment1.test;
+package edu.neu.ccs.cs5010;
 
-import Assignment1.Highway;
-import Assignment1.Vehicle;
+import edu.neu.ccs.cs5010.Highway;
+import edu.neu.ccs.cs5010.Vehicle;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 /**
  * <code>HighwayTest</code> is a test of <code>Highway</code> class.
  *
- * @see Assignment1.Highway
+ * @see edu.neu.ccs.cs5010.Highway
  * @author Shuwan Huang
  */
 public class HighwayTest {

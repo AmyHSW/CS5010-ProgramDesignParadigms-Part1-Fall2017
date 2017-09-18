@@ -1,8 +1,9 @@
 /**
  * This is part of Assignment 1: Environment Setup and Review of Java for PDP, Fall 2017
  */
-package Assignment1;
+package edu.neu.ccs.cs5010;
 
+import edu.neu.ccs.cs5010.Vehicle;
 import java.util.Set;
 import java.util.LinkedHashSet;
 import java.util.TreeMap;

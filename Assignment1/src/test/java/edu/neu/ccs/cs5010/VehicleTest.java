@@ -1,6 +1,6 @@
-package Assignment1.test;
+package edu.neu.ccs.cs5010;
 
-import Assignment1.Vehicle;
+import edu.neu.ccs.cs5010.Vehicle;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
 /**
  * <code>VehicleTest</code> is a test of the <code>Vehicle</code> class.
  *
- * @see Assignment1.Vehicle
+ * @see edu.neu.ccs.cs5010.Vehicle
  * @author Shuwan Huang
  */
 public class VehicleTest {

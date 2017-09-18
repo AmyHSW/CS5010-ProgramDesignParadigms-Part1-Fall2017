@@ -1,4 +1,4 @@
-package Assignment1;
+package edu.neu.ccs.cs5010;
 
 /**
 * This is part of Assignment 1 - Environment Setup and Review of Java for PDP, Fall 2017.

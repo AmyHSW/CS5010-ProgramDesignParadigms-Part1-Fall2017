@@ -1,4 +1,4 @@
-package Assignment1;
+package edu.neu.ccs.cs5010;
 
 import java.util.Iterator;
 
@@ -8,7 +8,7 @@ import java.util.Iterator;
  * <code>ScenicRoad</code> has a lower bandwidth. When number of Vehicles >= bandwidth
  * in a single direction, it will cause all Vehicles to slow down to 5 mph.
  *
- * @see Assignment1.Highway
+ * @see edu.neu.ccs.cs5010.Highway
  * @author Shuwan Huang
  */
 public class ScenicRoad {

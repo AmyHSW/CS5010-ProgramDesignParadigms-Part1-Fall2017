@@ -1,7 +1,7 @@
-package Assignment1.test;
+package edu.neu.ccs.cs5010;
 
-import Assignment1.ScenicRoad;
-import Assignment1.Vehicle;
+import edu.neu.ccs.cs5010.ScenicRoad;
+import edu.neu.ccs.cs5010.Vehicle;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
 /**
  * <code>ScenicRoadTest</code> is a test of <code>ScenicRoad</code> class.
  *
- * @see Assignment1.ScenicRoad
+ * @see edu.neu.ccs.cs5010.ScenicRoad
  * @author Shuwan Huang
  */
 public class ScenicRoadTest {
