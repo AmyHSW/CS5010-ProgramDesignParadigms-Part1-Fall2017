@@ -18,14 +18,9 @@ public class RandomHomework {
     };
 
     /**
-     * Constructs a RandomHomework object.
-     */
-    public RandomHomework() { }
-
-    /**
      * @return a random course name from a list of four possible courses.
      */
-    public String getCourse() {
+    public static String getCourse() {
         Random r = new Random();
         return COURSES[r.nextInt(N_COURSES)];
     }

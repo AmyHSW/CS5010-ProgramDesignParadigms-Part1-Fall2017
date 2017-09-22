@@ -17,7 +17,7 @@ public class ReverseNumber {
      * @param n an integer to be reversed.
      * @return the reverse of n.
      */
-    public int getReverseNumber(int n) {
+    public static long getReverseNumber(int n) {
         if (n < 0) {
             return -reverse(-n);
         } else {
@@ -26,7 +26,7 @@ public class ReverseNumber {
     }
 
     // a helper method to compute the reversed number of a positive integer.
-    private int reverse(int n) {
+    private static long reverse(int n) {
         int rev = 0;
         while (n > 0) {
             rev = rev * 10 + n % 10;
