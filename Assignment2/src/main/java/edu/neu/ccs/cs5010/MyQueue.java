@@ -1,3 +1,5 @@
+package edu.neu.ccs.cs5010;
+
 /**
  * Created by zontakm on 9/12/2017.
  * This is a DUMMY implementation of Queue ADT
