@@ -1,7 +1,12 @@
 package edu.neu.ccs.cs5010;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+
+import java.util.LinkedList;
+import java.util.NoSuchElementException;
+import java.util.Random;
 
 import static org.junit.Assert.*;
 
@@ -10,49 +15,109 @@ public class MyQueueTest {
     private IQueue queue = null;
 
     /**
-     * Sets up an IQueue with integers before each test case.
-     *
-     * @throws Exception
+     * Declares a new MyQueue before each test case.
      */
     @Before
-    public void setUp() throws Exception {
-        queue = (new MyQueue()).enqueue(-1).enqueue(4).enqueue(3).enqueue(9);
+    public void setUp() {
+        queue = new MyQueue();
     }
 
     /**
-     * Tests that front method returns the least recently-added integer.
-     * @throws Exception
+     * Tests that isEmpty returns true for empty queue.
      */
     @Test
-    public void front() throws Exception {
-        assertEquals(-1, queue.front());
+    public void testIsEmptyOnEmpty() {
+        assertTrue("isEmpty does not return true for empty queue",
+                    queue.isEmpty());
     }
 
     /**
-     * Tests that enqueue adds an integer to the queue and returns that queue.
-     * @throws Exception
+     * Tests that isEmpty return false for non-empty queue.
      */
     @Test
-    public void enqueue() throws Exception {
-        assertEquals(-1, queue.enqueue(7).front());
+    public void testIsEmptyOnNonEmpty() {
+        queue = queue.enqueue(1);
+        assertFalse("isEmpty does not return false for non-empty queue",
+                     queue.isEmpty());
     }
 
     /**
-     * Tests that dequeue removes the least recently-added integer and returns that queue.
-     * @throws Exception
+     * Tests that enqueue adds a new integer to the queue.
      */
     @Test
-    public void dequeue() throws Exception {
-        assertEquals(4, queue.dequeue().front());
+    public void testEnqueue() {
+        queue = queue.enqueue(1);
     }
 
     /**
-     * Tests that isEmpty returns true for an empty queue and false otherwise.
-     * @throws Exception
+     * Tests that dequeue throws a NoSuchElementException on an empty queue.
      */
-    @Test
-    public void isEmpty() throws Exception {
-        assertFalse(queue.isEmpty());
+    @Ignore // ignored because not required.
+    @Test(expected = NoSuchElementException.class)
+    public void testDequeueOnEmpty() {
+        queue = queue.dequeue();
     }
 
+    /**
+     * Tests that dequeue removes the least recently-added element and returns that new queue.
+     */
+    @Test
+    public void testDequeue() {
+        queue = queue.enqueue(1);
+        queue = queue.dequeue();
+    }
+
+    /**
+     * Tests that front returns the least recently-added element.
+     */
+    @Test
+    public void testFront() {
+        queue = queue.enqueue(1).enqueue(2).enqueue(3).enqueue(4);
+        assertEquals("front does not return the least recently-added element", 1, queue.front());
+    }
+
+    /**
+     * Enqueues 10 element to queue and tests if queue stores the elements
+     * in FIFO order by dequeueing elements one by one.
+     */
+    @Test
+    public void test10Inputs() {
+        testByComparingToLinkedList(10);
+    }
+
+    /**
+     * Enqueues 50 element to queue and tests if queue stores the elements
+     * in FIFO order by dequeueing elements one by one.
+     */
+    @Test
+    public void test50Inputs() {
+        testByComparingToLinkedList(50);
+    }
+
+    /**
+     * Enqueues 100 element to queue and tests if queue stores the elements
+     * in FIFO order by dequeueing elements one by one.
+     */
+    @Test
+    public void test100Inputs() {
+        testByComparingToLinkedList(100);
+    }
+
+    // a helper method that compares the behavior of MyQueue and LinkedList to test if queue follows
+    // FIFO order when enqueueing and dequeueing elements.
+    private void testByComparingToLinkedList(int n) {
+        LinkedList<Integer> list = new LinkedList<Integer>();
+        Random rd = new Random();
+        for (int i = 0; i < n; i++){
+            int r = rd.nextInt(50);
+            queue = queue.enqueue(r);
+            list.add(r);
+        }
+        while (!queue.isEmpty()) {
+            assertTrue("LinkedList is empty but MyQueue is not.", !list.isEmpty());
+            assertTrue("Elements in MyQueue and LinkedList do not match.",
+                       queue.front() == list.remove());
+            queue = queue.dequeue();
+        }
+    }
 }

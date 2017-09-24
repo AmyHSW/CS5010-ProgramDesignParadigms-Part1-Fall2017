@@ -1,7 +1,12 @@
 package edu.neu.ccs.cs5010;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+
+import java.util.LinkedList;
+import java.util.NoSuchElementException;
+import java.util.Random;
 
 import static org.junit.Assert.*;
 
@@ -10,48 +15,99 @@ public class MyStackTest {
     private IStack stack = null;
 
     /**
-     * Sets up an IStack with integers before each test case;
-     * @throws Exception
+     * Declares an empty MyStack before each test.
      */
     @Before
-    public void setUp() throws Exception {
-        stack = (new MyStack()).push(1).push(2).push(3).push(4);
+    public void setUp() {
+        stack = new MyStack();
+    }
+
+    @Test
+    public void testIsEmptyOnEmpty() {
+        assertTrue("isEmpty does not return true for empty stack",
+                    stack.isEmpty());
+    }
+
+    @Test
+    public void testIsEmptyOnNonEmpty() {
+        stack = stack.push(1);
+        assertFalse("isEmpty does not return false for non-empty stack",
+                     stack.isEmpty());
+    }
+
+    @Test
+    public void testPush() {
+        stack = stack.push(1);
     }
 
     /**
-     * Tests that top method returns the most recently-added integer.
-     * @throws Exception
+     * Tests that pop throws a NoSuchElementException on empty stack.
+     * Ignored because not required.
      */
+    @Ignore
+    @Test (expected = NoSuchElementException.class)
+    public void testPopOnEmpty() {
+        stack = stack.pop();
+    }
+
     @Test
-    public void top() throws Exception {
-        assertEquals(4, stack.top());
+    public void testPop() {
+        stack = stack.push(1);
+        stack = stack.pop();
     }
 
     /**
-     * Tests that push adds an integer to the stack and returns that stack.
-     * @throws Exception
+     * Tests that top return the most recently-added element.
      */
     @Test
-    public void push() throws Exception {
-        assertEquals(5, stack.push(5).top());
+    public void testTop() {
+        stack = stack.push(1).push(2).push(3).push(4).push(5);
+        assertTrue("top does not return the most recently-added element",
+                   5 == stack.top());
     }
 
     /**
-     * Tests that pop removes the most recently-added integer and returns that stack.
-     * @throws Exception
+     * Pushes 10 element to stack and tests if stack stores the elements
+     * in LIFO order by poping elements from stack one by one.
      */
     @Test
-    public void pop() throws Exception {
-        assertEquals(3, stack.pop().top());
+    public void test10Inputs() {
+        testByComparingToLinkedList(10);
     }
 
     /**
-     * Tests that isEmpty returns true for an empty stack and false otherwise.
-     * @throws Exception
+     * Pushes 50 element to stack and tests if stack stores the elements
+     * in LIFO order by poping elements from stack one by one.
      */
     @Test
-    public void isEmpty() throws Exception {
-        assertFalse(stack.isEmpty());
+    public void test50Inputs() {
+        testByComparingToLinkedList(50);
     }
 
+    /**
+     * Pushes 100 element to stack and tests if stack stores the elements
+     * in LIFO order by poping elements from stack one by one.
+     */
+    @Test
+    public void test100Inputs() {
+        testByComparingToLinkedList(100);
+    }
+
+    // a helper method that compares the behavior of MyStack and LinkedList to test if stack follows
+    // LIFO order when pushing and poping elements.
+    private void testByComparingToLinkedList(int n) {
+        LinkedList<Integer> list = new LinkedList<Integer>();
+        Random rd = new Random();
+        for (int i = 0; i < n; i++) {
+            int r = rd.nextInt(50);
+            stack = stack.push(r);
+            list.add(r);
+        }
+        while (!stack.isEmpty()) {
+            assertTrue("LinkedList is empty but MyStack is not.", !list.isEmpty());
+            assertTrue("elements in MyStack and LinkedList do not match.",
+                        stack.top() == list.removeLast());
+            stack = stack.pop();
+        }
+    }
 }
