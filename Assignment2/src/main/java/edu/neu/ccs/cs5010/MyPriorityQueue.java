@@ -20,7 +20,7 @@ import java.util.NoSuchElementException;
  *
  * @author Shuwan Huang
  */
-public class MyPriorityQueue<E extends Comparable<E>> {
+public class MyPriorityQueue<E extends Comparable<E>> implements IPriorityQueue<E>{
 
     private E[] pq;
     private int n; // number of elements on priority queue
