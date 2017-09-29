@@ -45,7 +45,7 @@ public class MyQueueTest {
      * Tests that enqueue adds a new integer to the queue.
      */
     @Test
-    public void testEnqueue() {
+    public void testOneEnqueue() {
         queue = queue.enqueue(1);
     }
 
@@ -62,9 +62,8 @@ public class MyQueueTest {
      * Tests that dequeue removes the least recently-added element and returns that new queue.
      */
     @Test
-    public void testDequeue() {
-        queue = queue.enqueue(1);
-        queue = queue.dequeue();
+    public void testOneDequeue() {
+        queue = queue.enqueue(1).dequeue();
     }
 
     /**
@@ -112,6 +111,9 @@ public class MyQueueTest {
             int r = rd.nextInt(50);
             queue = queue.enqueue(r);
             list.add(r);
+        }
+        if (n > 0) {
+            assertFalse("queue is empty but it should not be", queue.isEmpty());
         }
         while (!queue.isEmpty()) {
             assertTrue("LinkedList is empty but MyQueue is not.", !list.isEmpty());

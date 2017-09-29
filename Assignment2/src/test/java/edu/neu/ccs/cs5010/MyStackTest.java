@@ -36,7 +36,7 @@ public class MyStackTest {
     }
 
     @Test
-    public void testPush() {
+    public void testOnePush() {
         stack = stack.push(1);
     }
 
@@ -51,9 +51,8 @@ public class MyStackTest {
     }
 
     @Test
-    public void testPop() {
-        stack = stack.push(1);
-        stack = stack.pop();
+    public void testOnePop() {
+        stack = stack.push(1).pop();
     }
 
     /**
@@ -102,6 +101,9 @@ public class MyStackTest {
             int r = rd.nextInt(50);
             stack = stack.push(r);
             list.add(r);
+        }
+        if (n > 0) {
+            assertFalse("stack is empty but it should not be", stack.isEmpty());
         }
         while (!stack.isEmpty()) {
             assertTrue("LinkedList is empty but MyStack is not.", !list.isEmpty());
