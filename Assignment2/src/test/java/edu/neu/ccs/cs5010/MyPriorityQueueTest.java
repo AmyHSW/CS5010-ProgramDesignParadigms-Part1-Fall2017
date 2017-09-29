@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
  */
 public class MyPriorityQueueTest {
 
-    private MyPriorityQueue<String> myPQ = null;
+    private IPriorityQueue<String> myPQ = null;
     private static final String[] WORDS = {
             "Java",
             "C++",
@@ -42,7 +42,7 @@ public class MyPriorityQueueTest {
      */
     @Test
     public void front() throws Exception {
-        assertEquals("Python", myPQ.front());
+        assertEquals("C++", myPQ.front());
     }
 
     /**
@@ -52,8 +52,8 @@ public class MyPriorityQueueTest {
      */
     @Test
     public void insert() throws Exception {
-        myPQ.insert("Ruby");
-        assertEquals("Ruby", myPQ.front());
+        myPQ.insert("C");
+        assertEquals("C", myPQ.front());
     }
 
     /**
@@ -63,8 +63,8 @@ public class MyPriorityQueueTest {
      */
     @Test
     public void remove() throws Exception {
-        assertEquals("Python", myPQ.remove());
-        assertEquals("JavaScript", myPQ.remove());
+        assertEquals("C++", myPQ.remove());
+        assertEquals("Go", myPQ.remove());
     }
 
     /**
@@ -84,7 +84,7 @@ public class MyPriorityQueueTest {
     @Test
     public void testForwardTraversal() throws Exception {
         List<String> list = myPQ.testForwardTraversal();
-        assertEquals("Python", list.get(0));
+        assertEquals("C++", list.get(0));
     }
 
     /**
@@ -94,7 +94,7 @@ public class MyPriorityQueueTest {
     @Test
     public void testReverseTraversal() throws Exception {
         List<String> list = myPQ.testReverseTraversal();
-        assertEquals("Python", list.get(4));
+        assertEquals("C++", list.get(4));
     }
 
     /**

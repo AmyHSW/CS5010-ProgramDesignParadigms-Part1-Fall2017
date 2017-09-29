@@ -124,7 +124,7 @@ public class MyPriorityQueue<E extends Comparable<E>> implements IPriorityQueue<
 
     // a helper method to restore the heap invariant.
     private void promote(int k) {
-        while (k > 1 && less(k / 2, k)) {
+        while (k > 1 && less(k, k / 2)) {
             swap(k / 2, k);
             k /= 2;
         }
@@ -132,9 +132,12 @@ public class MyPriorityQueue<E extends Comparable<E>> implements IPriorityQueue<
 
     // a helper method to restore the heap invariant.
     private void demote(int k) {
-        while (k < n && less(k, k * 2)) {
-            swap(k, k * 2);
-            k *= 2;
+        while (k * 2 < n) {
+            int j = 2 * k;
+            if (j < n && less(j + 1, j)) j++;
+            if (!less(j, k)) break;
+            swap(k, j);
+            k = j;
         }
     }
 
