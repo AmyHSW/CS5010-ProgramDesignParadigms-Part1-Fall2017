@@ -1,10 +1,6 @@
-package edu.neu.ccs.cs5010;
+package edu.neu.ccs.cs5010.Assignment2.section2;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /**
  * The <code>MyPriorityQueue</code> class represents a priority queue of generic keys.
@@ -20,7 +16,7 @@ import java.util.NoSuchElementException;
  *
  * @author Shuwan Huang
  */
-public class MyPriorityQueue<E extends Comparable<E>> implements IPriorityQueue<E>{
+public class MyPriorityQueue<E extends Comparable<E>> implements IPriorityQueue<E> {
 
     private E[] pq;
     private int n; // number of elements on priority queue
@@ -97,24 +93,6 @@ public class MyPriorityQueue<E extends Comparable<E>> implements IPriorityQueue<
         return n == 0;
     }
 
-    /**
-     * @return a list that contains contents in the priority queue in forward traversal order.
-     */
-    public List<E> testForwardTraversal() {
-        List<E> list = new ArrayList<E>();
-        list.addAll(Arrays.asList(pq).subList(1, n + 1));
-        return list;
-    }
-
-    /**
-     * @return a list that contains contents in the priority queue in backward traversal order.
-     */
-    public List<E> testReverseTraversal() {
-        List<E> list = new ArrayList<E>();
-        for (int i = n; i >= 1; i--) list.add(pq[i]);
-        return list;
-    }
-
     @SuppressWarnings("unchecked")
     private void resize(int sz) {
         E[] copy = (E[])new Comparable[sz];
@@ -154,6 +132,30 @@ public class MyPriorityQueue<E extends Comparable<E>> implements IPriorityQueue<
         } else {
             return comparator.compare(pq[i], pq[j]) < 0;
         }
+    }
+
+    /**
+     * @return a list that contains contents in the priority queue in forward traversal order.
+     */
+    public List<E> testForwardTraversal() {
+        List<E> list = new ArrayList<E>();
+        while (n > 0) list.add(remove());
+        for (E e : list) {
+            insert(e);
+        }
+        return list;
+    }
+
+    /**
+     * @return a list that contains contents in the priority queue in backward traversal order.
+     */
+    public List<E> testReverseTraversal() {
+        List<E> list = testForwardTraversal();
+        List<E> reverseList = new ArrayList<>();
+        for (int i = list.size() - 1; i >= 0; i--) {
+            reverseList.add(list.get(i));
+        }
+        return reverseList;
     }
 
 }

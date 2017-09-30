@@ -8,10 +8,8 @@ Assignment2/target/
 # IntelliJ config files #
 Assignment1/.idea/
 Assignment1/Assignment1.iml
-Assignment1/pom.xml
 Assignment2/.idea/
 Assignment2/Assignment2.iml
-Assignment2/pom.xml
 
 # OS generated files #
 .DS_Store

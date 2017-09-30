@@ -1,7 +1,4 @@
-package edu.neu.ccs.cs5010;
-
-import javax.imageio.event.IIOWriteProgressListener;
-import java.util.NoSuchElementException;
+package edu.neu.ccs.cs5010.Assignment2.section1;
 
 /**
  * Created by zontakm on 9/12/2017.

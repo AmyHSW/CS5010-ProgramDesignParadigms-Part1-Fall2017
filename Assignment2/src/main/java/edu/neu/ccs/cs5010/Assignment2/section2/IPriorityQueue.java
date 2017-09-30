@@ -1,4 +1,4 @@
-package edu.neu.ccs.cs5010;
+package edu.neu.ccs.cs5010.Assignment2.section2;
 
 import java.util.List;
 

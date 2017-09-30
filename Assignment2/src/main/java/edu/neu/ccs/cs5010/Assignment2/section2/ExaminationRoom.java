@@ -1,4 +1,4 @@
-package edu.neu.ccs.cs5010;
+package edu.neu.ccs.cs5010.Assignment2.section2;
 
 import java.time.Duration;
 
@@ -93,4 +93,5 @@ public class ExaminationRoom implements Comparable<ExaminationRoom> {
         return "Examination room (busy for " + busyTime.toMinutes() + " min"
                 + ", treated " + nPatients + " patients)";
     }
+
 }

@@ -1,4 +1,4 @@
-package edu.neu.ccs.cs5010;
+package edu.neu.ccs.cs5010.Assignment2.section2;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +19,7 @@ public class PatientTest {
     private LocalDateTime arrival = null;
     private Duration treatTime = null;
     private int urgency = 0;
+    private int id = 1;
 
     /**
      * Creates a new Patient object before each test.
@@ -28,7 +29,7 @@ public class PatientTest {
         arrival = LocalDateTime.of(2017, 9, 28, 16, 30);
         treatTime = Duration.ofMinutes(30);
         urgency = 3;
-        patient = new Patient(arrival,urgency, treatTime);
+        patient = new Patient(arrival,urgency, treatTime, id);
     }
 
     /**
@@ -67,7 +68,7 @@ public class PatientTest {
      */
     @Test
     public void testCompareToForEqualUrgency() throws Exception {
-        Patient other = new Patient(arrival.plusMinutes(20), urgency, treatTime);
+        Patient other = new Patient(arrival.plusMinutes(20), urgency, treatTime, id);
         assertTrue("patient who arrived earlier should be ordered before the other but it isn't",
                    patient.compareTo(other) < 0);
     }
@@ -77,7 +78,7 @@ public class PatientTest {
      */
     @Test
     public void testCompareToForEqualArrival() throws Exception {
-        Patient other = new Patient(arrival, urgency + 2, treatTime);
+        Patient other = new Patient(arrival, urgency + 2, treatTime, id + 1);
         assertTrue("patient with lower urgency level should be ordered before the other but it isn't",
                    patient.compareTo(other) < 0);
     }
@@ -87,15 +88,7 @@ public class PatientTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testThrowsIllegalArgumentExceptionForInvalidUrgency() throws Exception {
-        Patient other = new Patient(arrival, 0, treatTime);
-    }
-
-    /**
-     * Tests that next produces a new Patient.
-     */
-    @Test
-    public void testNext() throws Exception {
-        Patient other = Patient.next();
+        Patient other = new Patient(arrival, 0, treatTime, id + 1);
     }
 
     /**
@@ -103,9 +96,10 @@ public class PatientTest {
      */
     @Test
     public void testToString() throws Exception {
-        String msg = "Patient (arrived at " + arrival
-                     + ", urgency level is " + urgency
-                     +", treatment time is " + treatTime.toMinutes() + " min)";
+        String msg = "Patient (ID-" + id
+                      + "): Arrived at " + arrival
+                      + ", urgency level is " + urgency
+                      +", treatment time is " + treatTime.toMinutes() + " min.";
         assertTrue("toString doesn't provide the correct message", msg.equals(patient.toString()));
     }
 

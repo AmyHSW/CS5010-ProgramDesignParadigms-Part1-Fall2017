@@ -1,4 +1,4 @@
-package edu.neu.ccs.cs5010;
+package edu.neu.ccs.cs5010.Assignment2.section2;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -28,6 +28,7 @@ public class ERSimulator implements ERSimulatorConstants {
 
     public void addPatient(Patient patient) {
         arrivalQueue.insert(patient);
+        System.out.println((char)27 + "[31mAdded to line: " + (char)27 + "[0m" + patient);
         patientsList.add(patient);
         update();
     }
@@ -39,13 +40,17 @@ public class ERSimulator implements ERSimulatorConstants {
     public void update() {
         LocalDateTime now = LocalDateTime.now();
 
-        while (!examinationQueue.isEmpty() && examinationQueue.front().getDepartureTime().compareTo(now) < 0) {
-            roomQueue.insert(examinationQueue.remove().getRoom());
+        while (!examinationQueue.isEmpty() && examinationQueue.front().getDepartureTime().compareTo(now) <= 0) {
+            Patient p = examinationQueue.remove();
+            System.out.println(now.toLocalTime());
+            System.out.println((char)27 + "[34mFinished treating patient (ID-" + p.getID() + ")" + (char)27 + "[0m");
+            roomQueue.insert(p.getRoom());
         }
 
         while (!roomQueue.isEmpty() && !arrivalQueue.isEmpty()) {
             Patient p = arrivalQueue.front();
             p.startExamination(roomQueue.remove(), now);
+            System.out.println((char)27 + "[32mStarted treating patient (ID-" + p.getID() + ")" + (char)27 + "[0m");
             p.getRoom().addBusyTime(Duration.between(now, p.getDepartureTime()));
             examinationQueue.insert(arrivalQueue.remove());
         }
@@ -104,21 +109,22 @@ public class ERSimulator implements ERSimulatorConstants {
 
     public static void main(String[] args) throws Exception {
         ERSimulator simulator = new ERSimulator(N_ROOMS);
+        PatientGenerator patientGenerator = new PatientGenerator();
         LocalDateTime startTime = LocalDateTime.now();
 
         System.out.println("Starts ER simulation with " + N_ROOMS + " rooms at " + startTime);
 
-        while (LocalDateTime.now().compareTo(startTime.plus(SIMULATION_MAX_TIME)) < 0) {
-            Patient p = Patient.next();
-            simulator.addPatient(p);
-            System.out.println("Added " + p);
+        while (LocalDateTime.now().compareTo(startTime.plus(SIMULATION_MAX_TIME)) <= 0) {
+            simulator.addPatient(patientGenerator.next());
             Thread.sleep(PAUSE_MILLI_SECONDS);
         }
         while (!simulator.isFree()) {
             simulator.update();
+            Thread.sleep(PAUSE_MILLI_SECONDS);
         }
 
         simulator.reportPatientsAvrgWait();
         simulator.reportRoomUsage(Duration.between(startTime, LocalDateTime.now()));
     }
+
 }

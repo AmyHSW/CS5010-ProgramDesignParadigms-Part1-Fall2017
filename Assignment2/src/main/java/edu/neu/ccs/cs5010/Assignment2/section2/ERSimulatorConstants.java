@@ -1,4 +1,4 @@
-package edu.neu.ccs.cs5010;
+package edu.neu.ccs.cs5010.Assignment2.section2;
 
 import java.time.Duration;
 
@@ -12,11 +12,11 @@ public interface ERSimulatorConstants {
 
     public static final Duration SIMULATION_MAX_TIME = Duration.ofMinutes(60);
 
-    public static final int PAUSE_MILLI_SECONDS = 180000;
+    public static final int PAUSE_MILLI_SECONDS = 120000;
 
-    public static final int N_ROOMS = 5;
+    public static final int N_ROOMS = 1;
 
-    public static final int MAX_TREATMENT_MINUTES = 10;
+    public static final int MAX_TREATMENT_MINUTES = 20;
 
     public static final int MIN_URGENCY_LEVEL = 1;
 

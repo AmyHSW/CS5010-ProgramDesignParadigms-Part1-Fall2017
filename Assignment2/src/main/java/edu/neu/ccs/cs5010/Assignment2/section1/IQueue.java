@@ -1,4 +1,4 @@
-package edu.neu.ccs.cs5010;
+package edu.neu.ccs.cs5010.Assignment2.section1;
 
 /**
  * Created by zontakm on 9/12/2017.
@@ -10,4 +10,3 @@ public interface IQueue {
     int front();
     boolean isEmpty();
 }
-

@@ -1,4 +1,4 @@
-package edu.neu.ccs.cs5010;
+package edu.neu.ccs.cs5010.Assignment2.section2;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +18,7 @@ public class MyPriorityQueueTest {
     private IPriorityQueue<String> myPQ = null;
     private static final String[] WORDS = {
             "Java",
-            "C++",
+            "C",
             "Python",
             "Go",
             "JavaScript"
@@ -31,8 +31,8 @@ public class MyPriorityQueueTest {
      */
     @Before
     public void setUp() throws Exception {
-        myPQ = new MyPriorityQueue<String>();
-        for (int i = 0; i < 5; i++) myPQ.insert(WORDS[i]);
+        myPQ = new MyPriorityQueue<>();
+        for (int i = 0; i < WORDS.length; i++) myPQ.insert(WORDS[i]);
     }
 
     /**
@@ -42,7 +42,7 @@ public class MyPriorityQueueTest {
      */
     @Test
     public void front() throws Exception {
-        assertEquals("C++", myPQ.front());
+        assertEquals("C", myPQ.front());
     }
 
     /**
@@ -52,8 +52,8 @@ public class MyPriorityQueueTest {
      */
     @Test
     public void insert() throws Exception {
-        myPQ.insert("C");
-        assertEquals("C", myPQ.front());
+        myPQ.insert("A");
+        assertEquals("A", myPQ.front());
     }
 
     /**
@@ -63,7 +63,7 @@ public class MyPriorityQueueTest {
      */
     @Test
     public void remove() throws Exception {
-        assertEquals("C++", myPQ.remove());
+        assertEquals("C", myPQ.remove());
         assertEquals("Go", myPQ.remove());
     }
 
@@ -84,7 +84,11 @@ public class MyPriorityQueueTest {
     @Test
     public void testForwardTraversal() throws Exception {
         List<String> list = myPQ.testForwardTraversal();
-        assertEquals("C++", list.get(0));
+        assertTrue("The 1st in the order should be C but it is not", list.get(0).equals("C"));
+        assertTrue("The 2nd in the order should be Go but it is not",list.get(1).equals("Go"));
+        assertTrue("The 3rd in the order should be Java but it is not",list.get(2).equals("Java"));
+        assertTrue("The 4th in the order should be Python but it is not",list.get(3).equals("Python"));
+        assertTrue("The 5th in the order should be JavaScript but it is not",list.get(4).equals("JavaScript"));
     }
 
     /**
@@ -94,7 +98,11 @@ public class MyPriorityQueueTest {
     @Test
     public void testReverseTraversal() throws Exception {
         List<String> list = myPQ.testReverseTraversal();
-        assertEquals("C++", list.get(4));
+        assertTrue("The 5th in the order should be C but it is not",list.get(4).equals("C"));
+        assertTrue("The 4th in the order should be Go but it is not",list.get(3).equals("Go"));
+        assertTrue("The 3rd in the order should be Java but it is not",list.get(2).equals("Java"));
+        assertTrue("The 2nd in the order should be Python but it is not",list.get(1).equals("Python"));
+        assertTrue("The 1st in the order should be JavaScript but it is not",list.get(0).equals("JavaScript"));
     }
 
     /**
@@ -112,4 +120,5 @@ public class MyPriorityQueueTest {
     public void removeThrowsNoSuchElementException() {
         new MyPriorityQueue().remove();
     }
+
 }

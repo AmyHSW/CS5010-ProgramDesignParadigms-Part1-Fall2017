@@ -1,4 +1,4 @@
-package edu.neu.ccs.cs5010;
+package edu.neu.ccs.cs5010.Assignment2.section1;
 
 import org.junit.Before;
 import org.junit.Ignore;
