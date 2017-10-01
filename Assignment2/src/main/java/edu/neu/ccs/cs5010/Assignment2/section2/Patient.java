@@ -1,4 +1,4 @@
-package edu.neu.ccs.cs5010.Assignment2.section2;
+package edu.neu.ccs.cs5010.assignment2.section2;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -18,17 +18,20 @@ import java.util.Random;
  *
  * @author Shuwan Huang
  */
-public class Patient implements Comparable<Patient>, ERSimulatorConstants {
+public class Patient implements IPatient, Comparable<Patient>, ERSimulatorConstants {
 
+    /**
+     * Compares patients according to their departure time.
+     */
     public static final Comparator<Patient> BY_DEPARTURE_TIME = new ByDepartureTime();
 
     private final LocalDateTime arrivalTime;
     private final int urgencyLevel;
-    private final Duration treatTime;
+    private final Duration treatmentDuration;
     private final int id;
 
     private LocalDateTime departureTime;
-    private Duration waitTime;
+    private Duration waitDuration;
     private ExaminationRoom room;
 
     /**
@@ -49,21 +52,22 @@ public class Patient implements Comparable<Patient>, ERSimulatorConstants {
         }
 
         if (urgencyLevel < MIN_URGENCY_LEVEL || urgencyLevel > MAX_URGENCY_LEVEL) {
-            throw new IllegalArgumentException("urgency level (" + urgencyLevel + ") is not between 1 and 10.");
+            throw new InvalidUrgencyLevelException("urgency level (" + urgencyLevel + ") is not between 1 and 10.");
         }
 
         this.arrivalTime = arrivalTime;
         this.urgencyLevel = urgencyLevel;
-        this.treatTime = treatTime;
+        this.treatmentDuration = treatTime;
         this.id = id;
 
         room = null;
         departureTime = LocalDateTime.MAX;
-        waitTime = null;
+        waitDuration = null;
     }
 
     // compare patients according to their departure time.
     private static class ByDepartureTime implements Comparator<Patient> {
+        @Override
         public int compare(Patient a, Patient b) {
             return a.departureTime.compareTo(b.departureTime);
         }
@@ -71,40 +75,55 @@ public class Patient implements Comparable<Patient>, ERSimulatorConstants {
 
     /**
      * Starts examination for the patient with the ExaminationRoom assigned and startTime set.
+     *
      * @param room the ExaminationRoom where patient gets treated.
      * @param startTime the time when patient starts examination.
      * @throws IllegalArgumentException if room is null.
      */
+    @Override
     public void startExamination(ExaminationRoom room, LocalDateTime startTime) {
         if (room == null) {
             throw new IllegalArgumentException("Examination room is null.");
         }
         validateStartTime(startTime);
 
-        departureTime = startTime.plus(treatTime);
-        waitTime = Duration.between(arrivalTime, startTime);
+        departureTime = startTime.plus(treatmentDuration);
+        waitDuration = Duration.between(arrivalTime, startTime);
         this.room = room;
     }
 
     /**
-     * Returns an integer number that is the id of this patient.
+     * Gets the id of this patient.
      * @return an integer number that is the id of this patient.
      */
+    @Override
     public int getID() {
         return id;
     }
 
     /**
-     * Returns the urgency level of this patient.
+     * Gets the urgency level of this patient.
      * @return an integer number that is the urgency level of this patient.
      */
+    @Override
     public int getUrgencyLevel() {
         return urgencyLevel;
     }
 
     /**
-     * @return the ExaminationRoom where patient gets treated.
+     * Gets the duration of treatment of this patient.
+     * @return the duration of treatment of this patient.
      */
+    @Override
+    public Duration getTreatmentDuration() {
+        return treatmentDuration;
+    }
+
+    /**
+     * Gets the ExaminationRoom where this patient gets treated.
+     * @return the ExaminationRoom where this patient gets treated.
+     */
+    @Override
     public ExaminationRoom getRoom() {
         return room;
     }
@@ -113,16 +132,18 @@ public class Patient implements Comparable<Patient>, ERSimulatorConstants {
      * Returns the departure time of this patient.
      * @return a LocalDateTime object that represents the departure time of the patient.
      */
+    @Override
     public LocalDateTime getDepartureTime() {
         return departureTime;
     }
 
     /**
-     * Returns the time that patient has waited before getting treated.
-     * @return a Duration object that presents how long this patient has waited before getting treated.
+     * Returns the wait of this patient before getting treated.
+     * @return a Duration object that represents how long this patient has waited before getting treated.
      */
-    public Duration getWaitTime() {
-        return waitTime;
+    @Override
+    public Duration getWaitDuration() {
+        return waitDuration;
     }
 
     // validates the start time of examination so that it is always later than arrival time.
@@ -131,7 +152,7 @@ public class Patient implements Comparable<Patient>, ERSimulatorConstants {
             throw new IllegalArgumentException("startTime is null.");
         }
         if (startTime.compareTo(arrivalTime) < 0) {
-            throw new IllegalArgumentException("startTime is earlier than arrivalTime.");
+            throw new InvalidStartTimeException("startTime is earlier than arrivalTime.");
         }
     }
 
@@ -167,7 +188,7 @@ public class Patient implements Comparable<Patient>, ERSimulatorConstants {
 
         if (urgencyLevel != patient.urgencyLevel) return false;
         if (arrivalTime != null ? !arrivalTime.equals(patient.arrivalTime) : patient.arrivalTime != null) return false;
-        return treatTime != null ? treatTime.equals(patient.treatTime) : patient.treatTime == null;
+        return treatmentDuration != null ? treatmentDuration.equals(patient.treatmentDuration) : patient.treatmentDuration == null;
     }
 
     /**
@@ -178,7 +199,7 @@ public class Patient implements Comparable<Patient>, ERSimulatorConstants {
     public int hashCode() {
         int result = arrivalTime != null ? arrivalTime.hashCode() : 0;
         result = 31 * result + urgencyLevel;
-        result = 31 * result + (treatTime != null ? treatTime.hashCode() : 0);
+        result = 31 * result + (treatmentDuration != null ? treatmentDuration.hashCode() : 0);
         return result;
     }
 
@@ -191,7 +212,7 @@ public class Patient implements Comparable<Patient>, ERSimulatorConstants {
         return "Patient (ID-" + id
                 + "): Arrived at " + arrivalTime
                 + ", urgency level is " + urgencyLevel
-                +", treatment time is " + treatTime.toMinutes() + " min.";
+                +", treatment time is " + treatmentDuration.toMinutes() + " min.";
     }
 
 }

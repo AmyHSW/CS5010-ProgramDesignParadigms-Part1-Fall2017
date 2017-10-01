@@ -1,5 +1,6 @@
-package edu.neu.ccs.cs5010.Assignment2.section2;
+package edu.neu.ccs.cs5010.assignment2.section2;
 
+import jdk.nashorn.internal.runtime.ECMAException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,6 +42,22 @@ public class PatientTest {
     }
 
     /**
+     * Tests that getID returns correct id of patient.
+     */
+    @Test
+    public void testGetID() throws Exception {
+        assertEquals("getID does not return the correct id", id, patient.getID());
+    }
+
+    /**
+     * Tests that getTreatmentDuration returns the correct duration of treatment.
+     */
+    @Test
+    public void testGetTreatmentDuration() throws Exception {
+        assertTrue("getTreatmentDuration return wrong output", treatTime.equals(patient.getTreatmentDuration()));
+    }
+
+    /**
      * Starts examination on the patient and tests if the ExaminationRoom, waitTime, and departureTime
      * are set accordingly and correctly.
      */
@@ -55,7 +72,7 @@ public class PatientTest {
                     room.equals(patient.getRoom()));
 
         assertTrue("getWaitTime doesn't return the correct wait period",
-                    Duration.between(arrival, start).equals(patient.getWaitTime()));
+                    Duration.between(arrival, start).equals(patient.getWaitDuration()));
 
         assertTrue("getDepartureTime doesn't return the correct departure time",
                     start.plus(treatTime).equals(patient.getDepartureTime()));
@@ -74,7 +91,7 @@ public class PatientTest {
     }
 
     /**
-     * Tesets that patients are ordered by their urgency levels.
+     * Tests that patients are ordered by their urgency levels.
      */
     @Test
     public void testCompareToForEqualArrival() throws Exception {
@@ -86,9 +103,37 @@ public class PatientTest {
     /**
      * Tests that Patient throws IllegalArgumentException for invalid urgency level.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testThrowsIllegalArgumentExceptionForInvalidUrgency() throws Exception {
+    @Test(expected = InvalidUrgencyLevelException.class)
+    public void testThrowsInvalidUrgencyLevelException() throws Exception {
         Patient other = new Patient(arrival, 0, treatTime, id + 1);
+    }
+
+    /**
+     * Tests that Patient throws InvalidStartTimeException if start time of examination is earlier than arrival time.
+     */
+    @Test(expected = InvalidStartTimeException.class)
+    public void testThrowsInvalidStartTimeException() throws Exception {
+        ExaminationRoom room = new ExaminationRoom();
+        patient.startExamination(room, arrival.minusMinutes(20));
+    }
+
+    /**
+     * Tests that equals returns true for patients with the same arrival time, urgency level, treatment time and id.
+     */
+    @Test
+    public void testEquals() throws Exception {
+        Patient other = new Patient(arrival, urgency, treatTime, id);
+        assertTrue("equals does not return true for equal patients", patient.equals(other));
+    }
+
+    /**
+     * Tests that patients that are equal to each other have the same hashcode.
+     */
+    @Test
+    public void testHashCode() throws Exception {
+        Patient other = new Patient(arrival, urgency, treatTime, id);
+        assertTrue("equal patients should have the same hashcode",
+                   patient.hashCode() == other.hashCode());
     }
 
     /**

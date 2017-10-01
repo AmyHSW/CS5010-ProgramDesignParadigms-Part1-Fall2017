@@ -1,4 +1,4 @@
-package edu.neu.ccs.cs5010.Assignment2.section2;
+package edu.neu.ccs.cs5010.assignment2.section2;
 
 import java.time.Duration;
 
@@ -12,7 +12,7 @@ import java.time.Duration;
  *
  * @author Shuwan Huang
  */
-public class ExaminationRoom implements Comparable<ExaminationRoom> {
+public class ExaminationRoom implements IExaminationRoom, Comparable<ExaminationRoom> {
 
     private Duration busyTime; // the length of time when this room is busy
     private int nPatients; // number of patients treated in this room
@@ -65,13 +65,16 @@ public class ExaminationRoom implements Comparable<ExaminationRoom> {
      */
     @Override
     public boolean equals(Object other) {
-        if (this == other) return true;
-        if (other == null || getClass() != other.getClass()) return false;
+      if (this == other) {
+        return true;
+      }
+      if (other == null || getClass() != other.getClass()) {
+        return false;
+      }
 
-        ExaminationRoom that = (ExaminationRoom) other;
+      ExaminationRoom that = (ExaminationRoom) other;
 
-        if (nPatients != that.nPatients) return false;
-        return busyTime != null ? busyTime.equals(that.busyTime) : that.busyTime == null;
+      return nPatients == that.nPatients && (busyTime != null ? busyTime.equals(that.busyTime) : that.busyTime == null);
     }
 
     /**
@@ -86,7 +89,7 @@ public class ExaminationRoom implements Comparable<ExaminationRoom> {
     }
 
     /**
-     * Rtuens a string representation of this examination room.
+     * Returns a string representation of this examination room.
      * @return a string  representation of this examination room.
      */
     public String toString() {

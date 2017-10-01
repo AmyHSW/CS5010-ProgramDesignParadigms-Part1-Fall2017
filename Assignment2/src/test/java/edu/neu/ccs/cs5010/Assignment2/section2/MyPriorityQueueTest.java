@@ -1,8 +1,10 @@
-package edu.neu.ccs.cs5010.Assignment2.section2;
+package edu.neu.ccs.cs5010.assignment2.section2;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -87,8 +89,8 @@ public class MyPriorityQueueTest {
         assertTrue("The 1st in the order should be C but it is not", list.get(0).equals("C"));
         assertTrue("The 2nd in the order should be Go but it is not",list.get(1).equals("Go"));
         assertTrue("The 3rd in the order should be Java but it is not",list.get(2).equals("Java"));
-        assertTrue("The 4th in the order should be Python but it is not",list.get(3).equals("Python"));
-        assertTrue("The 5th in the order should be JavaScript but it is not",list.get(4).equals("JavaScript"));
+        assertTrue("The 4th in the order should be JavaScript but it is not",list.get(3).equals("JavaScript"));
+        assertTrue("The 5th in the order should be Python but it is not",list.get(4).equals("Python"));
     }
 
     /**
@@ -101,8 +103,8 @@ public class MyPriorityQueueTest {
         assertTrue("The 5th in the order should be C but it is not",list.get(4).equals("C"));
         assertTrue("The 4th in the order should be Go but it is not",list.get(3).equals("Go"));
         assertTrue("The 3rd in the order should be Java but it is not",list.get(2).equals("Java"));
-        assertTrue("The 2nd in the order should be Python but it is not",list.get(1).equals("Python"));
-        assertTrue("The 1st in the order should be JavaScript but it is not",list.get(0).equals("JavaScript"));
+        assertTrue("The 2nd in the order should be JavaScript but it is not",list.get(1).equals("JavaScript"));
+        assertTrue("The 1st in the order should be Python but it is not",list.get(0).equals("Python"));
     }
 
     /**
@@ -121,4 +123,26 @@ public class MyPriorityQueueTest {
         new MyPriorityQueue().remove();
     }
 
+    @Test
+    public void testPatientQueue() throws Exception {
+        IPriorityQueue<Patient> patientQueue = new MyPriorityQueue<>();
+
+        Patient p1 = new Patient(LocalDateTime.now(), 8, Duration.ofMinutes(1), 1);
+        patientQueue.insert(p1);
+        Patient p2 = new Patient(LocalDateTime.now(), 2, Duration.ofMinutes(1), 2);
+        patientQueue.insert(p2);
+        Patient p3 = new Patient(LocalDateTime.now(), 1, Duration.ofMinutes(1), 3);
+        patientQueue.insert(p3);
+        Patient p4 = new Patient(LocalDateTime.now(), 5, Duration.ofMinutes(1), 4);
+        patientQueue.insert(p4);
+        Patient p5 = new Patient(LocalDateTime.now(), 2, Duration.ofMinutes(1), 5);
+        patientQueue.insert(p5);
+
+        List<Patient> patientList = patientQueue.testForwardTraversal();
+        assertTrue("p3 should be 1st priority patient", patientList.get(0).equals(p3));
+        assertTrue("p2 should be 2nd priority patient", patientList.get(1).equals(p2));
+        assertTrue("p5 should be 3rd priority patient", patientList.get(2).equals(p5));
+        assertTrue("p4 should be 4th priority patient", patientList.get(3).equals(p4));
+        assertTrue("p1 should be 5th priority patient", patientList.get(4).equals(p1));
+    }
 }

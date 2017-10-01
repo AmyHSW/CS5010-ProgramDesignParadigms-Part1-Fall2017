@@ -1,4 +1,4 @@
-package edu.neu.ccs.cs5010.Assignment2.section2;
+package edu.neu.ccs.cs5010.assignment2.section2;
 
 import org.junit.Before;
 import org.junit.Test;

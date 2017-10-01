@@ -1,4 +1,4 @@
-package edu.neu.ccs.cs5010.Assignment2.section2;
+package edu.neu.ccs.cs5010.assignment2.section2;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -50,6 +50,32 @@ public class ExaminationRoomTest {
         ExaminationRoom other = new ExaminationRoom();
         other.addBusyTime(Duration.ofMinutes(20));
         assertTrue("examination rooms are not compared by busy time", room.compareTo(other) < 0);
+    }
+
+    /**
+     * Tests that equals returns true for rooms with the same busy time and number of patients.
+     */
+    @Test
+    public void testEquals() throws Exception {
+        room.addBusyTime(Duration.ofMinutes(20));
+
+        ExaminationRoom other = new ExaminationRoom();
+        other.addBusyTime(Duration.ofMinutes(20));
+
+        assertTrue("equals does not return true for equal rooms", room.equals(other));
+    }
+
+    /**
+     * Tests that examination rooms that are equal to each other have the same hashcode.
+     */
+    @Test
+    public void testHashCode() throws Exception {
+        room.addBusyTime(Duration.ofMinutes(20));
+
+        ExaminationRoom other = new ExaminationRoom();
+        other.addBusyTime(Duration.ofMinutes(20));
+
+        assertTrue("equal rooms should have the same hash code", room.hashCode() == other.hashCode());
     }
 
     /**

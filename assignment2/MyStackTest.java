@@ -1,6 +1,5 @@
-package edu.neu.ccs.cs5010.Assignment2.section1;
+package edu.neu.ccs.cs5010.assignment2.section1;
 
-import edu.neu.ccs.cs5010.Assignment2.section1.IStack;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package edu.neu.ccs.cs5010.Assignment2.section2;
+package edu.neu.ccs.cs5010.assignment2.section2;
 
 import java.util.*;
 
@@ -49,11 +49,11 @@ public class MyPriorityQueue<E extends Comparable<E>> implements IPriorityQueue<
     /**
      * Inserts the object in the priority queue.
      *
-     * @param e the object to be inserted.
+     * @param elt the object to be inserted.
      */
-    public void insert(E e) {
+    public void insert(E elt) {
         if (n == pq.length - 1) resize(pq.length * 2);
-        pq[++n] = e;
+        pq[++n] = elt;
         promote(n);
     }
 
@@ -103,19 +103,19 @@ public class MyPriorityQueue<E extends Comparable<E>> implements IPriorityQueue<
     // a helper method to restore the heap invariant.
     private void promote(int k) {
         while (k > 1 && less(k, k / 2)) {
-            swap(k / 2, k);
-            k /= 2;
+        swap(k / 2, k);
+        k /= 2;
         }
     }
 
     // a helper method to restore the heap invariant.
     private void demote(int k) {
-        while (k * 2 < n) {
-            int j = 2 * k;
-            if (j < n && less(j + 1, j)) j++;
-            if (!less(j, k)) break;
-            swap(k, j);
-            k = j;
+        while (k * 2 <= n) {
+        int j = 2 * k;
+        if (j < n && less(j + 1, j)) j++;
+        if (!less(j, k)) break;
+        swap(k, j);
+        k = j;
         }
     }
 
@@ -123,19 +123,20 @@ public class MyPriorityQueue<E extends Comparable<E>> implements IPriorityQueue<
         E tmp = pq[i];
         pq[i] = pq[j];
         pq[j] = tmp;
-    }
+     }
 
     // a helper method for compares.
     private boolean less(int i, int j) {
         if (comparator == null) {
-            return pq[i].compareTo(pq[j]) < 0;
+        return pq[i].compareTo(pq[j]) < 0;
         } else {
-            return comparator.compare(pq[i], pq[j]) < 0;
+        return comparator.compare(pq[i], pq[j]) < 0;
         }
     }
 
     /**
-     * @return a list that contains contents in the priority queue in forward traversal order.
+     * Returns a list that contains contents in the priority queue in the order from highest priority to lowest.
+     * @return a list that contains contents in the priority queue in the order from highest priority to lowest.
      */
     public List<E> testForwardTraversal() {
         List<E> list = new ArrayList<E>();
@@ -147,7 +148,8 @@ public class MyPriorityQueue<E extends Comparable<E>> implements IPriorityQueue<
     }
 
     /**
-     * @return a list that contains contents in the priority queue in backward traversal order.
+     * Returns a list that contains contents in the priority queue in the order from lowest priority to highest.
+     * @return a list that contains contents in the priority queue in the order from lowest priority to highest.
      */
     public List<E> testReverseTraversal() {
         List<E> list = testForwardTraversal();

@@ -1,4 +1,4 @@
-package edu.neu.ccs.cs5010.Assignment2.section2;
+package edu.neu.ccs.cs5010.assignment2.section2;
 
 import java.time.Duration;
 
@@ -10,16 +10,36 @@ import java.time.Duration;
  */
 public interface ERSimulatorConstants {
 
-    public static final Duration SIMULATION_MAX_TIME = Duration.ofMinutes(60);
+    /**
+     * The max duration of time that program keeps adding new patients.
+     */
+    Duration SIMULATION_MAX_TIME = Duration.ofHours(8);
 
-    public static final int PAUSE_MILLI_SECONDS = 120000;
+    /**
+     * An integer that represents the number of milli-seconds that program waits before adding
+     * another new patient.
+     */
+    int PAUSE_ADD_PATIENT = 60000;
 
-    public static final int N_ROOMS = 1;
+    /**
+     * An integer that represents the number of milli-seconds that program waits before updating
+     * the ongoing examination queue and patients queue.
+     */
+    int PAUSE_BETWEEN_UPDATE = 60000;
 
-    public static final int MAX_TREATMENT_MINUTES = 20;
+    /**
+     * The max number of minutes that a patient may need to get treated.
+     */
+    int MAX_TREATMENT_MINUTES = 10;
 
-    public static final int MIN_URGENCY_LEVEL = 1;
+    /**
+     * The min urgency level.
+     */
+    int MIN_URGENCY_LEVEL = 1;
 
-    public static final int MAX_URGENCY_LEVEL = 10;
+    /**
+     * The max urgency level.
+     */
+    int MAX_URGENCY_LEVEL = 10;
 
 }
