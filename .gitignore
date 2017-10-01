@@ -3,15 +3,15 @@
 
 # Output directories #
 Assignment1/target/
-Assignment2/target/
+assignment2/target/
 
 # IntelliJ config files #
 Assignment1/.idea/
 Assignment1/Assignment1.iml
-Assignment2/.idea/
-Assignment2/Assignment2.iml
+assignment2/.idea/
+assignment2/assignment2.iml
 
 # OS generated files #
 .DS_Store
 Assignment1/.DS_Store
-Assignment2/.DS_Store
+assignment2/.DS_Store
