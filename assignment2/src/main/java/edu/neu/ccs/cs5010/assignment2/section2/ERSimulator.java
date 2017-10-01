@@ -14,7 +14,7 @@ import java.util.Scanner;
  */
 public class ERSimulator implements ERSimulatorConstants {
 
-    // set protected for testing
+    // set protected only for testing!!
     protected final IPriorityQueue<Patient> arrivalQueue;
     protected final IPriorityQueue<ExaminationRoom> roomQueue;
     protected final IPriorityQueue<Patient> examinationQueue;
@@ -23,12 +23,18 @@ public class ERSimulator implements ERSimulatorConstants {
     /**
      * Constructs a new ERSimulator with given number of examination rooms.
      * @param numRoom number of examination rooms.
+     * @throws InvalidNumRoomException if numRoom is not positive.
      */
     public ERSimulator(int numRoom) {
+        if (numRoom <= 0) {
+            throw new InvalidNumRoomException("number of examination rooms " + numRoom + " is not positive.");
+        }
+
         arrivalQueue = new MyPriorityQueue<>();
         roomQueue = new MyPriorityQueue<>();
         examinationQueue = new MyPriorityQueue<>(Patient.BY_DEPARTURE_TIME);
         patientsList = new ArrayList<>();
+
         initRoom(numRoom);
     }
 
@@ -148,18 +154,17 @@ public class ERSimulator implements ERSimulatorConstants {
 
     /**
      * Creates a ERSimulator and a PatientGenerator. Reads in an integer from user to set the time for simulation.
-     * During the simulation period, generates patients and adds to the simulator in a certain frequency.
+     * During the simulation period, generates patients and adds to the simulator, the pause between generation
+     * of new patients is random.
      * After the simulation period, stops generating patients. When all the patients have finished treatment,
      * reports the average wait of patients and the usage information of examination rooms.
      *
      * @param args the command-line arguments
-     * @throws InterruptedException if any thread has interrupted the current thread, which will not occur
-     * in this simulation.
      */
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        int numRoom = 0;
-        Duration simulationTime = null;
+        int numRoom;
+        Duration simulationTime;
         System.out.println("Please enter the time (minutes) for simulation and the number of examination rooms:");
         while (true) {
             try{
@@ -183,12 +188,15 @@ public class ERSimulator implements ERSimulatorConstants {
 
         System.out.println("Starts ER simulation with " + numRoom + " rooms at " + startTime);
         while (LocalDateTime.now().compareTo(startTime.plus(simulationTime)) <= 0) {
-            simulator.addPatient(patientGenerator.next());
-            Thread.sleep(PAUSE_ADD_PATIENT);
+            Patient patient = patientGenerator.next();
+            if (patient != null) {
+                simulator.addPatient(patient);
+            } else {
+                simulator.update();
+            }
         }
         while (!simulator.isFree()) {
             simulator.update();
-            Thread.sleep(PAUSE_BETWEEN_UPDATE);
         }
 
         simulator.reportPatientsAvrgWaitAndTreatment();

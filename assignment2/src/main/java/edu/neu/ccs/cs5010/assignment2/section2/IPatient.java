@@ -3,6 +3,11 @@ package edu.neu.ccs.cs5010.assignment2.section2;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
+/**
+ * The <code>IPatient</code> interface represents a patient object.
+ *
+ * @author Shuwan Huang
+ */
 public interface IPatient {
 
     /**

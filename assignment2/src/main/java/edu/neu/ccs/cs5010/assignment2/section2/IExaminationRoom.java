@@ -2,6 +2,11 @@ package edu.neu.ccs.cs5010.assignment2.section2;
 
 import java.time.Duration;
 
+/**
+ * The <code>IExaminationRoom</code> interface represents an examination room.
+ *
+ * @author Shuwan Huang
+ */
 public interface IExaminationRoom {
 
     /**

@@ -3,6 +3,8 @@ package edu.neu.ccs.cs5010.assignment2.section2;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.LocalDateTime;
+
 import static org.junit.Assert.*;
 
 /**
@@ -28,11 +30,15 @@ public class PatientGeneratorTest {
      */
     @Test
     public void testNext() throws Exception {
-        Patient patient1 = patientGenerator.next();
-        assertTrue("id of first patient should be 1 but it is not", patient1.getID() == 1);
+        patientGenerator.lastTime = LocalDateTime.now().minusHours(1);
+        Patient patient = patientGenerator.next();
+        assertTrue(patient != null);
+        assertTrue("id of first patient should be 1 but it is not", patient.getID() == 1);
 
-        Patient patient2 = patientGenerator.next();
-        assertTrue("id of second patient should be 2 but it is not", patient2.getID() == 2);
+        patientGenerator.lastTime = LocalDateTime.now().minusHours(1);
+        patient = patientGenerator.next();
+        assertTrue(patient != null);
+        assertTrue("id of second patient should be 2 but it is not", patient.getID() == 2);
     }
 
 }

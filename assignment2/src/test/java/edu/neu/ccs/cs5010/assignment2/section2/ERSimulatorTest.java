@@ -9,33 +9,62 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
+/**
+ * The <code>ERSimulatorTest</code> is a test class for <code>ERSimulator</code>.
+ *
+ * @author Shuwan Huang
+ */
 public class ERSimulatorTest {
 
     private ERSimulator simulator = null;
 
+    /**
+     * Creates a new ERSimulator before each test.
+     */
     @Before
     public void setUp() throws Exception {
         simulator = new ERSimulator(1);
     }
 
+    /**
+     * Tests that ERSimulator constructor throws an InvalidNumRoomException if numRoom is not positive.
+     */
+    @Test(expected = InvalidNumRoomException.class)
+    public void testThrowsInvalidNumRoomException() throws Exception {
+        ERSimulator other = new ERSimulator(-1);
+    }
+
+    /**
+     * Tests that isFree returns true for an empty simulator.
+     */
     @Test
     public void testIsFreeOnFree() throws Exception {
         assertTrue("isFree returns false for an empty simulator", simulator.isFree());
     }
 
+    /**
+     * Tests adding one patient to the simulator.
+     */
     @Test
     public void testAddOnePatient() throws Exception {
         simulator.addPatient(new Patient(LocalDateTime.now(), 1, Duration.ofMinutes(20), 1));
     }
 
+    /**
+     * Tests that isFree returns false for a busy simulator.
+     */
     @Test
     public void testIsFreeOnBusy() throws Exception {
         simulator.addPatient(new Patient(LocalDateTime.now(), 1, Duration.ofMinutes(20), 1));
         assertFalse("isFree returns true for a busy simulator", simulator.isFree());
     }
 
+    /**
+     * Adds to the simulator a few patients and tests that patients are ordered correctly in arrivalQueue.
+     * Also tests that roomQueue and examinationQueue return correct results for isEmpty.
+     */
     @Test
-    public void testOnPriorityQueues() throws Exception {
+    public void testOnQueues() throws Exception {
         Patient p1 = new Patient(LocalDateTime.now(), 8, Duration.ofMinutes(1), 1);
         Patient p2 = new Patient(LocalDateTime.now(), 2, Duration.ofMinutes(1), 2);
         Patient p3 = new Patient(LocalDateTime.now(), 1, Duration.ofMinutes(1), 3);
@@ -65,11 +94,17 @@ public class ERSimulatorTest {
         simulator.update();
     }
 
+    /**
+     * Tests that reportPatientAvrgWaitAndTreatment does not throw exception on empty simulator.
+     */
     @Test
     public void testReportPatientAvrgWaitAndTreatment() throws Exception {
         simulator.reportPatientsAvrgWaitAndTreatment();
     }
 
+    /**
+     * Tests that reportRoomUsage does not throw exception on empty simulator.
+     */
     @Test
     public void testReportRoomUsage() throws Exception {
         simulator.reportRoomUsage(Duration.ofMinutes(1));

@@ -2,6 +2,12 @@ package edu.neu.ccs.cs5010.assignment2.section2;
 
 import java.util.List;
 
+/**
+ * The <code>IPriorityQueue</code> interface represents the common properties of a priority queue.
+ *
+ * @param <E> the generic type of object stored in priority queue.
+ * @author Shuwan Huang
+ */
 public interface IPriorityQueue<E> {
 
     /**

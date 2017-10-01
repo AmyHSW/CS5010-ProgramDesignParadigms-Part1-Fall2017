@@ -118,12 +118,73 @@ public class PatientTest {
     }
 
     /**
+     * Tests that Patient throws IllegalArgumentException for null arrival time.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testThrowsIllegalArgumentExceptionForNullArrival() throws Exception {
+        Patient other = new Patient(null, urgency, treatTime, id);
+    }
+
+    /**
+     * Tests that Patient throws IllegalArgumentException for null treatment duration.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testThrowsIllegalArgumentExceptionForNullTreatment() throws Exception {
+        Patient other = new Patient(arrival, urgency, null, id);
+    }
+
+    /**
+     * Tests that Patient throws IllegalArgumentException for null examination room.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testThrowsIllegalArgumentExceptionForNullRoom() throws Exception {
+        patient.startExamination(null, LocalDateTime.now());
+    }
+
+    /**
+     * Tests that Patient throws IllegalArgumentException for null start time.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testThrowsIllegalArgumentExceptionForNullStart() throws Exception {
+        patient.startExamination(new ExaminationRoom(), null);
+    }
+
+    /**
      * Tests that equals returns true for patients with the same arrival time, urgency level, treatment time and id.
      */
     @Test
     public void testEquals() throws Exception {
+        assertFalse("equals returns true when compare to null", patient.equals(null));
+
         Patient other = new Patient(arrival, urgency, treatTime, id);
         assertTrue("equals does not return true for equal patients", patient.equals(other));
+    }
+
+    /**
+     * Tests that equals returns false for patients with different urgency level.
+     */
+    @Test
+    public void testEqualsOnDifferentUrgency() throws Exception {
+        Patient other = new Patient(arrival, urgency + 1, treatTime, id);
+        assertTrue("equals returns true for different patients", !patient.equals(other));
+    }
+
+    /**
+     * Tests that equals returns false for patients with different arrival time.
+     */
+    @Test
+    public void testEqualsOnDifferentArrival() throws Exception {
+        Patient other = new Patient(arrival.minusMinutes(10), urgency, treatTime, id);
+        assertTrue("equals returns true for different patients", !patient.equals(other));
+    }
+
+    /**
+     * Tests that equals returns false for patients with different treatment time.
+     */
+    @Test
+    public void testEqualsOnDifferentTreatTime() throws Exception {
+        Patient other = new Patient(arrival, urgency, treatTime.plusMinutes(5), id);
+        assertTrue("equals returns true for different patients", !patient.equals(other));
     }
 
     /**
@@ -144,7 +205,7 @@ public class PatientTest {
         String msg = "Patient (ID-" + id
                       + "): Arrived at " + arrival
                       + ", urgency level is " + urgency
-                      +", treatment time is " + treatTime.toMinutes() + " min.";
+                      +", treatment duration is " + treatTime.toMinutes() + " min.";
         assertTrue("toString doesn't provide the correct message", msg.equals(patient.toString()));
     }
 

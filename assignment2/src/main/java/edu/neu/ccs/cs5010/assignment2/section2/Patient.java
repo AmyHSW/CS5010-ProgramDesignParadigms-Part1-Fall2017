@@ -212,7 +212,7 @@ public class Patient implements IPatient, Comparable<Patient>, ERSimulatorConsta
         return "Patient (ID-" + id
                 + "): Arrived at " + arrivalTime
                 + ", urgency level is " + urgencyLevel
-                +", treatment time is " + treatmentDuration.toMinutes() + " min.";
+                +", treatment duration is " + treatmentDuration.toMinutes() + " min.";
     }
 
 }

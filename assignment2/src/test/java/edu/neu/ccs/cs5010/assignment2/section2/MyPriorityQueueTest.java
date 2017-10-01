@@ -54,6 +54,8 @@ public class MyPriorityQueueTest {
      */
     @Test
     public void insert() throws Exception {
+        myPQ.insert("R");
+        assertEquals("C", myPQ.front());
         myPQ.insert("A");
         assertEquals("A", myPQ.front());
     }

@@ -16,16 +16,9 @@ public interface ERSimulatorConstants {
     Duration SIMULATION_MAX_TIME = Duration.ofHours(8);
 
     /**
-     * An integer that represents the number of milli-seconds that program waits before adding
-     * another new patient.
+     * The max number of milli-seconds to pause between generation of new patients.
      */
-    int PAUSE_ADD_PATIENT = 60000;
-
-    /**
-     * An integer that represents the number of milli-seconds that program waits before updating
-     * the ongoing examination queue and patients queue.
-     */
-    int PAUSE_BETWEEN_UPDATE = 60000;
+    int MAX_PAUSE_ADD_PATIENT = 60000;
 
     /**
      * The max number of minutes that a patient may need to get treated.
