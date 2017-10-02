@@ -10,6 +10,11 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
+/**
+ * The <code>MyStackTest</code> is a test class for <code>MyStack</code>.
+ *
+ * @author Shuwan Huang
+ */
 public class MyStackTest {
 
     private IStack stack = null;
@@ -22,12 +27,18 @@ public class MyStackTest {
         stack = new MyStack();
     }
 
+    /**
+     * Tests that isEmpty returns true for an empty stack.
+     */
     @Test
     public void testIsEmptyOnEmpty() {
         assertTrue("isEmpty does not return true for empty stack",
                     stack.isEmpty());
     }
 
+    /**
+     * Tests that isEmpty returns false for a non-empty stack.
+     */
     @Test
     public void testIsEmptyOnNonEmpty() {
         stack = stack.push(1);
@@ -35,6 +46,9 @@ public class MyStackTest {
                      stack.isEmpty());
     }
 
+    /**
+     * Tests pushing one integer to the stack.
+     */
     @Test
     public void testOnePush() {
         stack = stack.push(1);
@@ -50,6 +64,9 @@ public class MyStackTest {
         stack = stack.pop();
     }
 
+    /**
+     * Tests poping one integer from the stack.
+     */
     @Test
     public void testOnePop() {
         stack = stack.push(1).pop();

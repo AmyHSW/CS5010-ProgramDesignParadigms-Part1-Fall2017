@@ -10,6 +10,11 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
+/**
+ * The <code>MyQueueTest</code> is a test class for <code>MyQueue</code>.
+ *
+ * @author Shuwan Huang
+ */
 public class MyQueueTest {
 
     private IQueue queue = null;

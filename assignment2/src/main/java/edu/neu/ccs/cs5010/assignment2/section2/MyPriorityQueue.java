@@ -10,11 +10,11 @@ import java.util.*;
  * <code>MyPriorityQueue</code> supports inserting elements to the queue with O(lgN) time, removing the head
  * element from the priority queue with O(lgN) time, and returning the head element with O(1) time.
  * It also supports checking if the priority queue is empty, and can return list that contains
- * all elements in queue either in forward direction or backward direction.
+ * all elements in queue either in ascending order of priority or in descending order.
  *
  * @param <E> the generic type of element on this priority queue
  *
- * @author Shuwan Huang
+ * @author Shuwan Huang (reference: Alogorithms, 4th edition)
  */
 public class MyPriorityQueue<E extends Comparable<E>> implements IPriorityQueue<E> {
 
