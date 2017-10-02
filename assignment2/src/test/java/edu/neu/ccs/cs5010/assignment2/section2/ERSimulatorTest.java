@@ -95,19 +95,11 @@ public class ERSimulatorTest {
     }
 
     /**
-     * Tests that reportPatientAvrgWaitAndTreatment does not throw exception on empty simulator.
+     * Tests the runSimulation method.
      */
     @Test
-    public void testReportPatientAvrgWaitAndTreatment() throws Exception {
-        simulator.reportPatientsAvrgWaitAndTreatment();
-    }
-
-    /**
-     * Tests that reportRoomUsage does not throw exception on empty simulator.
-     */
-    @Test
-    public void testReportRoomUsage() throws Exception {
-        simulator.reportRoomUsage(Duration.ofMinutes(1));
+    public void testRunSimulation() throws Exception {
+        simulator.runSimulation(LocalDateTime.now(), Duration.ofSeconds(5), 2500, 1);
     }
 
 }

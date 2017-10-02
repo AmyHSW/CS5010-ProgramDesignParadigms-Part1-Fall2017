@@ -14,19 +14,21 @@ import java.util.Random;
  */
 public class PatientGenerator implements IPatientGenerator, ERSimulatorConstants {
 
+    private final int maxPauseMs;
+    private final int maxTreatmentMin;
     private int patientID; // starting at 1
-    private final Random rd; // a Random object to produce random parameters
     private int numPauseMillis; // number of milli-seconds to pause between generation of patients
     protected LocalDateTime lastTime; // last time a new patient was generated; set protected only for testing!!
 
     /**
      * Constructs a new PatientGenerator and sets the initial patient id to be 1.
      */
-    public PatientGenerator() {
+    public PatientGenerator(int maxPauseMs, int maxTreatmentMin) {
+        this.maxPauseMs = maxPauseMs;
+        this.maxTreatmentMin = maxTreatmentMin;
         patientID = 1;
-        rd = new Random();
         lastTime = LocalDateTime.now();
-        numPauseMillis = rd.nextInt(MAX_PAUSE_ADD_PATIENT + 1);
+        numPauseMillis = (new Random()).nextInt(maxPauseMs + 1);
     }
 
     /**
@@ -40,13 +42,14 @@ public class PatientGenerator implements IPatientGenerator, ERSimulatorConstants
             return null;
         }
         int urgencyLevel, treatmentMinutes;
+        Random rd = new Random();
         while (true) {
             urgencyLevel = rd.nextInt(MAX_URGENCY_LEVEL + 1);
-            treatmentMinutes = rd.nextInt(MAX_TREATMENT_MINUTES + 1);
+            treatmentMinutes = rd.nextInt(maxTreatmentMin + 1);
             if (urgencyLevel >= MIN_URGENCY_LEVEL && treatmentMinutes > 0) break;
         }
         lastTime = LocalDateTime.now();
-        numPauseMillis = rd.nextInt(MAX_PAUSE_ADD_PATIENT + 1);
+        numPauseMillis = rd.nextInt(maxPauseMs + 1);
         return new Patient(lastTime, urgencyLevel, Duration.ofMinutes(treatmentMinutes), patientID++);
     }
 

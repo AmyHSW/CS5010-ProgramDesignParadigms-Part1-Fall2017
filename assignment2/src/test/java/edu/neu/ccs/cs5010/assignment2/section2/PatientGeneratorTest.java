@@ -21,7 +21,7 @@ public class PatientGeneratorTest {
      */
     @Before
     public void setUp() throws Exception {
-        patientGenerator = new PatientGenerator();
+        patientGenerator = new PatientGenerator(1000, 10);
     }
 
     /**

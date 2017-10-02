@@ -1,6 +1,7 @@
 package edu.neu.ccs.cs5010.assignment2.section2;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 
 /**
  * The <code>IERSimulator</code> interface represents the emergency room simulator.
@@ -27,13 +28,14 @@ public interface IERSimulator {
     void update();
 
     /**
-     * Analyzes and prints the average wait time for treatment to console.
+     * Runs the simulation at given start time, keeps generating patients during the given duration
+     * of simulation and updating the simulation as it goes. Sets the max pause milliseconds and max treatment
+     * minutes as well.
+     * @param startTime the start time of this simulation.
+     * @param simulationTime the duration of time for generating patients.
+     * @param maxPause the max pause of milliseconds between patient generation
+     * @param maxTreatment the max treatment (minutes) of patient.
      */
-    void reportPatientsAvrgWaitAndTreatment();
+    void runSimulation(LocalDateTime startTime, Duration simulationTime, int maxPause, int maxTreatment);
 
-    /**
-     * Analyzes and prints the usage of examination rooms to console.
-     * @param duration the duration of the simulation.
-     */
-    void reportRoomUsage(Duration duration);
 }

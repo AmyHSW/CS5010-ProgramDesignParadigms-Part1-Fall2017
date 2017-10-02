@@ -18,12 +18,12 @@ public interface ERSimulatorConstants {
     /**
      * The max number of milli-seconds to pause between generation of new patients.
      */
-    int MAX_PAUSE_ADD_PATIENT = 60000;
+    int MAX_PAUSE_ADD_PATIENT = 600000;
 
     /**
      * The max number of minutes that a patient may need to get treated.
      */
-    int MAX_TREATMENT_MINUTES = 10;
+    int MAX_TREATMENT_MINUTES = 60;
 
     /**
      * The min urgency level.

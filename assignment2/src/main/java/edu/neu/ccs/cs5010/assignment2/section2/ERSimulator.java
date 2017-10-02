@@ -1,5 +1,6 @@
 package edu.neu.ccs.cs5010.assignment2.section2;
 
+import java.awt.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class ERSimulator implements IERSimulator, ERSimulatorConstants {
 
         arrivalQueue = new MyPriorityQueue<>();
         roomQueue = new MyPriorityQueue<>();
-        examinationQueue = new MyPriorityQueue<IPatient>(Patient.BY_DEPARTURE_TIME);
+        examinationQueue = new MyPriorityQueue<>(Patient.BY_DEPARTURE_TIME);
         patientsList = new ArrayList<>();
 
         initRoom(numRoom);
@@ -99,12 +100,47 @@ public class ERSimulator implements IERSimulator, ERSimulatorConstants {
     }
 
     /**
-     * Analyzes the average wait time for treatment. Prints to the console the overall average wait time,
-     * average wait time for patients with urgency levels from1 to 4, average wait time for patients with
-     * urgency levels 9 or 10.
+     * Runs the simulation at given start time, keeps generating patients during the given duration
+     * of simulation and updating the simulation as it goes. If the simulator is already busy, prints message
+     * to console and stops.
+     * Sets the max pause and max treatment as the given parameters to patient generator.
+     * During the simulation period, generates patients and adds to the simulator.
+     * After the simulation period, stops generating patients. When all the patients have finished treatment,
+     * reports the results.
+     *
+     * @param startTime the start time of this simulation.
+     * @param simulationTime the duration of time for generating patients.
+     * @param maxPauseMs the max pause of milliseconds between patient generation
+     * @param maxTreatmentMin the max treatment (minutes) of patient.
      */
     @Override
-    public void reportPatientsAvrgWaitAndTreatment() {
+    public void runSimulation(LocalDateTime startTime, Duration simulationTime, int maxPauseMs, int maxTreatmentMin) {
+        if (!isFree()) {
+            System.out.println("The simulator is already busy.");
+        }
+        IPatientGenerator patientGenerator = new PatientGenerator(maxPauseMs, maxTreatmentMin);
+        while (LocalDateTime.now().compareTo(startTime.plus(simulationTime)) <= 0) {
+            IPatient patient = patientGenerator.next();
+            if (patient != null) {
+                addPatient(patient);
+            } else {
+                update();
+            }
+        }
+        while (!isFree()) {
+            update();
+        }
+        Duration actualRunTime = Duration.between(startTime, LocalDateTime.now());
+        System.out.println("The simulation is over. It has run " + actualRunTime.toMinutes() + " min.");
+        System.out.println("Now analyzing the results..");
+        reportPatientsInfo();
+        reportRoomUsage(actualRunTime);
+    }
+
+     // Analyzes the average wait time for treatment. Prints to the console the overall average wait time,
+     // average wait time for patients with urgency levels from1 to 4, average wait time for patients with
+     // urgency levels 9 or 10.
+    private void reportPatientsInfo() {
         if (!isFree()) {
             System.out.println("The treatment has not ended for all patients.");
             return;
@@ -138,6 +174,7 @@ public class ERSimulator implements IERSimulator, ERSimulatorConstants {
         double urgencyNineToTenAvrgWait = (double)urgencyNineToTenWait.toMinutes() / nPatientsUrgencyNineToTen;
         double avrgTreatmentDuration = (double) overallTreatmentDuration.toMinutes() / nPatients;
 
+        System.out.println("This emergency room has treated " + nPatients + " patients.");
         System.out.println("Average overall wait = " + avrgOverallWait + " min.");
         System.out.println("Patients (urgency lv 1 - 4) waited " + urgencyOneToFourAvrgWait + " min for average.");
         System.out.println("Patients (urgency lv 9 - 10) waited " + urgencyNineToTenAvrgWait + " min for average.");
@@ -150,8 +187,7 @@ public class ERSimulator implements IERSimulator, ERSimulatorConstants {
      *
      * @param duration the duration of the simulation.
      */
-    @Override
-    public void reportRoomUsage(Duration duration) {
+    private void reportRoomUsage(Duration duration) {
         if (!isFree()) {
             System.out.println("Some examination rooms are still being used.");
             return;
@@ -167,11 +203,9 @@ public class ERSimulator implements IERSimulator, ERSimulatorConstants {
     }
 
     /**
-     * Creates a ERSimulator and a PatientGenerator. Reads in an integer from user to set the time for simulation.
-     * During the simulation period, generates patients and adds to the simulator, the pause between generation
-     * of new patients is random.
-     * After the simulation period, stops generating patients. When all the patients have finished treatment,
-     * reports the average wait of patients and the usage information of examination rooms.
+     * Creates a ERSimulator object. Reads in 4 integers from user to set the time for simulation, the number
+     * of examination rooms, the max pause between patient generation, and the max treatment duration.
+     * Then run the simulation with given parameters.
      *
      * @param args the command-line arguments
      */
@@ -179,42 +213,34 @@ public class ERSimulator implements IERSimulator, ERSimulatorConstants {
         Scanner sc = new Scanner(System.in);
         int numRoom;
         Duration simulationTime;
-        System.out.println("Please enter the time (minutes) for simulation and the number of examination rooms:");
+        int maxPause, maxTreatment;
+        System.out.print("Please enter simulation time (min), the number of examination rooms,");
+        System.out.println(" max pause between generation of patients (ms), and max treatment time (min): ");
         while (true) {
-            try{
+            try {
                 simulationTime = Duration.ofMinutes(sc.nextInt());
                 numRoom = sc.nextInt();
-                if (simulationTime.compareTo(SIMULATION_MAX_TIME) <= 0 && numRoom > 0) {
+                maxPause = sc.nextInt();
+                maxTreatment = sc.nextInt();
+                if (simulationTime.compareTo(SIMULATION_MAX_TIME) <= 0 && numRoom > 0
+                        && simulationTime.compareTo(Duration.ZERO) > 0 && maxPause > 0 && maxTreatment > 0
+                        && maxPause <= MAX_PAUSE_ADD_PATIENT && maxTreatment <= MAX_TREATMENT_MINUTES) {
                     break;
                 }
                 System.out.print("Please enter number of minutes less than " + SIMULATION_MAX_TIME.toMinutes());
                 System.out.println(" and positive number of rooms.");
+                System.out.println("Please enter max pause less than " + MAX_PAUSE_ADD_PATIENT + " ms.");
+                System.out.println("Please enter max treatment less than " + MAX_TREATMENT_MINUTES + "min.");
             } catch (InputMismatchException ex) {
                 sc.nextLine();
-                System.out.println("Please enter two integers.");
+                System.out.println("Please enter 4 integers.");
             }
         }
         sc.close();
-
-        ERSimulator simulator = new ERSimulator(numRoom);
-        IPatientGenerator patientGenerator = new PatientGenerator();
+        IERSimulator simulator = new ERSimulator(numRoom);
         LocalDateTime startTime = LocalDateTime.now();
-
         System.out.println("Starts ER simulation with " + numRoom + " rooms at " + startTime);
-        while (LocalDateTime.now().compareTo(startTime.plus(simulationTime)) <= 0) {
-            IPatient patient = patientGenerator.next();
-            if (patient != null) {
-                simulator.addPatient(patient);
-            } else {
-                simulator.update();
-            }
-        }
-        while (!simulator.isFree()) {
-            simulator.update();
-        }
-
-        simulator.reportPatientsAvrgWaitAndTreatment();
-        simulator.reportRoomUsage(Duration.between(startTime, LocalDateTime.now()));
+        simulator.runSimulation(startTime, simulationTime, maxPause, maxTreatment);
     }
 
 }
