@@ -28,19 +28,15 @@ public class MyPriorityQueueTest {
 
     /**
      * Sets up the priority queue before each case test.
-     *
-     * @throws Exception
      */
     @Before
     public void setUp() throws Exception {
         myPQ = new MyPriorityQueue<>();
-        for (int i = 0; i < WORDS.length; i++) myPQ.insert(WORDS[i]);
+        for (String WORD : WORDS) myPQ.insert(WORD);
     }
 
     /**
      * Tests that MyPriorityQueue returns correct head element.
-     *
-     * @throws Exception
      */
     @Test
     public void front() throws Exception {
@@ -49,8 +45,6 @@ public class MyPriorityQueueTest {
 
     /**
      * Tests that MyPriorityQueue inserts the element to the correct position.
-     *
-     * @throws Exception
      */
     @Test
     public void insert() throws Exception {
@@ -62,8 +56,6 @@ public class MyPriorityQueueTest {
 
     /**
      * Tests that MyPriorityQueue removes and returns the head element.
-     *
-     * @throws Exception
      */
     @Test
     public void remove() throws Exception {
@@ -73,8 +65,6 @@ public class MyPriorityQueueTest {
 
     /**
      * Tests that MyPriorityQueue correctly checks if the queue is empty.
-     *
-     * @throws Exception
      */
     @Test
     public void isEmpty() throws Exception {
@@ -83,7 +73,6 @@ public class MyPriorityQueueTest {
 
     /**
      * Tests that MyPriorityQueue returns a list with contents in forward traversal order.
-     * @throws Exception
      */
     @Test
     public void testForwardTraversal() throws Exception {
@@ -97,7 +86,6 @@ public class MyPriorityQueueTest {
 
     /**
      * Tests that MyPriorityQueue returns a list with contents in backward traversal order.
-     * @throws Exception
      */
     @Test
     public void testReverseTraversal() throws Exception {
@@ -127,20 +115,20 @@ public class MyPriorityQueueTest {
 
     @Test
     public void testPatientQueue() throws Exception {
-        IPriorityQueue<Patient> patientQueue = new MyPriorityQueue<>();
+        IPriorityQueue<IPatient> patientQueue = new MyPriorityQueue<>();
 
-        Patient p1 = new Patient(LocalDateTime.now(), 8, Duration.ofMinutes(1), 1);
+        IPatient p1 = new Patient(LocalDateTime.now(), 8, Duration.ofMinutes(1), 1);
         patientQueue.insert(p1);
-        Patient p2 = new Patient(LocalDateTime.now(), 2, Duration.ofMinutes(1), 2);
+        IPatient p2 = new Patient(LocalDateTime.now(), 2, Duration.ofMinutes(1), 2);
         patientQueue.insert(p2);
-        Patient p3 = new Patient(LocalDateTime.now(), 1, Duration.ofMinutes(1), 3);
+        IPatient p3 = new Patient(LocalDateTime.now(), 1, Duration.ofMinutes(1), 3);
         patientQueue.insert(p3);
-        Patient p4 = new Patient(LocalDateTime.now(), 5, Duration.ofMinutes(1), 4);
+        IPatient p4 = new Patient(LocalDateTime.now(), 5, Duration.ofMinutes(1), 4);
         patientQueue.insert(p4);
-        Patient p5 = new Patient(LocalDateTime.now(), 2, Duration.ofMinutes(1), 5);
+        IPatient p5 = new Patient(LocalDateTime.now(), 2, Duration.ofMinutes(1), 5);
         patientQueue.insert(p5);
 
-        List<Patient> patientList = patientQueue.testForwardTraversal();
+        List<IPatient> patientList = patientQueue.testForwardTraversal();
         assertTrue("p3 should be 1st priority patient", patientList.get(0).equals(p3));
         assertTrue("p2 should be 2nd priority patient", patientList.get(1).equals(p2));
         assertTrue("p5 should be 3rd priority patient", patientList.get(2).equals(p5));

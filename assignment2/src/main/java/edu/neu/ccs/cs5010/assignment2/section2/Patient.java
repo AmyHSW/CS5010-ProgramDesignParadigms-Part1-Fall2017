@@ -18,12 +18,12 @@ import java.util.Random;
  *
  * @author Shuwan Huang
  */
-public class Patient implements IPatient, Comparable<Patient>, ERSimulatorConstants {
+public class Patient implements IPatient, ERSimulatorConstants {
 
     /**
      * Compares patients according to their departure time.
      */
-    public static final Comparator<Patient> BY_DEPARTURE_TIME = new ByDepartureTime();
+    public static final Comparator<IPatient> BY_DEPARTURE_TIME = new ByDepartureTime();
 
     private final LocalDateTime arrivalTime;
     private final int urgencyLevel;
@@ -32,22 +32,23 @@ public class Patient implements IPatient, Comparable<Patient>, ERSimulatorConsta
 
     private LocalDateTime departureTime;
     private Duration waitDuration;
-    private ExaminationRoom room;
+    private IExaminationRoom room;
 
     /**
-     * Constructs a new Patient with the provided arrivalTime, urgencyLevel, and treatTime.
+     * Constructs a new Patient with the provided arrivalTime, urgencyLevel, and treatmentDuration.
      *
      * @param arrivalTime the time when Patient arrived.
      * @param urgencyLevel the urgency rating of Patient with 1 the highest priority and 10 the lowest.
-     * @param treatTime the time it takes to treat the Patient.
-     * @throws IllegalArgumentException if arrivalTime or treatTime is null, or urgency level is not between 1 and 10.
+     * @param treatmentDuration the duration of treatment of this patient.
+     * @throws IllegalArgumentException if arrivalTime or treatmentDuration is null.
+     * @throws InvalidUrgencyLevelException if urgency level is not between 1 to 10.
      */
-    public Patient(LocalDateTime arrivalTime, int urgencyLevel, Duration treatTime, int id) {
+    public Patient(LocalDateTime arrivalTime, int urgencyLevel, Duration treatmentDuration, int id) {
         if (arrivalTime == null) {
             throw new IllegalArgumentException("arrivalTime is null.");
         }
 
-        if (treatTime == null) {
+        if (treatmentDuration == null) {
             throw new IllegalArgumentException("treatTime is null.");
         }
 
@@ -57,7 +58,7 @@ public class Patient implements IPatient, Comparable<Patient>, ERSimulatorConsta
 
         this.arrivalTime = arrivalTime;
         this.urgencyLevel = urgencyLevel;
-        this.treatmentDuration = treatTime;
+        this.treatmentDuration = treatmentDuration;
         this.id = id;
 
         room = null;
@@ -66,10 +67,10 @@ public class Patient implements IPatient, Comparable<Patient>, ERSimulatorConsta
     }
 
     // compare patients according to their departure time.
-    private static class ByDepartureTime implements Comparator<Patient> {
+    private static class ByDepartureTime implements Comparator<IPatient> {
         @Override
-        public int compare(Patient a, Patient b) {
-            return a.departureTime.compareTo(b.departureTime);
+        public int compare(IPatient a, IPatient b) {
+            return a.getDepartureTime().compareTo(b.getDepartureTime());
         }
     }
 
@@ -78,14 +79,20 @@ public class Patient implements IPatient, Comparable<Patient>, ERSimulatorConsta
      *
      * @param room the ExaminationRoom where patient gets treated.
      * @param startTime the time when patient starts examination.
-     * @throws IllegalArgumentException if room is null.
+     * @throws IllegalArgumentException if room or startTime is null.
+     * @throws InvalidStartTimeException if start time is earlier than arrival time.
      */
     @Override
-    public void startExamination(ExaminationRoom room, LocalDateTime startTime) {
+    public void startExamination(IExaminationRoom room, LocalDateTime startTime) {
         if (room == null) {
             throw new IllegalArgumentException("Examination room is null.");
         }
-        validateStartTime(startTime);
+        if (startTime == null) {
+            throw new IllegalArgumentException("startTime is null.");
+        }
+        if (startTime.compareTo(arrivalTime) < 0) {
+            throw new InvalidStartTimeException("startTime is earlier than arrivalTime.");
+        }
 
         departureTime = startTime.plus(treatmentDuration);
         waitDuration = Duration.between(arrivalTime, startTime);
@@ -124,7 +131,7 @@ public class Patient implements IPatient, Comparable<Patient>, ERSimulatorConsta
      * @return the ExaminationRoom where this patient gets treated.
      */
     @Override
-    public ExaminationRoom getRoom() {
+    public IExaminationRoom getRoom() {
         return room;
     }
 
@@ -146,16 +153,6 @@ public class Patient implements IPatient, Comparable<Patient>, ERSimulatorConsta
         return waitDuration;
     }
 
-    // validates the start time of examination so that it is always later than arrival time.
-    private void validateStartTime(LocalDateTime startTime) {
-        if (startTime == null) {
-            throw new IllegalArgumentException("startTime is null.");
-        }
-        if (startTime.compareTo(arrivalTime) < 0) {
-            throw new InvalidStartTimeException("startTime is earlier than arrivalTime.");
-        }
-    }
-
     /**
      * The patient with lower urgencyLevel has higher priority.
      * If two patients have same urgencyLevel, the one arrived earlier than the other
@@ -165,11 +162,11 @@ public class Patient implements IPatient, Comparable<Patient>, ERSimulatorConsta
      *         the value 0 if this patient and that have equal priority.
      */
     @Override
-    public int compareTo(Patient that) {
-        if (this.urgencyLevel != that.urgencyLevel) {
-            return this.urgencyLevel - that.urgencyLevel;
+    public int compareTo(IPatient that) {
+        if (this.urgencyLevel != that.getUrgencyLevel()) {
+            return this.urgencyLevel - that.getUrgencyLevel();
         } else {
-            return this.arrivalTime.compareTo(that.arrivalTime);
+            return this.arrivalTime.compareTo(((Patient)that).arrivalTime);
         }
     }
 

@@ -84,7 +84,7 @@ public class ERSimulatorTest {
         assertFalse("examQueue is empty but it should not be", simulator.examinationQueue.isEmpty());
         assertTrue("simulator should be treating p1 but it is not", simulator.examinationQueue.front().equals(p1));
 
-        List<Patient> patientList = simulator.arrivalQueue.testForwardTraversal();
+        List<IPatient> patientList = simulator.arrivalQueue.testForwardTraversal();
         assertTrue("there should be 4 patients on the queue", patientList.size() == 4);
         assertTrue("p3 should be 1st priority patient", patientList.get(0).equals(p3));
         assertTrue("p2 should be 2nd priority patient", patientList.get(1).equals(p2));

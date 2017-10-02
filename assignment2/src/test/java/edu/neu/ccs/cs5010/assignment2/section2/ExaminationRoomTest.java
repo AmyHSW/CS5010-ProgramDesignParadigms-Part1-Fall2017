@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
  */
 public class ExaminationRoomTest {
 
-    private ExaminationRoom room = null;
+    private IExaminationRoom room = null;
 
     /**
      * Creates a new ExaminationRoom object before each test.
@@ -47,7 +47,7 @@ public class ExaminationRoomTest {
      */
     @Test
     public void testCompareTo() throws Exception {
-        ExaminationRoom other = new ExaminationRoom();
+        IExaminationRoom other = new ExaminationRoom();
         other.addBusyTime(Duration.ofMinutes(20));
         assertTrue("examination rooms are not compared by busy time", room.compareTo(other) < 0);
     }
@@ -59,7 +59,7 @@ public class ExaminationRoomTest {
     public void testEquals() throws Exception {
         room.addBusyTime(Duration.ofMinutes(20));
 
-        ExaminationRoom other = new ExaminationRoom();
+        IExaminationRoom other = new ExaminationRoom();
         other.addBusyTime(Duration.ofMinutes(20));
 
         assertTrue("equals does not return true for equal rooms", room.equals(other));
@@ -72,7 +72,7 @@ public class ExaminationRoomTest {
     public void testHashCode() throws Exception {
         room.addBusyTime(Duration.ofMinutes(20));
 
-        ExaminationRoom other = new ExaminationRoom();
+        IExaminationRoom other = new ExaminationRoom();
         other.addBusyTime(Duration.ofMinutes(20));
 
         assertTrue("equal rooms should have the same hash code", room.hashCode() == other.hashCode());

@@ -10,15 +10,23 @@ import java.util.Scanner;
 /**
  * The <code>ERSimulator</code> class models the treatment of patients in a hospital emergency room.
  *
+ * When a patient arrives, it will firstly be added to the arrival queue. The simulator constantly checks if
+ * any patient finishes treatment at current local time. When a patient finishes examination, it will be removed
+ * from examination queue, and the corresponding room will be added to the room queue. If the arrival queue
+ * is not empty, the program will pick the patient with highest priority and start examination on that patient.
+ *
+ * At the end of simulation, the ERSimulator will analyze and print to console the average wait of patients
+ * for treatment and the usage information of examination rooms.
+ *
  * @author Shuwan Huang
  */
-public class ERSimulator implements ERSimulatorConstants {
+public class ERSimulator implements IERSimulator, ERSimulatorConstants {
 
     // set protected only for testing!!
-    protected final IPriorityQueue<Patient> arrivalQueue;
-    protected final IPriorityQueue<ExaminationRoom> roomQueue;
-    protected final IPriorityQueue<Patient> examinationQueue;
-    private final List<Patient> patientsList;
+    protected final IPriorityQueue<IPatient> arrivalQueue;
+    protected final IPriorityQueue<IExaminationRoom> roomQueue;
+    protected final IPriorityQueue<IPatient> examinationQueue;
+    private final List<IPatient> patientsList;
 
     /**
      * Constructs a new ERSimulator with given number of examination rooms.
@@ -32,7 +40,7 @@ public class ERSimulator implements ERSimulatorConstants {
 
         arrivalQueue = new MyPriorityQueue<>();
         roomQueue = new MyPriorityQueue<>();
-        examinationQueue = new MyPriorityQueue<>(Patient.BY_DEPARTURE_TIME);
+        examinationQueue = new MyPriorityQueue<IPatient>(Patient.BY_DEPARTURE_TIME);
         patientsList = new ArrayList<>();
 
         initRoom(numRoom);
@@ -48,7 +56,8 @@ public class ERSimulator implements ERSimulatorConstants {
      * Adds a patient to this simulator. Updates the examination queue and room queue after addition of patient.
      * @param patient the Patient to be added.
      */
-    public void addPatient(Patient patient) {
+    @Override
+    public void addPatient(IPatient patient) {
         arrivalQueue.insert(patient);
         System.out.println((char)27 + "[31mAdded to line: " + (char)27 + "[0m" + patient);
         patientsList.add(patient);
@@ -59,6 +68,7 @@ public class ERSimulator implements ERSimulatorConstants {
      * Checks if all the patients have been treated.
      * @return true if all the patients have finished treatment; false otherwise.
      */
+    @Override
     public boolean isFree() {
         return examinationQueue.isEmpty() && arrivalQueue.isEmpty();
     }
@@ -68,18 +78,19 @@ public class ERSimulator implements ERSimulatorConstants {
      * waiting on the arrival queue while examination room is available, start examination on the patient
      * and add the patient to examination queue.
      */
+    @Override
     public void update() {
         LocalDateTime now = LocalDateTime.now();
 
         while (!examinationQueue.isEmpty() && examinationQueue.front().getDepartureTime().compareTo(now) <= 0) {
-            Patient patient = examinationQueue.remove();
+            IPatient patient = examinationQueue.remove();
             System.out.println(now.toLocalTime());
             System.out.println((char)27 + "[34mFinished treating patient (ID-" + patient.getID() + ")" + (char)27 + "[0m");
             roomQueue.insert(patient.getRoom());
         }
 
         while (!roomQueue.isEmpty() && !arrivalQueue.isEmpty()) {
-            Patient patient = arrivalQueue.front();
+            IPatient patient = arrivalQueue.front();
             patient.startExamination(roomQueue.remove(), now);
             System.out.println((char)27 + "[32mStarted treating patient (ID-" + patient.getID() + ")" + (char)27 + "[0m");
             patient.getRoom().addBusyTime(patient.getTreatmentDuration());
@@ -92,6 +103,7 @@ public class ERSimulator implements ERSimulatorConstants {
      * average wait time for patients with urgency levels from1 to 4, average wait time for patients with
      * urgency levels 9 or 10.
      */
+    @Override
     public void reportPatientsAvrgWaitAndTreatment() {
         if (!isFree()) {
             System.out.println("The treatment has not ended for all patients.");
@@ -107,7 +119,7 @@ public class ERSimulator implements ERSimulatorConstants {
         int nPatientsUrgencyOneToFour = 0;
         int nPatientsUrgencyNineToTen = 0;
 
-        for (Patient patient : patientsList) {
+        for (IPatient patient : patientsList) {
             int urgency = patient.getUrgencyLevel();
             Duration wait = patient.getWaitDuration();
             overallWait = overallWait.plus(wait);
@@ -135,18 +147,20 @@ public class ERSimulator implements ERSimulatorConstants {
     /**
      * Analyzes the usage of examination rooms. For each examination room, prints to the console the
      * number of patients treated in the room, and the percentage of time when the room is busy.
+     *
      * @param duration the duration of the simulation.
      */
+    @Override
     public void reportRoomUsage(Duration duration) {
         if (!isFree()) {
             System.out.println("Some examination rooms are still being used.");
             return;
         }
 
-        List<ExaminationRoom> roomList = roomQueue.testForwardTraversal();
+        List<IExaminationRoom> roomList = roomQueue.testForwardTraversal();
         int roomID = 0;
         long totalMinutes = duration.toMinutes();
-        for (ExaminationRoom room : roomList) {
+        for (IExaminationRoom room : roomList) {
             System.out.println("(" + ++roomID  + ") " + room
                                + ": busy% = " + (double)room.getBusyTime().toMinutes() / totalMinutes);
         }
@@ -183,12 +197,12 @@ public class ERSimulator implements ERSimulatorConstants {
         sc.close();
 
         ERSimulator simulator = new ERSimulator(numRoom);
-        PatientGenerator patientGenerator = new PatientGenerator();
+        IPatientGenerator patientGenerator = new PatientGenerator();
         LocalDateTime startTime = LocalDateTime.now();
 
         System.out.println("Starts ER simulation with " + numRoom + " rooms at " + startTime);
         while (LocalDateTime.now().compareTo(startTime.plus(simulationTime)) <= 0) {
-            Patient patient = patientGenerator.next();
+            IPatient patient = patientGenerator.next();
             if (patient != null) {
                 simulator.addPatient(patient);
             } else {

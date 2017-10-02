@@ -8,7 +8,12 @@ import java.time.LocalDateTime;
  *
  * @author Shuwan Huang
  */
-public interface IPatient {
+public interface IPatient extends Comparable<IPatient> {
+
+    /**
+     * Compares patients according to their departure time.
+     */
+    Comparable<IPatient> BY_DEPARTURE_TIME = null;
 
     /**
      * Starts examination for the patient with the ExaminationRoom assigned and startTime set.
@@ -16,7 +21,7 @@ public interface IPatient {
      * @param room the ExaminationRoom where patient gets treated.
      * @param start the time when patient starts examination.
      */
-    void startExamination(ExaminationRoom room, LocalDateTime start);
+    void startExamination(IExaminationRoom room, LocalDateTime start);
 
     /**
      * Gets the id of this patient.
@@ -40,7 +45,7 @@ public interface IPatient {
      * Gets the ExaminationRoom where this patient gets treated.
      * @return the ExaminationRoom where this patient gets treated.
      */
-    ExaminationRoom getRoom();
+    IExaminationRoom getRoom();
 
     /**
      * Returns the departure time of this patient.

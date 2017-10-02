@@ -31,7 +31,7 @@ public class PatientGeneratorTest {
     @Test
     public void testNext() throws Exception {
         patientGenerator.lastTime = LocalDateTime.now().minusHours(1);
-        Patient patient = patientGenerator.next();
+        IPatient patient = patientGenerator.next();
         assertTrue(patient != null);
         assertTrue("id of first patient should be 1 but it is not", patient.getID() == 1);
 

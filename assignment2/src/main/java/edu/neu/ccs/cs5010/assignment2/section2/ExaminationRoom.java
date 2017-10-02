@@ -12,7 +12,7 @@ import java.time.Duration;
  *
  * @author Shuwan Huang
  */
-public class ExaminationRoom implements IExaminationRoom, Comparable<ExaminationRoom> {
+public class ExaminationRoom implements IExaminationRoom {
 
     private Duration busyTime; // the length of time when this room is busy
     private int nPatients; // number of patients treated in this room
@@ -53,8 +53,8 @@ public class ExaminationRoom implements IExaminationRoom, Comparable<Examination
      * @return a negative integer if this examination room is less busy than the other; the value 0 if they are
      *         equally busy; a positive integer if this examination room is busier than the other.
      */
-    public int compareTo(ExaminationRoom other) {
-        return this.busyTime.compareTo(other.busyTime);
+    public int compareTo(IExaminationRoom other) {
+        return this.busyTime.compareTo(other.getBusyTime());
     }
 
     /**

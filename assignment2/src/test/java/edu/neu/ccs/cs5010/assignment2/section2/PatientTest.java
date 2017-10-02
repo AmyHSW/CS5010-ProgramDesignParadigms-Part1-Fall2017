@@ -105,7 +105,7 @@ public class PatientTest {
      */
     @Test(expected = InvalidUrgencyLevelException.class)
     public void testThrowsInvalidUrgencyLevelException() throws Exception {
-        Patient other = new Patient(arrival, 0, treatTime, id + 1);
+        IPatient other = new Patient(arrival, 0, treatTime, id + 1);
     }
 
     /**
@@ -113,7 +113,7 @@ public class PatientTest {
      */
     @Test(expected = InvalidStartTimeException.class)
     public void testThrowsInvalidStartTimeException() throws Exception {
-        ExaminationRoom room = new ExaminationRoom();
+        IExaminationRoom room = new ExaminationRoom();
         patient.startExamination(room, arrival.minusMinutes(20));
     }
 
@@ -122,7 +122,7 @@ public class PatientTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testThrowsIllegalArgumentExceptionForNullArrival() throws Exception {
-        Patient other = new Patient(null, urgency, treatTime, id);
+        IPatient other = new Patient(null, urgency, treatTime, id);
     }
 
     /**
@@ -130,7 +130,7 @@ public class PatientTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testThrowsIllegalArgumentExceptionForNullTreatment() throws Exception {
-        Patient other = new Patient(arrival, urgency, null, id);
+        IPatient other = new Patient(arrival, urgency, null, id);
     }
 
     /**
@@ -156,7 +156,7 @@ public class PatientTest {
     public void testEquals() throws Exception {
         assertFalse("equals returns true when compare to null", patient.equals(null));
 
-        Patient other = new Patient(arrival, urgency, treatTime, id);
+        IPatient other = new Patient(arrival, urgency, treatTime, id);
         assertTrue("equals does not return true for equal patients", patient.equals(other));
     }
 
@@ -165,7 +165,7 @@ public class PatientTest {
      */
     @Test
     public void testEqualsOnDifferentUrgency() throws Exception {
-        Patient other = new Patient(arrival, urgency + 1, treatTime, id);
+        IPatient other = new Patient(arrival, urgency + 1, treatTime, id);
         assertTrue("equals returns true for different patients", !patient.equals(other));
     }
 
@@ -174,7 +174,7 @@ public class PatientTest {
      */
     @Test
     public void testEqualsOnDifferentArrival() throws Exception {
-        Patient other = new Patient(arrival.minusMinutes(10), urgency, treatTime, id);
+        IPatient other = new Patient(arrival.minusMinutes(10), urgency, treatTime, id);
         assertTrue("equals returns true for different patients", !patient.equals(other));
     }
 
@@ -183,7 +183,7 @@ public class PatientTest {
      */
     @Test
     public void testEqualsOnDifferentTreatTime() throws Exception {
-        Patient other = new Patient(arrival, urgency, treatTime.plusMinutes(5), id);
+        IPatient other = new Patient(arrival, urgency, treatTime.plusMinutes(5), id);
         assertTrue("equals returns true for different patients", !patient.equals(other));
     }
 
@@ -192,7 +192,7 @@ public class PatientTest {
      */
     @Test
     public void testHashCode() throws Exception {
-        Patient other = new Patient(arrival, urgency, treatTime, id);
+        IPatient other = new Patient(arrival, urgency, treatTime, id);
         assertTrue("equal patients should have the same hashcode",
                    patient.hashCode() == other.hashCode());
     }

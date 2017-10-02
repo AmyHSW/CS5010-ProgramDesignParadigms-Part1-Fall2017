@@ -12,7 +12,7 @@ import java.util.Random;
  *
  * @author Shuwan Huang
  */
-public class PatientGenerator implements ERSimulatorConstants {
+public class PatientGenerator implements IPatientGenerator, ERSimulatorConstants {
 
     private int patientID; // starting at 1
     private final Random rd; // a Random object to produce random parameters
@@ -35,7 +35,7 @@ public class PatientGenerator implements ERSimulatorConstants {
      *
      * @return a new Patient object.
      */
-    public Patient next() {
+    public IPatient next() {
         if (Duration.between(lastTime, LocalDateTime.now()).toMillis() < numPauseMillis) {
             return null;
         }

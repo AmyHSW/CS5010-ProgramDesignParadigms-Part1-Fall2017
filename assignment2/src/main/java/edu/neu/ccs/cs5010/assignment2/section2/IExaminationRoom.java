@@ -7,7 +7,7 @@ import java.time.Duration;
  *
  * @author Shuwan Huang
  */
-public interface IExaminationRoom {
+public interface IExaminationRoom extends Comparable<IExaminationRoom> {
 
     /**
      * Adds busy time to this examination room and increments the number of patients by one.
@@ -20,4 +20,5 @@ public interface IExaminationRoom {
      * @return the busy time of this examination room.
      */
     Duration getBusyTime();
+
 }
