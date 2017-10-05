@@ -1,6 +1,5 @@
 package edu.neu.ccs.cs5010.assignment2.section2;
 
-import java.awt.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -66,15 +65,6 @@ public class ERSimulator implements IERSimulator, ERSimulatorConstants {
     }
 
     /**
-     * Checks if all the patients have been treated.
-     * @return true if all the patients have finished treatment; false otherwise.
-     */
-    @Override
-    public boolean isFree() {
-        return examinationQueue.isEmpty() && arrivalQueue.isEmpty();
-    }
-
-    /**
      * Updates the examination queue and room queue based on the current local time. If there are patients
      * waiting on the arrival queue while examination room is available, start examination on the patient
      * and add the patient to examination queue.
@@ -97,6 +87,15 @@ public class ERSimulator implements IERSimulator, ERSimulatorConstants {
             patient.getRoom().addBusyTime(patient.getTreatmentDuration());
             examinationQueue.insert(arrivalQueue.remove());
         }
+    }
+
+    /**
+     * Checks if all the patients have been treated.
+     * @return true if all the patients have finished treatment; false otherwise.
+     */
+    @Override
+    public boolean isFree() {
+        return examinationQueue.isEmpty() && arrivalQueue.isEmpty();
     }
 
     /**
