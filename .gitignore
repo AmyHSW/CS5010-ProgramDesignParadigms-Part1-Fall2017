@@ -4,14 +4,25 @@
 # Output directories #
 Assignment1/target/
 assignment2/target/
+assignment3/target/
 
 # IntelliJ config files #
 Assignment1/.idea/
 Assignment1/Assignment1.iml
 assignment2/.idea/
 assignment2/assignment2.iml
+assignment3/.idea/
+assignment3/assignment3.iml
 
 # OS generated files #
 .DS_Store
 Assignment1/.DS_Store
 assignment2/.DS_Store
+assignment3/.DS_Store
+
+# assignment3 sample files #
+email-template.txt
+Flight3FromVancouverToSeattle.csv
+Flight363FromSeattleToBoston.csv
+
+
