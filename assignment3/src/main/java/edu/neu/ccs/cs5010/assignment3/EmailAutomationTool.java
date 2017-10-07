@@ -6,15 +6,13 @@ public class EmailAutomationTool {
     private final EmailGenerator emailGenerator;
 
     public EmailAutomationTool(String[] args) {
-        ArgumentParser argumentParser = new ArgumentParser(args);
+        ArgumentsParser argumentParser = new ArgumentsParser(args);
         if (!argumentParser.isLegalFormat()) {
-            throw new InvalidInputFormatException(argumentParser.getErrorMessage());
+            System.out.println(argumentParser.getErrorMessage());
+            throw new InvalidInputFormatException("command-line arguments are in wrong format");
         }
         memberDB = new MemberDatabase(argumentParser.getCsvFile());
-        emailGenerator = new EmailGenerator(argumentParser.getEmailTemplate(),
-                                            argumentParser.getEvent(),
-                                            argumentParser.getDepartureCity(),
-                                            argumentParser.getArrivalCity());
+        emailGenerator = new EmailGenerator(argumentParser.getEmailTemplate(), argumentParser.getFlightInfo());
     }
 
     public void automateEmailGeneration() {

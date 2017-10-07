@@ -1,11 +1,10 @@
 package edu.neu.ccs.cs5010.assignment3;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,25 +15,26 @@ public class EmailGenerator implements IEmailGenerator {
     private final Map<String, String> flightInfo;
     private final String template;
 
-    public EmailGenerator(String templateFileName, String event, String departure, String destination) {
+    public EmailGenerator(String templateFileName, Map<String, String> flightInfo) {
         template = parseTemplate(templateFileName);
 
-        flightInfo = new HashMap<>();
-        flightInfo.put("event", event);
-        flightInfo.put("departure-city", departure);
-        flightInfo.put("destination-city", destination);
+        this.flightInfo = flightInfo;
         flightInfo.put("Date", (new SimpleDateFormat()).format(Calendar.getInstance().getTime()));
     }
 
     private String parseTemplate(String templateFileName) {
-        String str = null;
-        try {
-            str = new String(Files.readAllBytes(Paths.get(templateFileName)));
+        StringBuilder sb = new StringBuilder();
+        try (BufferedReader br = new BufferedReader(new FileReader(templateFileName))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+                sb.append(System.getProperty("line.separator"));
+            }
         } catch (IOException ioe) {
             System.out.println("Something went wrong!: " + ioe.getMessage());
             ioe.printStackTrace();
         }
-        return str;
+        return sb.toString();
     }
 
     @Override

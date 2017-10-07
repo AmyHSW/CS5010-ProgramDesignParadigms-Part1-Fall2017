@@ -14,10 +14,11 @@ public class EmailGeneratorTest {
 
     @Before
     public void setUp() throws Exception {
-        emailGenerator = new EmailGenerator("email-template.txt",
-                                            "arrival",
-                                            "Vancouver",
-                                            "Seattle");
+        Map<String, String> flightInfo = new HashMap<>();
+        flightInfo.put("event", "arrival");
+        flightInfo.put("departure-city", "Vancouver");
+        flightInfo.put("destination-city", "Seattle");
+        emailGenerator = new EmailGenerator("email-template.txt", flightInfo);
     }
 
     @Test
