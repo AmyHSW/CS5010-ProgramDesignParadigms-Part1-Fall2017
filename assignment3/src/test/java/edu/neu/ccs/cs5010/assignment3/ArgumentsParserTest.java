@@ -7,10 +7,19 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 
+/**
+ * The <code>ArgumentsParserTest</code> is a test class for <code>ArgumentsParser</code>.
+ *
+ * @author Shuwan Huang
+ */
 public class ArgumentsParserTest {
 
     private IArgumentsParser legalArguments1, legalArguments2, illegalArguments1, illegalArguments2;
 
+    /**
+     * Initializes four ArgumentsParser with four different String array before each test.
+     * Two of them are constructed with legal arguments, the other two are constructed with illegal arguments.
+     */
     @Before
     public void setUp() throws Exception {
         String[] args1 = {
@@ -27,14 +36,15 @@ public class ArgumentsParserTest {
         };
         String[] args3 = {
                 "--email-template", "--output-dir",
-                "--csv-file", "Flight363FromSeattleToBoston.csv",
+                "--csv-file", "Flight363FromSeattleToBoston",
                 "--event", "arrival"
         };
         String[] args4 = {
-                "--email-template", "email-template.txt",
+                "--email-template", "email-template",
                 "--output-dir", "emails",
                 "--csv-file", "Flight363.csv",
-                "--event", "arrival"
+                "--event", "unknown",
+                "--output"
         };
         legalArguments1 = new ArgumentsParser(args1);
         legalArguments2 = new ArgumentsParser(args2);
@@ -42,6 +52,9 @@ public class ArgumentsParserTest {
         illegalArguments2 = new ArgumentsParser(args4);
     }
 
+    /**
+     * Tests that isLegalFormat returns correct answer for both legal arguments and illegal arguments.
+     */
     @Test
     public void isLegalFormat() throws Exception {
         assertTrue(legalArguments1.isLegalFormat());
@@ -50,6 +63,10 @@ public class ArgumentsParserTest {
         assertTrue(!illegalArguments2.isLegalFormat());
     }
 
+    /**
+     * Tests that getErrorMessage returns null for legal arguments, and a String of error message
+     * for illegal arguments.
+     */
     @Test
     public void getErrorMessage() throws Exception {
         assertTrue(legalArguments1.getErrorMessage() == null);
@@ -61,6 +78,10 @@ public class ArgumentsParserTest {
         System.out.println(illegalArguments2.getErrorMessage());
     }
 
+    /**
+     * Tests that getEmailTemplate returns the correct filename for legal arguments,
+     * and null for illegal arguments.
+     */
     @Test
     public void getEmailTemplate() throws Exception {
         assertTrue("legalArguments1 returns wrong email template",
@@ -71,8 +92,12 @@ public class ArgumentsParserTest {
         assertTrue(illegalArguments2.getEmailTemplate() == null);
     }
 
+    /**
+     * Tests that getOutputDir returns the correct folder name for legal arguments,
+     * and null for illegal arguments.
+     */
     @Test
-    public void getOutputDirection() throws Exception {
+    public void getOutputDir() throws Exception {
         assertTrue("legalArguments1 returns wrong output dir",
                    legalArguments1.getOutputDir().equals("emails"));
         assertTrue("legalArguments2 returns wrong output dir",
@@ -81,6 +106,10 @@ public class ArgumentsParserTest {
         assertTrue(illegalArguments2.getOutputDir() == null);
     }
 
+    /**
+     * Tests that getCsvFile returns the correct filename for legal arguments,
+     * and null for illegal arguments.
+     */
     @Test
     public void getCsvFile() throws Exception {
         assertTrue(legalArguments1.getCsvFile().equals("Flight363FromSeattleToBoston.csv"));
@@ -89,6 +118,10 @@ public class ArgumentsParserTest {
         assertTrue(illegalArguments2.getCsvFile() == null);
     }
 
+    /**
+     * Tests that getFlightInfo returns a map for legal arguments that contains correct information,
+     * and null for illegal arguments.
+     */
     @Test
     public void getFlightInfo() throws Exception {
         Map<String, String> info = legalArguments1.getFlightInfo();

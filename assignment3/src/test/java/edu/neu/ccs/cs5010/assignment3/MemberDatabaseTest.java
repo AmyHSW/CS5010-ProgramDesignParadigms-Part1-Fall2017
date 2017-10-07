@@ -3,6 +3,7 @@ package edu.neu.ccs.cs5010.assignment3;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -29,7 +30,7 @@ public class MemberDatabaseTest {
      * in csv file. Tests that each member object contains attributes provided in the csv file.
      */
     @Test
-    public void testGetMemberList() throws Exception {
+    public void getMemberList() throws Exception {
         List<IMember> memberList = memberDB.getMemberList();
         assertTrue(memberList.size() == 3);
         for (IMember member : memberDB.getMemberList()) {
@@ -46,6 +47,17 @@ public class MemberDatabaseTest {
 
             assertTrue(!member.hasAttribute("Age"));
         }
+    }
+
+    /**
+     * Tests that MemberDatabase throws an EmptyCsvFileException for an empty csv file.
+     */
+    @Test(expected = EmptyCsvFileException.class)
+    public void testThrowsEmptyCsvFileException() throws Exception {
+        File empty = new File("empty.csv");
+        empty.createNewFile();
+        IMemberDatabase db = new MemberDatabase("empty.csv");
+
     }
 
 }
