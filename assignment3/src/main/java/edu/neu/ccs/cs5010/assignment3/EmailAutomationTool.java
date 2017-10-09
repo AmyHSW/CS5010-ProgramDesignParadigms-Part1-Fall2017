@@ -15,10 +15,10 @@ import java.util.regex.Pattern;
  * The <code>EmailAutomationTool</code> class provides a tool to automate the process of email generation.
  * The arguments that passed to the constructor should be in a legal format that contains email template filename,
  * output direction, csv filename and the event.
- *<p></p>
+ * <p></p>
  * This class uses a MemberDatabase to store the member information given in the csv file, and uses a EmailGenerator
  * to generate emails for each member given the email template.
- *<p></p>
+ * <p></p>
  * When the <code>startEmailAutomation()</code> method is called, emails will be generated per member and saved in
  * output directory. If from-email and password are provided by user, the emails will be sent right away.
  *

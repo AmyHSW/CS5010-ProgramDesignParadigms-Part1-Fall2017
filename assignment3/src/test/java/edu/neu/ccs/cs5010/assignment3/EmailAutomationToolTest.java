@@ -28,16 +28,6 @@ public class EmailAutomationToolTest {
                 "--event", "arrival",
         };
         automation = new EmailAutomationTool(args);
-
-        String[] argsOptional = {
-                "--email-template", "email-template.txt",
-                "--output-dir", "emails",
-                "--csv-file", "Flight3FromVancouverToSeattle.csv",
-                "--event", "arrival",
-                "--from-email", "user@gmail.com",
-                "--password", "wrongpassword"
-        };
-        automationOptional = new EmailAutomationTool(argsOptional);
     }
 
     /**
@@ -63,7 +53,15 @@ public class EmailAutomationToolTest {
      */
     @Test(expected = MessagingException.class)
     public void testThrowsMessagingException() throws Exception {
-        automationOptional.startEmailAutomation();
+        String[] argsOptional = {
+                "--email-template", "email-template.txt",
+                "--output-dir", "emails",
+                "--csv-file", "Flight3FromVancouverToSeattle.csv",
+                "--event", "arrival",
+                "--from-email", "user@gmail.com",
+                "--password", "password"
+        };
+        EmailAutomationTool.main(argsOptional);
     }
 
     /**
@@ -77,7 +75,7 @@ public class EmailAutomationToolTest {
                 "--csv-file", "Flight363FromSeattleToBoston.csv",
                 "--event", "arrival"
         };
-        new EmailAutomationTool(args1);
+        EmailAutomationTool.main(args1);
     }
 
 }
