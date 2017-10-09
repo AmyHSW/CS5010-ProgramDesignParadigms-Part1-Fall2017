@@ -7,8 +7,9 @@ import java.util.regex.Pattern;
 
 /**
  * The <code>ArgumentsParser</code> class validates the format of arguments and parses the arguments
- * into information of email template, output directory, csv file and event.
- *
+ * into information of email template, output directory, csv file and event. If the arguments also contain
+ * from-email and password, parses them as well.
+ * <p></p>
  * It provides a method <code>isLegalFormat</code> to check if arguments are in legal format , and getters to
  * obtain the above information.
  *
@@ -20,6 +21,8 @@ public class ArgumentsParser implements IArgumentsParser {
     private static final String OUTPUT_DIR = "--output-dir";
     private static final String CSV_FILE = "--csv-file";
     private static final String EVENT = "--event";
+    private static final String FROM_EMAIL = "--from-email";
+    private static final String PASSWORD = "--password";
     private static final String USAGE_MSG =
             "Usage: \n\n"
             + "--email-template <file>      accepts a filename that holds the email template\n\n"
@@ -29,6 +32,9 @@ public class ArgumentsParser implements IArgumentsParser {
             + "                             a following format\n"
             + "                             Flight<id>From<departure-city>To<destination-city>.csv\n\n"
             + "--event <details>            specifies if the delay refers to departure/arrival\n\n"
+            + "--from-email <email>         (optional) accepts an email address from which the emails\n"
+            + "                             will be sent\n\n"
+            + "--password <password>        (optional) accepts the password to the email address provided\n\n"
             + "For example:\n\n"
             + "--email-template  email-template.txt  --output-dir  emails  --csv-file\n"
             + "Flight363FromSeattleToBoston.csv  --event  arrival\n";
@@ -50,6 +56,8 @@ public class ArgumentsParser implements IArgumentsParser {
         userInput.put(OUTPUT_DIR, null);
         userInput.put(CSV_FILE, null);
         userInput.put(EVENT, null);
+        userInput.put(FROM_EMAIL, null);
+        userInput.put(PASSWORD, null);
 
         errorMsg = new StringBuilder();
         flightInfo = new HashMap<>();
@@ -77,7 +85,10 @@ public class ArgumentsParser implements IArgumentsParser {
                 case EMAIL_TEMPLATE: parseEmailTemplate(args[i++]); continue;
                 case CSV_FILE: parseCsvFile(args[i++]); continue;
                 case EVENT: parseEvent(args[i++]); continue;
-                case OUTPUT_DIR: parseOutputDir(args[i++]);
+                case OUTPUT_DIR: parseOutputDir(args[i++]); continue;
+                case FROM_EMAIL: parseFromEmail(args[i++]); continue;
+                case PASSWORD: parsePassword(args[i++]); continue;
+                default:
             }
         }
     }
@@ -97,14 +108,14 @@ public class ArgumentsParser implements IArgumentsParser {
     private void parseCsvFile(String file) {
         if (!file.endsWith(".csv")) {
             errorMsg.append(CSV_FILE);
-            errorMsg.append(" argument is not a csv file;\n");
+            errorMsg.append(" argument is not a csv file\n");
             return;
         }
-        Pattern pattern = Pattern.compile("(Flight[0-9]+)From([A-Z][a-z]+)To([A-Z][a-z]+).csv");
+        Pattern pattern = Pattern.compile("Flight([0-9]+)From([A-Z][a-z]+)To([A-Z][a-z]+).csv");
         Matcher matcher = pattern.matcher(file);
         if (matcher.matches()) {
             userInput.put(CSV_FILE, file);
-            flightInfo.put("flight-number", matcher.group(1));
+            flightInfo.put("id", matcher.group(1));
             flightInfo.put("departure-city", matcher.group(2));
             flightInfo.put("destination-city", matcher.group(3));
         } else {
@@ -129,8 +140,26 @@ public class ArgumentsParser implements IArgumentsParser {
         userInput.put(OUTPUT_DIR, outputDir);
     }
 
+    // checks that if the argument is an email address, if yes, puts it in userInput map.
+    private void parseFromEmail(String fromEmail) {
+        Pattern pattern = Pattern.compile("@");
+        Matcher matcher = pattern.matcher(fromEmail);
+        if (matcher.find()) {
+            userInput.put(FROM_EMAIL, fromEmail);
+        } else {
+            errorMsg.append(FROM_EMAIL);
+            errorMsg.append(" argument does not contian an email address\n");
+        }
+    }
+
+    // puts the password in userInput map.
+    private void parsePassword(String password) {
+        userInput.put(PASSWORD, password);
+    }
+
     /**
-     * Returns true if arguments are in legal format and false otherwise.
+     * Returns true if the required information -- email template, output directory,
+     * csv file and event detail -- are provided in legal format.
      * @return true if arguments are in legal format and false otherwise.
      */
     @Override
@@ -174,13 +203,37 @@ public class ArgumentsParser implements IArgumentsParser {
     }
 
     /**
-     * Returns the name of csv file; ; null if arguments are not in legal format
-     * @return the name of csv file; ; null if arguments are not in legal format
+     * Returns the name of csv file; null if arguments are not in legal format
+     * @return the name of csv file; null if arguments are not in legal format
      */
     @Override
     public String getCsvFile() {
         if (!isLegalFormat()) return null;
         return userInput.get(CSV_FILE);
+    }
+
+    /**
+     * Returns the email address from which to send the emails; null if arguments are not in legal format or
+     * if email address is not provided.
+     * @return the email address from which to send the emails; null if arguments are not in legal format or
+     * if email address is not provided.
+     */
+    @Override
+    public String getFromEmail() {
+        if (!isLegalFormat()) return null;
+        return userInput.get(FROM_EMAIL);
+    }
+
+    /**
+     * Returns the password to the email address; null if arguments are not in legal format or if
+     * email address and password are not provided.
+     * @return the password to the email address; null if arguments are not in legal format or if
+     * email address and password are not provided.
+     */
+    @Override
+    public String getPassword() {
+        if (!isLegalFormat()) return null;
+        return userInput.get(PASSWORD);
     }
 
     /**

@@ -32,12 +32,15 @@ public class ArgumentsParserTest {
                 "--csv-file", "Flight363FromSeattleToBoston.csv",
                 "--email-template", "email-template.txt",
                 "--output-dir", "emails",
-                "--event", "arrival"
+                "--event", "arrival",
+                "--from-email", "jbutt@gmail.com",
+                "--password", "jamesbutt'sPassword"
         };
         String[] args3 = {
                 "--email-template", "--output-dir",
                 "--csv-file", "Flight363FromSeattleToBoston",
-                "--event", "arrival"
+                "--event", "arrival",
+                "--from-email", "jbuttgmail.com"
         };
         String[] args4 = {
                 "--email-template", "email-template",
@@ -119,6 +122,30 @@ public class ArgumentsParserTest {
     }
 
     /**
+     * Tests that getFromEmail returns the correct email address if it is provided in the
+     * arguments, and null if it is not provided or if arguments are in illegal format.
+     */
+    @Test
+    public void getFromEmail() throws Exception {
+        assertTrue(legalArguments1.getFromEmail() == null);
+        assertTrue(legalArguments2.getFromEmail().equals("jbutt@gmail.com"));
+        assertTrue(illegalArguments1.getFromEmail() == null);
+        assertTrue(illegalArguments2.getFromEmail() == null);
+    }
+
+    /**
+     * Tests that getPassword returns the correct password if it is provided in the
+     * arguments, and null if it is not provided or if arguments are in illegal format.
+     */
+    @Test
+    public void getPassword() throws Exception {
+        assertTrue(legalArguments1.getPassword() == null);
+        assertTrue(legalArguments2.getPassword().equals("jamesbutt'sPassword"));
+        assertTrue(illegalArguments1.getPassword() == null);
+        assertTrue(illegalArguments2.getPassword() == null);
+    }
+
+    /**
      * Tests that getFlightInfo returns a map for legal arguments that contains correct information,
      * and null for illegal arguments.
      */
@@ -128,13 +155,13 @@ public class ArgumentsParserTest {
         assertTrue(info.get("event").equals("arrival"));
         assertTrue(info.get("departure-city").equals("Seattle"));
         assertTrue(info.get("destination-city").equals("Boston"));
-        assertTrue(info.get("flight-number").equals("Flight363"));
+        assertTrue(info.get("id").equals("363"));
 
         info = legalArguments2.getFlightInfo();
         assertTrue(info.get("event").equals("arrival"));
         assertTrue(info.get("departure-city").equals("Seattle"));
         assertTrue(info.get("destination-city").equals("Boston"));
-        assertTrue(info.get("flight-number").equals("Flight363"));
+        assertTrue(info.get("id").equals("363"));
 
         assertTrue(illegalArguments1.getFlightInfo() == null);
         assertTrue(illegalArguments2.getFlightInfo() == null);

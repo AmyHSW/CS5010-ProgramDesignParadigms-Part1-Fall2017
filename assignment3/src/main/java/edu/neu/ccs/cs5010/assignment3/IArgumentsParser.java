@@ -42,10 +42,27 @@ public interface IArgumentsParser {
     String getCsvFile();
 
     /**
+     * Returns the email address from which to send the emails; null if arguments are not in legal format or
+     * if email address is not provided.
+     * @return the email address from which to send the emails; null if arguments are not in legal format or
+     * if email address is not provided.
+     */
+    String getFromEmail();
+
+    /**
+     * Returns the password to the email address; null if arguments are not in legal format or if
+     * email address and password are not provided.
+     * @return the password to the email address; null if arguments are not in legal format or if
+     * email address and password are not provided.
+     */
+    String getPassword();
+
+    /**
      * Returns a map that contains flight information parsed from arguments; null if arguments
      * are not in legal format.
      * @return a map that contains flight information parsed from arguments; null if arguments
      * are not in legal format.
      */
     Map<String, String> getFlightInfo();
+
 }
