@@ -44,7 +44,7 @@ public class EmailAutomationTool implements IEmailAutomationTool {
         ArgumentsParser argumentParser = new ArgumentsParser(args);
         if (!argumentParser.isLegalFormat()) {
             System.out.println(argumentParser.getErrorMessage());
-            throw new InvalidInputFormatException("command-line arguments are in wrong format.");
+            throw new InvalidInputFormatException("arguments are in wrong format.");
         }
         memberDB = new MemberDatabase(argumentParser.getCsvFile());
         emailGenerator = new EmailGenerator(argumentParser.getEmailTemplate(), argumentParser.getFlightInfo());

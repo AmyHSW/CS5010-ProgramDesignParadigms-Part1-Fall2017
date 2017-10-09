@@ -76,7 +76,7 @@ public class ArgumentsParser implements IArgumentsParser {
                 errorMsg.append(" cannot be recognized\n");
                 continue;
             }
-            if (args[i].startsWith("-")) {
+            if (i >= args.length || args[i].startsWith("--")) {
                 errorMsg.append(arg);
                 errorMsg.append(" was given without providing appropriate argument\n");
                 continue;
@@ -179,6 +179,9 @@ public class ArgumentsParser implements IArgumentsParser {
     @Override
     public String getErrorMessage() {
         if (isLegalFormat()) return null;
+        if (errorMsg.toString().equals("")) {
+            errorMsg.append("Some required arguments are missing! Please see below an example of input\n");
+        }
         return "Error:\n\n" + errorMsg.toString() + "\n" + USAGE_MSG;
     }
 
