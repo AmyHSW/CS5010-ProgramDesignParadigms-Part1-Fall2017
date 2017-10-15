@@ -15,12 +15,13 @@ import java.util.regex.Pattern;
  *
  * @author Shuwan Huang
  */
-public class ArgumentsParser implements IArgumentsParser {
+public class CMDHandler {
 
     private static final String EMAIL_TEMPLATE = "--email-template";
     private static final String OUTPUT_DIR = "--output-dir";
     private static final String CSV_FILE = "--csv-file";
     private static final String EVENT = "--event";
+    private static final String MODE = "--mode";
     private static final String FROM_EMAIL = "--from-email";
     private static final String PASSWORD = "--password";
     private static final String USAGE_MSG =
@@ -35,13 +36,17 @@ public class ArgumentsParser implements IArgumentsParser {
             + "--from-email <email>         (optional) accepts an email address from which the emails\n"
             + "                             will be sent\n\n"
             + "--password <password>        (optional) accepts the password to the email address provided\n\n"
+            + "--mode <mode>                (optional) accepts the mode of email automation, 1 (default mode)\n"
+            + "                             is to save emails in a folder, 2 is to send emails to passengers\n\n"
             + "For example:\n\n"
             + "--email-template  email-template.txt  --output-dir  emails  --csv-file\n"
             + "Flight363FromSeattleToBoston.csv  --event  arrival\n";
 
+
+    private static final int DEFAULT_MODE = 1;
+
     private final Map<String, String> userInput; // stores the user-input arguments
     private final StringBuilder errorMsg; // stores error message
-    private final Map<String, String> flightInfo;
 
     /**
      * Constructs a new ArgumentParser with the given String array. Initializes the userInput as a HashMap
@@ -50,17 +55,17 @@ public class ArgumentsParser implements IArgumentsParser {
      *
      * @param args a String array
      */
-    public ArgumentsParser(String[] args) {
+    public CMDHandler(String[] args) {
         userInput = new HashMap<>();
         userInput.put(EMAIL_TEMPLATE, null);
         userInput.put(OUTPUT_DIR, null);
         userInput.put(CSV_FILE, null);
         userInput.put(EVENT, null);
+        userInput.put(MODE, null);
         userInput.put(FROM_EMAIL, null);
         userInput.put(PASSWORD, null);
 
         errorMsg = new StringBuilder();
-        flightInfo = new HashMap<>();
 
         parseArgs(args);
     }
@@ -68,93 +73,98 @@ public class ArgumentsParser implements IArgumentsParser {
     // parses the arguments and puts them in map if arguments are in legal format.
     private void parseArgs(String[] args) {
         int i = 0;
+
         while (i < args.length) {
+
             String arg = args[i++];
-            if (!arg.startsWith("--")) continue;
-            if (!userInput.containsKey(arg)) {
+
+            if (!isHeader(arg)) continue;
+
+            if (!isRecognizable(arg)) {
                 errorMsg.append(arg);
                 errorMsg.append(" cannot be recognized\n");
                 continue;
             }
-            if (i >= args.length || args[i].startsWith("--")) {
+
+            if (!isArgument(args, i)) {
                 errorMsg.append(arg);
                 errorMsg.append(" was given without providing appropriate argument\n");
                 continue;
             }
-            switch (arg) {
-                case EMAIL_TEMPLATE: parseEmailTemplate(args[i++]); continue;
-                case CSV_FILE: parseCsvFile(args[i++]); continue;
-                case EVENT: parseEvent(args[i++]); continue;
-                case OUTPUT_DIR: parseOutputDir(args[i++]); continue;
-                case FROM_EMAIL: parseFromEmail(args[i++]); continue;
-                case PASSWORD: parsePassword(args[i++]); continue;
-                default:
+
+            if (validate(arg, args[i])) {
+                userInput.put(arg, args[i++]);
+            } else {
+                i++;
             }
         }
     }
 
+    private boolean isHeader(String arg) {
+        return arg.startsWith("--");
+    }
+
+    private boolean isRecognizable(String arg) {
+        return userInput.containsKey(arg);
+    }
+
+    private boolean isArgument(String[] args, int i) {
+        return i < args.length && !args[i].startsWith("--");
+    }
+
+    private boolean validate(String header, String arg) {
+        if (header.equals(EMAIL_TEMPLATE)) {
+            return validateEmailTemplate(arg);
+        }
+        if (header.equals(CSV_FILE)) {
+            return validateCsvFile(arg);
+        }
+        if (header.equals(EVENT)) {
+            return validateEvent(arg);
+        }
+        return true;
+    }
+
     // checks if the provided email template is a text file, if yes, puts it in the userInput map.
-    private void parseEmailTemplate(String template) {
+    private boolean validateEmailTemplate(String template) {
         if (template.endsWith(".txt")) {
-            userInput.put(EMAIL_TEMPLATE, template);
+            return true;
         } else {
             errorMsg.append(EMAIL_TEMPLATE);
             errorMsg.append(" argument does not provide a text filename\n");
+            return false;
         }
     }
 
-    // checks if the provided csv file is a csv file that contains necessary information, if yes,
-    // puts it in the userInput map
-    private void parseCsvFile(String file) {
+    // checks if the csv filename contains necessary information, if yes, puts it in the userInput map.
+    // obtains flight id, departure city and destination city from the filename, and puts in flightInfo map.
+    // assumes the flight id is only numbers, and city names are only letters.
+    private boolean validateCsvFile(String file) {
         if (!file.endsWith(".csv")) {
             errorMsg.append(CSV_FILE);
             errorMsg.append(" argument is not a csv file\n");
-            return;
+            return false;
         }
         Pattern pattern = Pattern.compile("Flight([0-9]+)From([A-Z][a-z]+)To([A-Z][a-z]+).csv");
         Matcher matcher = pattern.matcher(file);
         if (matcher.matches()) {
-            userInput.put(CSV_FILE, file);
-            flightInfo.put("id", matcher.group(1));
-            flightInfo.put("departure-city", matcher.group(2));
-            flightInfo.put("destination-city", matcher.group(3));
+            return true;
         } else {
             errorMsg.append(CSV_FILE);
             errorMsg.append(" argument does not contain flight number or departure-city or destination-city\n");
+            return false;
         }
     }
 
     // checks if the provided event is either arrival or departure, if yes, puts it in userInput map.
-    private void parseEvent(String event) {
+    private boolean validateEvent(String event) {
         if (event.equals("arrival") || event.equals("departure")) {
-            userInput.put(EVENT, event);
-            flightInfo.put("event", event);
+            return true;
         } else {
             errorMsg.append(EVENT);
             errorMsg.append(" argument does not contain a departure/arrival event\n");
+            return false;
         }
-    }
-
-    // puts the output directory in map
-    private void parseOutputDir(String outputDir) {
-        userInput.put(OUTPUT_DIR, outputDir);
-    }
-
-    // checks that if the argument is an email address, if yes, puts it in userInput map.
-    private void parseFromEmail(String fromEmail) {
-        Pattern pattern = Pattern.compile("@");
-        Matcher matcher = pattern.matcher(fromEmail);
-        if (matcher.find()) {
-            userInput.put(FROM_EMAIL, fromEmail);
-        } else {
-            errorMsg.append(FROM_EMAIL);
-            errorMsg.append(" argument does not contian an email address\n");
-        }
-    }
-
-    // puts the password in userInput map.
-    private void parsePassword(String password) {
-        userInput.put(PASSWORD, password);
     }
 
     /**
@@ -162,7 +172,6 @@ public class ArgumentsParser implements IArgumentsParser {
      * csv file and event detail -- are provided in legal format.
      * @return true if arguments are in legal format and false otherwise.
      */
-    @Override
     public boolean isLegalFormat() {
             return userInput.get(EMAIL_TEMPLATE) != null
                     && userInput.get(OUTPUT_DIR) != null
@@ -176,7 +185,6 @@ public class ArgumentsParser implements IArgumentsParser {
      * @return the error message if arguments are in illegal format; null if arguments are in
      * legal format.
      */
-    @Override
     public String getErrorMessage() {
         if (isLegalFormat()) return null;
         if (errorMsg.toString().equals("")) {
@@ -189,8 +197,7 @@ public class ArgumentsParser implements IArgumentsParser {
      * Returns a filename that holds the email template; null if arguments are not in legal format.
      * @return a filename that holds the email template; null if arguments are not in legal format.
      */
-    @Override
-    public String getEmailTemplate() {
+    public String getTemplate() {
         if (!isLegalFormat()) return null;
         return userInput.get(EMAIL_TEMPLATE);
     }
@@ -199,7 +206,6 @@ public class ArgumentsParser implements IArgumentsParser {
      * Returns the name of a folder that will store all output; null if arguments are not in legal format.
      * @return the name of a folder that will store all output; null if arguments are not in legal format.
      */
-    @Override
     public String getOutputDir() {
         if (!isLegalFormat()) return null;
         return userInput.get(OUTPUT_DIR);
@@ -209,10 +215,19 @@ public class ArgumentsParser implements IArgumentsParser {
      * Returns the name of csv file; null if arguments are not in legal format
      * @return the name of csv file; null if arguments are not in legal format
      */
-    @Override
     public String getCsvFile() {
         if (!isLegalFormat()) return null;
         return userInput.get(CSV_FILE);
+    }
+
+    public String getEvent() {
+        if (!isLegalFormat()) return null;
+        return userInput.get(EVENT);
+    }
+
+    public int getMode() {
+        if (userInput.get(MODE) == null) return DEFAULT_MODE;
+        return Integer.parseInt(userInput.get(MODE));
     }
 
     /**
@@ -221,7 +236,6 @@ public class ArgumentsParser implements IArgumentsParser {
      * @return the email address from which to send the emails; null if arguments are not in legal format or
      * if email address is not provided.
      */
-    @Override
     public String getFromEmail() {
         if (!isLegalFormat()) return null;
         return userInput.get(FROM_EMAIL);
@@ -233,22 +247,9 @@ public class ArgumentsParser implements IArgumentsParser {
      * @return the password to the email address; null if arguments are not in legal format or if
      * email address and password are not provided.
      */
-    @Override
     public String getPassword() {
         if (!isLegalFormat()) return null;
         return userInput.get(PASSWORD);
-    }
-
-    /**
-     * Returns a map that contains flight information parsed from arguments; null if arguments
-     * are not in legal format.
-     * @return a map that contains flight information parsed from arguments; null if arguments
-     * are not in legal format.
-     */
-    @Override
-    public Map<String, String> getFlightInfo() {
-        if (!isLegalFormat()) return null;
-        return flightInfo;
     }
 
 }

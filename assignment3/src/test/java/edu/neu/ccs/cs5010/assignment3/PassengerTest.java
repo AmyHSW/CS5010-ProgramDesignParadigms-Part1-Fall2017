@@ -13,9 +13,9 @@ import static org.junit.Assert.*;
  *
  * @author Shuwan Huang
  */
-public class MemberTest {
+public class PassengerTest {
 
-    private IMember member = null;
+    private Passenger ps = null;
 
     /**
      * Initializes a new Member with the map before each test.
@@ -27,7 +27,7 @@ public class MemberTest {
         info.put("last_name", "Butt");
         info.put("email", "jbutt@gmail.com");
         info.put("rewards", "silver");
-        member = new Member(info);
+        ps = new Passenger(info);
     }
 
     /**
@@ -35,7 +35,7 @@ public class MemberTest {
      */
     @Test
     public void hasAttribute() throws Exception {
-        assertTrue(member.hasAttribute("first_name"));
+        assertTrue(ps.hasAttribute("first_name"));
     }
 
     /**
@@ -43,8 +43,8 @@ public class MemberTest {
      */
     @Test
     public void getAttribute() throws Exception {
-        assertTrue(member.getAttribute("first_name").equals("James"));
-        assertTrue(member.getAttribute("phone") == null);
+        assertTrue(ps.getAttribute("first_name").equals("James"));
+        assertTrue(ps.getAttribute("phone") == null);
     }
 
     /**
@@ -58,10 +58,10 @@ public class MemberTest {
         copy.put("last_name", "Butt");
         copy.put("email", "jbutt@gmail.com");
         copy.put("rewards", "silver");
-        assertTrue(member.equals(new Member(copy)));
-        assertTrue(!member.equals(null));
-        assertTrue(member.equals(member));
-        assertTrue(!member.equals("notMember"));
+        assertTrue(ps.equals(new Passenger(copy)));
+        assertTrue(!ps.equals(null));
+        assertTrue(ps.equals(ps));
+        assertTrue(!ps.equals("notMember"));
     }
 
     /**
@@ -74,7 +74,7 @@ public class MemberTest {
         copy.put("last_name", "Butt");
         copy.put("email", "jbutt@gmail.com");
         copy.put("rewards", "silver");
-        assertTrue(member.hashCode() == (new Member(copy)).hashCode());
+        assertTrue(ps.hashCode() == (new Passenger(copy)).hashCode());
     }
 
 }

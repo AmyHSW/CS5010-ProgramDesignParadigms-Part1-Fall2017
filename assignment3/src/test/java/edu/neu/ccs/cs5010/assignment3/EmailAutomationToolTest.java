@@ -12,8 +12,8 @@ import javax.mail.MessagingException;
  */
 public class EmailAutomationToolTest {
 
-    private IEmailAutomationTool automation = null;
-    private IEmailAutomationTool automationOptional = null;
+    private EmailAutomationTool automation = null;
+    private EmailAutomationTool automationOptional = null;
     private String[] args;
 
     /**
@@ -28,14 +28,6 @@ public class EmailAutomationToolTest {
                 "--event", "arrival",
         };
         automation = new EmailAutomationTool(args);
-    }
-
-    /**
-     * Tests that the email automation works for legal arguments input.
-     */
-    @Test
-    public void startEmailAutomation() throws Exception {
-        automation.startEmailAutomation();
     }
 
     /**
@@ -58,6 +50,7 @@ public class EmailAutomationToolTest {
                 "--output-dir", "emails",
                 "--csv-file", "Flight3FromVancouverToSeattle.csv",
                 "--event", "arrival",
+                "--mode", "2",
                 "--from-email", "user@gmail.com",
                 "--password", "password"
         };

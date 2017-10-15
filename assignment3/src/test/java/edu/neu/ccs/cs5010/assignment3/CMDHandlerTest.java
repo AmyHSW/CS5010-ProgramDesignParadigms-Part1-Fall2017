@@ -12,9 +12,9 @@ import static org.junit.Assert.*;
  *
  * @author Shuwan Huang
  */
-public class ArgumentsParserTest {
+public class CMDHandlerTest {
 
-    private IArgumentsParser legalArguments1, legalArguments2, illegalArguments1, illegalArguments2;
+    private CMDHandler legalArguments1, legalArguments2, illegalArguments1, illegalArguments2;
 
     /**
      * Initializes four ArgumentsParser with four different String array before each test.
@@ -49,10 +49,10 @@ public class ArgumentsParserTest {
                 "--event", "unknown",
                 "--output"
         };
-        legalArguments1 = new ArgumentsParser(args1);
-        legalArguments2 = new ArgumentsParser(args2);
-        illegalArguments1 = new ArgumentsParser(args3);
-        illegalArguments2 = new ArgumentsParser(args4);
+        legalArguments1 = new CMDHandler(args1);
+        legalArguments2 = new CMDHandler(args2);
+        illegalArguments1 = new CMDHandler(args3);
+        illegalArguments2 = new CMDHandler(args4);
     }
 
     /**
@@ -88,11 +88,11 @@ public class ArgumentsParserTest {
     @Test
     public void getEmailTemplate() throws Exception {
         assertTrue("legalArguments1 returns wrong email template",
-                    legalArguments1.getEmailTemplate().equals("email-template.txt"));
+                    legalArguments1.getTemplate().equals("email-template.txt"));
         assertTrue("legalArguments2 returns wrong email template",
-                    legalArguments2.getEmailTemplate().equals("email-template.txt"));
-        assertTrue(illegalArguments1.getEmailTemplate() == null);
-        assertTrue(illegalArguments2.getEmailTemplate() == null);
+                    legalArguments2.getTemplate().equals("email-template.txt"));
+        assertTrue(illegalArguments1.getTemplate() == null);
+        assertTrue(illegalArguments2.getTemplate() == null);
     }
 
     /**
@@ -145,26 +145,5 @@ public class ArgumentsParserTest {
         assertTrue(illegalArguments2.getPassword() == null);
     }
 
-    /**
-     * Tests that getFlightInfo returns a map for legal arguments that contains correct information,
-     * and null for illegal arguments.
-     */
-    @Test
-    public void getFlightInfo() throws Exception {
-        Map<String, String> info = legalArguments1.getFlightInfo();
-        assertTrue(info.get("event").equals("arrival"));
-        assertTrue(info.get("departure-city").equals("Seattle"));
-        assertTrue(info.get("destination-city").equals("Boston"));
-        assertTrue(info.get("id").equals("363"));
-
-        info = legalArguments2.getFlightInfo();
-        assertTrue(info.get("event").equals("arrival"));
-        assertTrue(info.get("departure-city").equals("Seattle"));
-        assertTrue(info.get("destination-city").equals("Boston"));
-        assertTrue(info.get("id").equals("363"));
-
-        assertTrue(illegalArguments1.getFlightInfo() == null);
-        assertTrue(illegalArguments2.getFlightInfo() == null);
-    }
 
 }

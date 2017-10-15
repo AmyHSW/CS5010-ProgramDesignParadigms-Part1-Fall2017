@@ -7,6 +7,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,13 +26,13 @@ import java.util.regex.Pattern;
  *
  * @author Shuwan Huang
  */
-public class EmailAutomationTool implements IEmailAutomationTool {
+public class EmailAutomationTool {
 
-    private final MemberDatabase memberDB;
-    private final EmailGenerator emailGenerator;
-    private final File outputDir; // the folder to save the emails
-    private final String fromEmail; // the email address from which to send the emails
-    private final String password; // the password to the email address
+    private static final int SAVE_EMAILS = 1;
+    private static final int SEND_EMAILS = 2;
+
+    private final CMDHandler cmdHandler;
+    private int mode;
 
     /**
      * Constructs a new EmailAutomationTool object with the given arguments. Checks that arguments is in
@@ -40,17 +42,50 @@ public class EmailAutomationTool implements IEmailAutomationTool {
      * @param args the String array that contains information of email template filename, output direction,
      *             csv filename and the event, with optional information of from-email and password
      */
-    public EmailAutomationTool(String[] args) {
-        ArgumentsParser argumentParser = new ArgumentsParser(args);
-        if (!argumentParser.isLegalFormat()) {
-            System.out.println(argumentParser.getErrorMessage());
+    public EmailAutomationTool(String[] args) throws Exception {
+        cmdHandler = new CMDHandler(args);
+        init();
+        startEmailGeneration();
+    }
+
+    private void init() {
+        if (!cmdHandler.isLegalFormat()) {
+            System.out.println(cmdHandler.getErrorMessage());
             throw new InvalidInputFormatException("arguments are in wrong format.");
         }
-        memberDB = new MemberDatabase(argumentParser.getCsvFile());
-        emailGenerator = new EmailGenerator(argumentParser.getEmailTemplate(), argumentParser.getFlightInfo());
-        outputDir = new File(argumentParser.getOutputDir());
-        fromEmail = argumentParser.getFromEmail();
-        password = argumentParser.getPassword();
+        mode = cmdHandler.getMode();
+    }
+
+    private void startEmailGeneration() throws Exception {
+        List<String> emails = new ArrayList<>();
+        EvaluatorContainer ec = new EvaluatorContainer(new DateEvaluator());
+        Evaluator constEvaluator = new ConstEvaluator(new FlightInfo(cmdHandler));
+        ec.add(constEvaluator);
+        Template t = new Template(cmdHandler.getTemplate());
+        PassengerInfo psInfo = new PassengerInfo(cmdHandler.getCsvFile());
+        int i = 1;
+        while (psInfo.hasNextPassenger()) {
+            ec.add(new PassengerEvaluator(psInfo.nextPassenger()));
+            String email = t.generateEmail(ec);
+            emails.add(email);
+        }
+        if (mode == SAVE_EMAILS) saveEmails(emails);
+        else if (mode == SEND_EMAILS) sendEmails(emails);
+    }
+
+    // saves email to the desired output directory
+    private void saveEmails(List<String> emails) {
+        File outputDir = new File(cmdHandler.getOutputDir());
+        outputDir.mkdir();
+        for (int i = 0; i < emails.size(); i++) {
+            File text = new File(outputDir, "email" + (i + 1) + ".txt");
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(text))) {
+                bw.write(emails.get(i));
+            } catch (IOException ioe) {
+                System.out.println("Something went wrong!: " + ioe.getMessage());
+                ioe.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -61,27 +96,13 @@ public class EmailAutomationTool implements IEmailAutomationTool {
      *
      * @throws MessagingException if the email address or password does not work when sending emails
      */
-    @Override
-    public void startEmailAutomation() throws MessagingException {
-        outputDir.mkdir();
-        int i = 1;
-        for (IMember member : memberDB.getMemberList()) {
-            String email = emailGenerator.getEmail(member);
-            File emailText = new File(outputDir, "email" + i++ +".txt");
-            try (BufferedWriter bw = new BufferedWriter(new FileWriter(emailText))) {
-                bw.write(email);
-            } catch (IOException ioe) {
-                System.out.println("Something went wrong!: " + ioe.getMessage());
-                ioe.printStackTrace();
-            }
-            if (fromEmail != null && password != null) {
-                sendEmail(email, member.getAttribute("email"));
-            }
-        }
-    }
+
 
     // sends the email to the member
-    private void sendEmail(String email, String toEmail) throws MessagingException {
+    private void sendEmails(List<String> emails) throws MessagingException {
+        String fromEmail = cmdHandler.getFromEmail();
+        String password = cmdHandler.getPassword();
+
         Properties properties = new Properties();
         properties.put("mail.smtp.starttls.enable", "true");
         properties.put("mail.smtp.auth", "true");
@@ -93,16 +114,23 @@ public class EmailAutomationTool implements IEmailAutomationTool {
             }
         });
 
-        Pattern pattern = Pattern.compile("Dear");
-        Matcher matcher = pattern.matcher(email);
-        String text = matcher.find() ? email.substring(matcher.start()) : "";
-
         MimeMessage message = new MimeMessage(session);
         message.setFrom(new InternetAddress(fromEmail));
-        message.addRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
         message.setSubject("Please accept our apologies for the arrival of your flight");
-        message.setText(text);
-        Transport.send(message);
+
+        for (String email : emails) {
+            Pattern pattern = Pattern.compile("Dear");
+            Matcher matcher = pattern.matcher(email);
+            String text = matcher.find() ? email.substring(matcher.start()) : "";
+
+            pattern = Pattern.compile("To: (.*?)\nSubject");
+            matcher = pattern.matcher(email);
+            String toEmail = matcher.find() ? matcher.group(1) : "";
+
+            message.setRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
+            message.setText(text);
+            Transport.send(message);
+        }
     }
 
     /**
@@ -111,9 +139,8 @@ public class EmailAutomationTool implements IEmailAutomationTool {
      *
      * @param args the command-line arguments
      */
-    public static void main(String[] args) throws MessagingException {
-        IEmailAutomationTool emailAutomationTool = new EmailAutomationTool(args);
-        emailAutomationTool.startEmailAutomation();
+    public static void main(String[] args) throws Exception {
+        EmailAutomationTool emailAutomationTool = new EmailAutomationTool(args);
     }
 
 }

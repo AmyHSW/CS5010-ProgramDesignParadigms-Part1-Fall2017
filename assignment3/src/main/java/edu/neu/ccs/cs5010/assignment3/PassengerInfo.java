@@ -16,10 +16,11 @@ import java.util.Map;
  *
  * @author Shuwan Huang
  */
-public class MemberDatabase implements IMemberDatabase {
+public class PassengerInfo {
 
-    private final List<IMember> memberList;
+    private final List<Passenger> psList = new ArrayList<>();
     private static final String CSV_SPLIT_BY = "\",\""; // regular expression to split the csv file
+    private int psID;
 
     /**
      * Initializes the member list. Parses the csv file and stores the member information in Member objects.
@@ -27,46 +28,40 @@ public class MemberDatabase implements IMemberDatabase {
      *
      * @param csvFileName the name of a csv file
      */
-    public MemberDatabase(String csvFileName) {
-        memberList = new ArrayList<>();
+    public PassengerInfo(String csvFileName) throws IOException {
         parseCsvFile(csvFileName);
     }
 
     // reads each record in the csv file using a BufferedReader, extracts the member information from it
-    private void parseCsvFile(String csvFileName) {
-        try (BufferedReader csvFile = new BufferedReader(new FileReader(csvFileName))) {
+    private void parseCsvFile(String csvFileName) throws IOException {
+        BufferedReader csvFile = new BufferedReader(new FileReader(csvFileName));
             String line = csvFile.readLine();
             if (line == null) {
                 throw new EmptyCsvFileException("The csv file is empty: " + csvFileName);
             }
-            String[] attributes = line.substring(1, line.length() - 1).split(CSV_SPLIT_BY);
+            String[] headers = line.substring(1, line.length() - 1).split(CSV_SPLIT_BY);
             while ((line = csvFile.readLine()) != null) {
-                String[] memberInfo = line.substring(1, line.length() - 1).split(CSV_SPLIT_BY);
-                addMember(attributes, memberInfo);
+                String[] values = line.substring(1, line.length() - 1).split(CSV_SPLIT_BY);
+                addPassenger(headers, values);
             }
-        } catch (IOException ioe) {
-            System.out.println("Something went wrong!: " + ioe.getMessage());
-            ioe.printStackTrace();
-        }
     }
 
     // puts the member information in a map, uses that map to initializes a Member object,
     // and adds it to the member list.
-    private void addMember(String[] attributes, String[] memberInfo) {
+    private void addPassenger(String[] headers, String[] values) {
         Map<String, String> info = new HashMap<>();
-        for (int i = 0; i < memberInfo.length; i++) {
-            info.put(attributes[i], memberInfo[i]);
+        for (int i = 0; i < values.length; i++) {
+            info.put(headers[i], values[i]);
         }
-        memberList.add(new Member(info));
+        psList.add(new Passenger(info));
     }
 
-    /**
-     * Returns a list that contains all members in the csv file.
-     * @return a list that contains all members in the csv file.
-     */
-    @Override
-    public List<IMember> getMemberList() {
-        return memberList;
+    public boolean hasNextPassenger() {
+        return psID < psList.size();
+    }
+
+    public Passenger nextPassenger() {
+        return psList.get(psID++);
     }
 
 }
