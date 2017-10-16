@@ -1,8 +1,7 @@
 package edu.neu.ccs.cs5010.assignment3;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,61 +11,50 @@ import java.util.regex.Pattern;
  *
  * @author Shuwan Huang
  */
-public class Template {
+public class Template implements ITemplate {
 
-    private static final String REGEX = "\\[\\[[^\\]]*\\]\\]"; // regular expression to find the placeholders
-    private final String template;
+  private static final String REGEX = "\\[\\[([^\\]]*)\\]\\]"; // regular expression to find the placeholders
+  private final String templateText;
+  private final List<String> placeholders;
 
-    /**
-     * Parses the template text file to a single string.
-     * @param templateFileName a filename that holds the email template
-     */
-    public Template(String templateFileName) {
-        template = convertToString(templateFileName);
+  /**
+   * Constructs a Template object. Converts the email template text file to a string, and finds placeholders
+   * in the email template.
+   *
+   * @param templateFileName a filename that holds the email template
+   */
+  public Template(String templateFileName) {
+    templateText = IOLibrary.convertFileToString(templateFileName);
+    placeholders = findPlaceholders(templateText);
+  }
+
+  private List<String> findPlaceholders(String templateText) {
+    List<String> placeholders = new ArrayList<>();
+    Pattern pattern = Pattern.compile(REGEX);
+    Matcher matcher = pattern.matcher(templateText);
+    while (matcher.find()) {
+      placeholders.add(matcher.group(1));
     }
+    return placeholders;
+  }
 
-    // parses the template file to a single string.
-    private String convertToString(String templateFileName) {
-        StringBuilder sb = new StringBuilder();
-        try (BufferedReader br = new BufferedReader(new FileReader(templateFileName))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-                sb.append(System.getProperty("line.separator"));
-            }
-        } catch (IOException ioe) {
-            System.out.println("Something went wrong!: " + ioe.getMessage());
-            ioe.printStackTrace();
-        }
-        return sb.toString();
+  /**
+   * Replaces the placeholders by information provided by the Evaluator object.
+   *
+   * @param evaluator an Evaluator
+   * @return an Email object that contains the email to the passenger
+   */
+  @Override
+  public IEmail toEmail(Evaluator evaluator) {
+    String emailContent = templateText;
+    for (String placeholder : placeholders) {
+      String value = evaluator.getValue(placeholder);
+      if (value == null) {
+        throw new InvalidPlaceholderException("Cannot determine placeholder information: " + placeholder);
+      }
+      emailContent = emailContent.replaceAll("\\[\\[" + placeholder + "\\]\\]", value);
     }
-
-    /**
-     * Replaces the placeholders by information provided by the Evaluator object.
-     * @param evaluator an Evaluator
-     * @return a string that contains the email to the passenger
-     */
-    public String generateEmail(Evaluator evaluator) {
-        StringBuffer sb = new StringBuffer();
-        Pattern pattern = Pattern.compile(REGEX);
-        Matcher matcher = pattern.matcher(template);
-        while (matcher.find()) {
-            String placeholder = matcher.group();
-            replacePlaceholder(matcher, sb, placeholder, evaluator);
-        }
-        matcher.appendTail(sb);
-        return sb.toString();
-    }
-
-    // replaces the placeholder if it matches the info in evaluator,
-    // otherwise throws an InvalidPlaceholderException.
-    private void replacePlaceholder(Matcher matcher, StringBuffer sb, String placeholder, Evaluator evaluator) {
-        String header = placeholder.substring(2, placeholder.length() - 2);
-        if (evaluator.getValue(header) != null) {
-            matcher.appendReplacement(sb, evaluator.getValue(header));
-        } else {
-            throw new InvalidPlaceholderException("Cannot determine placeholder information: " + placeholder);
-        }
-    }
+    return new Email(emailContent);
+  }
 
 }

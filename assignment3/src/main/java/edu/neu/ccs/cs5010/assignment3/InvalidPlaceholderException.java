@@ -7,11 +7,12 @@ package edu.neu.ccs.cs5010.assignment3;
  */
 public class InvalidPlaceholderException extends RuntimeException {
 
-    /**
-     * Constructs an InvalidPlaceholderException with the specified detail message.
-     * @param msg the detail message
-     */
-    public InvalidPlaceholderException(String msg) {
-        super(msg);
-    }
+  /**
+   * Constructs an InvalidPlaceholderException with the specified detail message.
+   *
+   * @param msg the detail message
+   */
+  public InvalidPlaceholderException(String msg) {
+    super(msg);
+  }
 }

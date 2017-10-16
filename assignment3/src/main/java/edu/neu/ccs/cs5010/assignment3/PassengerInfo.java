@@ -1,67 +1,61 @@
 package edu.neu.ccs.cs5010.assignment3;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
- * The <code>MemberDatabase</code> class stores the member information in a list of members.
- * The member information is provided by the csv file.
- *
- * This class provides a method <code>getMemberList</code> that returns the list of members.
+ * The <code>PassengerInfo</code> class stores all passenger information provided by the csv file.
+ * The csv file is parsed into lists of tokens by a csv parser. The first list is the headers, and the
+ * rest are passenger information.
  *
  * @author Shuwan Huang
  */
-public class PassengerInfo {
+public class PassengerInfo implements IPassengerInfo {
 
-    private final List<Passenger> psList = new ArrayList<>();
-    private static final String CSV_SPLIT_BY = "\",\""; // regular expression to split the csv file
-    private int psID;
+  private int psID = 0; // records the number of passenger called by nextPassenger()
+  private List<String> headers;
+  private List<List<String>> passengers;
 
-    /**
-     * Initializes the member list. Parses the csv file and stores the member information in Member objects.
-     * Adds the Member objects to the member list.
-     *
-     * @param csvFileName the name of a csv file
-     */
-    public PassengerInfo(String csvFileName) throws IOException {
-        parseCsvFile(csvFileName);
-    }
+  /**
+   * Parses the csv file using a csv parser. Builds passenger information based on the results of
+   * csv parser.
+   *
+   * @param csvFileName the name of a csv file
+   */
+  public PassengerInfo(String csvFileName) {
+    CSVParser csvParser = new CSVParser(IOLibrary.convertFileToString(csvFileName));
+    buildPassengerInfo(csvParser.getTokens());
+  }
 
-    // reads each record in the csv file using a BufferedReader, extracts the member information from it
-    private void parseCsvFile(String csvFileName) throws IOException {
-        BufferedReader csvFile = new BufferedReader(new FileReader(csvFileName));
-            String line = csvFile.readLine();
-            if (line == null) {
-                throw new EmptyCsvFileException("The csv file is empty: " + csvFileName);
-            }
-            String[] headers = line.substring(1, line.length() - 1).split(CSV_SPLIT_BY);
-            while ((line = csvFile.readLine()) != null) {
-                String[] values = line.substring(1, line.length() - 1).split(CSV_SPLIT_BY);
-                addPassenger(headers, values);
-            }
-    }
+  private void buildPassengerInfo(List<List<String>> tokens) {
+    headers = tokens.get(0);
+    passengers = tokens.subList(1, tokens.size());
+  }
 
-    // puts the member information in a map, uses that map to initializes a Member object,
-    // and adds it to the member list.
-    private void addPassenger(String[] headers, String[] values) {
-        Map<String, String> info = new HashMap<>();
-        for (int i = 0; i < values.length; i++) {
-            info.put(headers[i], values[i]);
-        }
-        psList.add(new Passenger(info));
-    }
+  /**
+   * Returns the headers in csv file.
+   * @return headers in csv file
+   */
+  @Override
+  public List<String> getHeaders() {
+    return headers;
+  }
 
-    public boolean hasNextPassenger() {
-        return psID < psList.size();
-    }
+  /**
+   * Returns true if there exists next passenger.
+   * @return true if there exists next passenger, false otherwise
+   */
+  @Override
+  public boolean hasNextPassenger() {
+    return psID < passengers.size();
+  }
 
-    public Passenger nextPassenger() {
-        return psList.get(psID++);
-    }
+  /**
+   * Returns a list of string that contains information of next passenger.
+   * @return a list of string that contains information of next passenger.
+   */
+  @Override
+  public List<String> nextPassenger() {
+    return passengers.get(psID++);
+  }
 
 }

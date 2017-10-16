@@ -3,32 +3,30 @@ package edu.neu.ccs.cs5010.assignment3;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * The <code>TemplateTest</code> is a test class for Template.
+ *
+ * @author Shuwan Huang
+ */
 public class TemplateTest {
 
-    private String[] args = {
-            "--email-template", "email-template.txt",
-            "--output-dir", "emails",
-            "--csv-file", "Flight3FromVancouverToSeattle.csv",
-            "--event", "arrival",
-    };
-    private Template template = null;
+  private ITemplate template = null;
 
-    @Before
-    public void setUp() throws Exception {
-        template = new Template("email-template.txt");
-    }
+  /**
+   * Initializes a new Template object.
+   */
+  @Before
+  public void setUp() throws Exception {
+    template = new Template("email-template.txt");
+  }
 
-    @Test
-    public void generateEmail() throws Exception {
-        EvaluatorContainer ec = new EvaluatorContainer(new DateEvaluator());
-        PassengerInfo psInfo = new PassengerInfo("Flight3FromVancouverToSeattle.csv");
-        CMDHandler cmdHandler = new CMDHandler(args);
-        Evaluator constEvaluator = new ConstEvaluator(new FlightInfo(cmdHandler));
-        ec.add(constEvaluator);
-        while (psInfo.hasNextPassenger()) {
-            ec.add(new PassengerEvaluator(psInfo.nextPassenger()));
-            System.out.println(template.generateEmail(ec));
-        }
-    }
+  /**
+   * Tests that Template throws an InvalidPlaceholderException when placeholder info cannot
+   * be determined.
+   */
+  @Test(expected = InvalidPlaceholderException.class)
+  public void expectedInvalidPlaceholderException() throws Exception {
+    IEmail email = template.toEmail(new DateEvaluator());
+  }
 
 }

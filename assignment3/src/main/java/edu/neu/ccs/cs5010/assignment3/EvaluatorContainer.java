@@ -1,36 +1,46 @@
 package edu.neu.ccs.cs5010.assignment3;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
-public class EvaluatorContainer implements Evaluator {
+/**
+ * The <code>EvaluatorContainer</code> is a container of evaluators, itself is also an evaluator.
+ *
+ * @author Shuwan Huang
+ */
+public class EvaluatorContainer implements IEvaluatorContainer {
 
-    private final List<Evaluator> generalEvaluators = new ArrayList<>();
-    private Evaluator psEvaluator;
+  private Deque<Evaluator> evaluators = new ArrayDeque<>();
 
-    public EvaluatorContainer(Evaluator dateEvaluator) {
-        generalEvaluators.add(dateEvaluator);
+  /**
+   * Returns the value if the placeholder has values in one of the evaluators
+   * @param placeholder a string
+   * @return the value, or null if placeholder is not found
+   */
+  @Override
+  public String getValue(String placeholder) {
+    for (Evaluator evaluator : evaluators) {
+      if (evaluator.getValue(placeholder) != null) {
+        return evaluator.getValue(placeholder);
+      }
     }
+    return null;
+  }
 
-    @Override
-    public String getValue(String placeholder) {
-        if (psEvaluator.getValue(placeholder) != null) {
-            return psEvaluator.getValue(placeholder);
-        }
-        for (Evaluator evaluator : generalEvaluators) {
-            if (evaluator.getValue(placeholder) != null) {
-                return evaluator.getValue(placeholder);
-            }
-        }
-        return null;
-    }
+  /**
+   * Adds an evaluator to this evaluator container.
+   * @param evaluator an evaluator
+   */
+  @Override
+  public void push(Evaluator evaluator) {
+    evaluators.push(evaluator);
+  }
 
-    public void add(Evaluator evaluator) {
-        if (evaluator instanceof PassengerEvaluator) {
-            psEvaluator = evaluator;
-        } else {
-            generalEvaluators.add(evaluator);
-        }
-    }
-
+  /**
+   * Removes the evaluator that was most recently added.
+   */
+  @Override
+  public void pop() {
+    if (!evaluators.isEmpty()) evaluators.pop();
+  }
 }
