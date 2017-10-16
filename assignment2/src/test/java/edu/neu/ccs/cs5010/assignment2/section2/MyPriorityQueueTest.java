@@ -117,15 +117,15 @@ public class MyPriorityQueueTest {
     public void testPatientQueue() throws Exception {
         IPriorityQueue<IPatient> patientQueue = new MyPriorityQueue<>();
 
-        IPatient p1 = new Patient(LocalDateTime.now(), 8, Duration.ofMinutes(1), 1);
+        IPatient p1 = new Patient(LocalDateTime.now(), new Urgency(8), Duration.ofMinutes(1), 1);
         patientQueue.insert(p1);
-        IPatient p2 = new Patient(LocalDateTime.now(), 2, Duration.ofMinutes(1), 2);
+        IPatient p2 = new Patient(LocalDateTime.now(), new Urgency(2), Duration.ofMinutes(1), 2);
         patientQueue.insert(p2);
-        IPatient p3 = new Patient(LocalDateTime.now(), 1, Duration.ofMinutes(1), 3);
+        IPatient p3 = new Patient(LocalDateTime.now(), new Urgency(1), Duration.ofMinutes(1), 3);
         patientQueue.insert(p3);
-        IPatient p4 = new Patient(LocalDateTime.now(), 5, Duration.ofMinutes(1), 4);
+        IPatient p4 = new Patient(LocalDateTime.now(), new Urgency(5), Duration.ofMinutes(1), 4);
         patientQueue.insert(p4);
-        IPatient p5 = new Patient(LocalDateTime.now(), 2, Duration.ofMinutes(1), 5);
+        IPatient p5 = new Patient(LocalDateTime.now(), new Urgency(2), Duration.ofMinutes(1), 5);
         patientQueue.insert(p5);
 
         List<IPatient> patientList = patientQueue.testForwardTraversal();

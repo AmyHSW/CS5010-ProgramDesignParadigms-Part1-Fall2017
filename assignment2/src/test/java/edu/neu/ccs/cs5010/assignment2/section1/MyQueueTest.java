@@ -69,10 +69,7 @@ public class MyQueueTest {
    */
   @Test
   public void testOneDequeue() {
-    IQueue queue2 = queue.enqueue(1);
-    IQueue queue3 = queue2.dequeue();
-    assertTrue(!queue2.isEmpty());
-    assertTrue(queue3.isEmpty());
+    queue = queue.enqueue(1).dequeue();
   }
 
   /**

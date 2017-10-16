@@ -33,7 +33,7 @@ public interface IPatient extends Comparable<IPatient> {
      * Gets the urgency level of this patient.
      * @return an integer number that is the urgency level of this patient.
      */
-    int getUrgencyLevel();
+    Urgency getUrgency();
 
     /**
      * Gets the duration of treatment of this patient.

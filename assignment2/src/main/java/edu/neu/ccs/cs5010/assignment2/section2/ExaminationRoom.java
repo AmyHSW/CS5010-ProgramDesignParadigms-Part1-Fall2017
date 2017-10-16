@@ -83,7 +83,7 @@ public class ExaminationRoom implements IExaminationRoom {
      */
     @Override
     public int hashCode() {
-        int result = busyTime != null ? busyTime.hashCode() : 0;
+        int result = busyTime.hashCode();
         result = 31 * result + nPatients;
         return result;
     }
