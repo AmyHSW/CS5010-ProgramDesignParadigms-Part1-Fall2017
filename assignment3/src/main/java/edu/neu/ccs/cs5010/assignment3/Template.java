@@ -1,5 +1,6 @@
 package edu.neu.ccs.cs5010.assignment3;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -13,17 +14,17 @@ import java.util.regex.Pattern;
  */
 public class Template implements ITemplate {
 
-  private static final String REGEX = "\\[\\[([^\\]]*)\\]\\]"; // regular expression to find the placeholders
+  private static final String REGEX = "\\[\\[([^\\]]*)\\]\\]"; // regex to find the placeholders
   private final String templateText;
   private final List<String> placeholders;
 
   /**
-   * Constructs a Template object. Converts the email template text file to a string, and finds placeholders
-   * in the email template.
+   * Constructs a Template object. Converts the email template text file to a string,
+   * and finds placeholders in the email template.
    *
    * @param templateFileName a filename that holds the email template
    */
-  public Template(String templateFileName) {
+  public Template(String templateFileName) throws IOException {
     templateText = IOLibrary.convertFileToString(templateFileName);
     placeholders = findPlaceholders(templateText);
   }
@@ -50,7 +51,8 @@ public class Template implements ITemplate {
     for (String placeholder : placeholders) {
       String value = evaluator.getValue(placeholder);
       if (value == null) {
-        throw new InvalidPlaceholderException("Cannot determine placeholder information: " + placeholder);
+        throw new InvalidPlaceholderException("Cannot determine placeholder information: "
+                                              + placeholder);
       }
       emailContent = emailContent.replaceAll("\\[\\[" + placeholder + "\\]\\]", value);
     }

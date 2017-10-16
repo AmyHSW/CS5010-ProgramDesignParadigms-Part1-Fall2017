@@ -1,5 +1,10 @@
 package edu.neu.ccs.cs5010.assignment3;
 
+/**
+ * The <code>IEmail</code> interface represents an email.
+ *
+ * @author Shuwan Huang
+ */
 public interface IEmail {
 
   /**

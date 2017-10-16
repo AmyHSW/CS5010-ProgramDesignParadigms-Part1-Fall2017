@@ -32,9 +32,11 @@ public interface ICMDHandler {
   String getTemplate();
 
   /**
-   * Returns the name of a folder that will store all output; null if arguments are not in legal format.
+   * Returns the name of a folder that will store all output; null if arguments are
+   * not in legal format.
    *
-   * @return the name of a folder that will store all output; null if arguments are not in legal format.
+   * @return the name of a folder that will store all output; null if arguments are
+   * not in legal format.
    */
   String getOutputDir();
 
@@ -61,11 +63,11 @@ public interface ICMDHandler {
   int getMode();
 
   /**
-   * Returns the email address from which to send the emails; null if arguments are not in legal format or
-   * if email address is not provided.
+   * Returns the email address from which to send the emails; null if arguments are not
+   * in legal format or if email address is not provided.
    *
-   * @return the email address from which to send the emails; null if arguments are not in legal format or
-   * if email address is not provided.
+   * @return the email address from which to send the emails; null if arguments are not
+   * in legal format or if email address is not provided.
    */
   String getFromEmail();
 

@@ -1,5 +1,10 @@
 package edu.neu.ccs.cs5010.assignment3;
 
+/**
+ * The <code>IEvaluatorContainer</code> interface represents an evaluator container.
+ *
+ * @author Shuwan Huang
+ */
 public interface IEvaluatorContainer extends Evaluator {
 
   /**

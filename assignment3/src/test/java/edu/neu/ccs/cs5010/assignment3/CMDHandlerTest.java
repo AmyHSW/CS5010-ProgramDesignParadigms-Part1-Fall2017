@@ -16,7 +16,8 @@ public class CMDHandlerTest {
 
   /**
    * Initializes four CMDHandler with four different String array before each test.
-   * Two of them are constructed with legal arguments, the other two are constructed with illegal arguments.
+   * Two of them are constructed with legal arguments, the other two are constructed with
+   * illegal arguments.
    */
   @Before
   public void setUp() throws Exception {
@@ -56,7 +57,8 @@ public class CMDHandlerTest {
   }
 
   /**
-   * Tests that isLegalFormat returns correct answer for both legal arguments and illegal arguments.
+   * Tests that isLegalFormat returns correct answer for both legal arguments and illegal
+   * arguments.
    */
   @Test
   public void isLegalFormat() throws Exception {

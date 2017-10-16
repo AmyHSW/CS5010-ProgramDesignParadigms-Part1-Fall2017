@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The <code>KeyValueEvaluator</code> is an evaluator that returns the value if the given placeholder can be
- * found.
+ * The <code>KeyValueEvaluator</code> is an evaluator that returns the value
+ * if the given placeholder can be found.
  *
  * @author Shuwan Huang
  */

@@ -18,7 +18,7 @@ public class EmailAutomationToolTest {
   public void main() throws Exception {
     String[] args = {
         "--email-template", "email-template.txt",
-        "--output-dir", "emails",
+        "--output-dir", "emails1",
         "--csv-file", "Flight3FromVancouverToSeattle.csv",
         "--event", "arrival",
     };
@@ -26,7 +26,7 @@ public class EmailAutomationToolTest {
 
     args = new String[] {
         "--email-template", "email-template.txt",
-        "--output-dir", "emails",
+        "--output-dir", "emails2",
         "--csv-file", "Flight3FromVancouverToSeattle.csv",
         "--event", "arrival",
         "--mode", "1"
@@ -44,7 +44,7 @@ public class EmailAutomationToolTest {
   public void testThrowsMessagingException() throws Exception {
     String[] argsOptional = {
         "--email-template", "email-template.txt",
-        "--output-dir", "emails",
+        "--output-dir", "emails3",
         "--csv-file", "Flight3FromVancouverToSeattle.csv",
         "--event", "arrival",
         "--mode", "2",
@@ -55,13 +55,25 @@ public class EmailAutomationToolTest {
   }
 
   /**
-   * Tests that EmailAutomationTool throws an InvalidInputFormatException if the arguments are in wrong format.
+   * Tests that EmailAutomationTool throws an InvalidInputFormatException if the arguments
+   * are in wrong format.
    */
   @Test(expected = InvalidInputFormatException.class)
   public void testThrowsInvalidInputFormatException() throws Exception {
     String[] args1 = {
         "--email-template",
         "--output-dir", "emails",
+        "--csv-file", "Flight363FromSeattleToBoston.csv",
+        "--event", "arrival"
+    };
+    EmailAutomationTool.main(args1);
+  }
+
+  @Test(expected = InvalidOutputDirException.class)
+  public void testThrowsInvalidOutputDirException() throws Exception {
+    String[] args1 = {
+        "--email-template", "email-template.txt",
+        "--output-dir", "lib",
         "--csv-file", "Flight363FromSeattleToBoston.csv",
         "--event", "arrival"
     };

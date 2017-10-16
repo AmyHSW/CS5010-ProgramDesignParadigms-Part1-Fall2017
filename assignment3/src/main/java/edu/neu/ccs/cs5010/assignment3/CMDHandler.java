@@ -7,11 +7,11 @@ import java.util.regex.Pattern;
 
 /**
  * The <code>CMDHandler</code> class validates the format of arguments and parses the arguments
- * into information of email template, output directory, csv file and event. If the arguments also contain
- * mode, from-email and password, parses them as well.
- * <p></p>
- * It provides a method <code>isLegalFormat</code> to check if arguments are in legal format , and getters to
- * obtain the above information.
+ * into information of email template, output directory, csv file and event. If the arguments also
+ * contain mode, from-email and password, parses them as well.
+ * <p>
+ * It provides a method <code>isLegalFormat</code> to check if arguments are in legal format,
+ * and getters to obtain the above information.
  *
  * @author Shuwan Huang
  */
@@ -26,18 +26,19 @@ public class CMDHandler implements ICMDHandler {
   private static final String PASSWORD = "--password";
   private static final String USAGE_MSG =
       "Usage: \n\n"
-          + "--email-template <file>      accepts a filename that holds the email template\n\n"
-          + "--output-dir <path>          accepts the name of a folder, all output is placed\n"
-          + "                             in this folder\n\n"
-          + "--csv-file <path>            accepts the name of the csv file to process, in\n"
-          + "                             a following format\n"
-          + "                             Flight<id>From<departure-city>To<destination-city>.csv\n\n"
-          + "--event <details>            specifies if the delay refers to departure/arrival\n\n"
-          + "--from-email <email>         (optional) accepts an email address from which the emails\n"
-          + "                             will be sent\n\n"
-          + "--password <password>        (optional) accepts the password to the email address provided\n\n"
-          + "--mode <mode>                (optional) accepts the mode of email automation, 1 (default mode)\n"
-          + "                             is to save emails in a folder, 2 is to send emails to passengers\n\n"
+          + "--email-template <file>   accepts a filename that holds the email template\n\n"
+          + "--output-dir <path>       accepts the name of a folder, all output is placed\n"
+          + "                          in this folder\n\n"
+          + "--csv-file <path>         accepts the name of the csv file to process, in\n"
+          + "                          a following format\n"
+          + "                          Flight<id>From<departure-city>To<destination-city>.csv\n\n"
+          + "--event <details>         specifies if the delay refers to departure/arrival\n\n"
+          + "--from-email <email>      (optional) accepts an email address from which the\n"
+          + "                          emails will be sent\n\n"
+          + "--password <password>     (optional) accepts the password to the email address\n\n"
+          + "--mode <mode>             (optional) accepts the mode of email automation,\n"
+          + "                          1 (default mode) is to save emails in a folder,\n"
+          + "                          2 is to send emails to passengers\n\n"
           + "For example:\n\n"
           + "--email-template  email-template.txt  --output-dir  emails  --csv-file\n"
           + "Flight363FromSeattleToBoston.csv  --event  arrival\n";
@@ -49,9 +50,10 @@ public class CMDHandler implements ICMDHandler {
   private final StringBuilder errorMsg; // stores error message
 
   /**
-   * Constructs a new CMDHandler with the given String array. Initializes the userInput as a HashMap
-   * that stores user input information with attributes as keys. Initializes the errorMsg as an empty
-   * StringBuilder. Parses the arguments and stores information in userInput map.
+   * Constructs a new CMDHandler with the given String array. Initializes the userInput as
+   * a HashMap that stores user input information with attributes as keys. Initializes
+   * the errorMsg as an empty StringBuilder. Parses the arguments and stores information
+   * in userInput map.
    *
    * @param args a String array
    */
@@ -156,7 +158,7 @@ public class CMDHandler implements ICMDHandler {
       return true;
     } else {
       errorMsg.append(CSV_FILE);
-      errorMsg.append(" argument does not contain flight number or departure-city or destination-city\n");
+      errorMsg.append(" argument does not contain necessary flight info.\n");
       return false;
     }
   }
@@ -198,7 +200,7 @@ public class CMDHandler implements ICMDHandler {
   public String getErrorMessage() {
     if (isLegalFormat()) return null;
     if (errorMsg.toString().equals("")) {
-      errorMsg.append("Some required arguments are missing! Please see below an example of input\n");
+      errorMsg.append("Some required arguments are missing! Please see the example below.\n");
     }
     return "Error:\n\n" + errorMsg.toString() + "\n" + USAGE_MSG;
   }
@@ -215,9 +217,10 @@ public class CMDHandler implements ICMDHandler {
   }
 
   /**
-   * Returns the name of a folder that will store all output; null if arguments are not in legal format.
-   *
-   * @return the name of a folder that will store all output; null if arguments are not in legal format.
+   * Returns the name of a folder that will store all output; null if arguments are
+   * not in legal format.
+   * @return the name of a folder that will store all output; null if arguments are
+   * not in legal format.
    */
   @Override
   public String getOutputDir() {
@@ -255,18 +258,21 @@ public class CMDHandler implements ICMDHandler {
    */
   @Override
   public int getMode() {
-    if (userInput.get(MODE) == null || userInput.get(FROM_EMAIL) == null || userInput.get(PASSWORD) == null)
+    if (userInput.get(MODE) == null
+        || userInput.get(FROM_EMAIL) == null
+        || userInput.get(PASSWORD) == null) {
       return DEFAULT_MODE;
-    else
+    } else {
       return Integer.parseInt(userInput.get(MODE));
+    }
   }
 
   /**
-   * Returns the email address from which to send the emails; null if arguments are not in legal format or
-   * if email address is not provided.
+   * Returns the email address from which to send the emails; null if arguments are
+   * not in legal format or if email address is not provided.
    *
-   * @return the email address from which to send the emails; null if arguments are not in legal format or
-   * if email address is not provided.
+   * @return the email address from which to send the emails; null if arguments are
+   * not in legal format or if email address is not provided.
    */
   @Override
   public String getFromEmail() {
