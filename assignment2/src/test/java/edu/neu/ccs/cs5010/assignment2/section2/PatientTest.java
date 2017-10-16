@@ -200,7 +200,7 @@ public class PatientTest {
   @Test
   public void testToString() throws Exception {
     String msg = "Patient (ID-" + id
-        + "): Arrived at " + arrival
+        + "): Arrived at " + arrival.toLocalTime()
         + ", urgency level is " + 3
         + ", treatment duration is " + treatTime.toMinutes() + " min.";
     assertTrue("toString doesn't provide the correct message", msg.equals(patient.toString()));

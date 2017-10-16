@@ -7,11 +7,11 @@ package edu.neu.ccs.cs5010.assignment2.section2;
  */
 public interface IPatientGenerator {
 
-    /**
-     * Generates a new patient.
-     *
-     * @return an IPatient object.
-     */
-    IPatient next();
+  /**
+   * Generates a new patient.
+   *
+   * @return an IPatient object.
+   */
+  IPatient next();
 
 }

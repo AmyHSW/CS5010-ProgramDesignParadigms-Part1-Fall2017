@@ -6,11 +6,11 @@ import java.util.Map;
 
 /**
  * The <code>CMDHandler</code> class validates the format of arguments and parses the arguments
- * into information of email template, output directory, csv file and event. If the arguments also contain
- * mode, from-email and password, parses them as well.
+ * into information of simulation time, simulation mode, number of rooms, max pause between
+ * patients generation, and max treatment duration.
  * <p></p>
- * It provides a method <code>isLegalFormat</code> to check if arguments are in legal format , and getters to
- * obtain the above information.
+ * It provides a method <code>isLegalFormat</code> to check if arguments are in legal format,
+ * and getters to obtain the above information.
  *
  * @author Shuwan Huang
  */
@@ -23,17 +23,17 @@ public class CMDHandler implements ICMDHandler {
   private static final String MAX_TREATMENT = "--max-treatment";
   private static final String USAGE_MSG =
       "Usage: \n\n"
-          + "--simulation-time <minutes>       accepts an integer that represents the simulation time\n"
-          + "                                  in minutes\n\n"
-          + "--number-rooms <integer>          accepts an integer that represents the number of rooms\n\n"
-          + "--mode <integer>                  accepts an integer that represents the mode of simulation, \n"
-          + "                                  1 for preset, 2 for random\n\n"
-          + "--max-pause <minutes>             accepts an integer that represents the max pause between \n"
-          + "                                  patient generation, in minutes (if it is in preset mode, this\n"
-          + "                                  is the exact pause time)\n\n"
-          + "--max-treatment <minutes>         accepts an integer that represents the max treatment duration\n"
-          + "                                  in minutes (if it is in preset mode, this is the exact treatment\n"
-          + "                                  duration)\n\n"
+          + "--simulation-time <min>  accepts an integer that represents the simulation time\n"
+          + "                         in minutes\n\n"
+          + "--number-rooms <int>     accepts an integer that represents the number of rooms\n\n"
+          + "--mode <int>             accepts an integer that represents the mode of simulation,\n"
+          + "                         1 for preset, 2 for random\n\n"
+          + "--max-pause <min>        accepts an integer that represents the max pause between \n"
+          + "                         patient generation, in minutes (if it is in preset mode,\n"
+          + "                         this is the exact pause time)\n\n"
+          + "--max-treatment <min>    accepts an integer that represents the max treatment\n"
+          + "                         duration in minutes (if it is in preset mode, this is\n"
+          + "                         the exact treatment duration)\n\n"
           + "For example:\n\n"
           + "--simulation-time  30  --number-rooms  5  --mode 1\n"
           + "--max-pause 60 --max-treatment 5\n";
@@ -42,9 +42,10 @@ public class CMDHandler implements ICMDHandler {
   private final StringBuilder errorMsg; // stores error message
 
   /**
-   * Constructs a new CMDHandler with the given String array. Initializes the userInput as a HashMap
-   * that stores user input information with attributes as keys. Initializes the errorMsg as an empty
-   * StringBuilder. Parses the arguments and stores information in userInput map.
+   * Constructs a new CMDHandler with the given String array. Initializes the userInput as
+   * a HashMap that stores user input information with attributes as keys. Initializes
+   * the errorMsg as an empty StringBuilder. Parses the arguments and stores information
+   * in userInput map.
    *
    * @param args a String array
    */
@@ -88,7 +89,7 @@ public class CMDHandler implements ICMDHandler {
         continue;
       }
 
-      // validates the format of argument and puts it in user input map
+      // validates that the argument is an integer
       int integer = parse(args[i++]);
       if (integer != -1) userInput.put(arg, integer);
     }
@@ -104,6 +105,7 @@ public class CMDHandler implements ICMDHandler {
     return userInput.containsKey(arg);
   }
 
+  // if the arg is an integer, returns the integer; if not, returns -1.
   private int parse(String arg) {
     try {
       int integer = Integer.parseInt(arg);
@@ -116,8 +118,7 @@ public class CMDHandler implements ICMDHandler {
   }
 
   /**
-   * Returns true if the required information -- email template, output directory,
-   * csv file and event detail -- are provided in legal format.
+   * Returns true if the required information are provided in legal format.
    *
    * @return true if arguments are in legal format and false otherwise.
    */
@@ -140,15 +141,14 @@ public class CMDHandler implements ICMDHandler {
   public String getErrorMessage() {
     if (isLegalFormat()) return null;
     if (errorMsg.toString().equals("")) {
-      errorMsg.append("Some required arguments are missing! Please see below an example of input\n");
+      errorMsg.append("Some required arguments are missing! Please see the example below.\n");
     }
     return "Error:\n\n" + errorMsg.toString() + "\n" + USAGE_MSG;
   }
 
   /**
-   * Returns a filename that holds the email template; null if arguments are not in legal format.
-   *
-   * @return a filename that holds the email template; null if arguments are not in legal format.
+   * Returns the mode of simulation; -1 if arguments are not in legal format.
+   * @return the mode of simulation; -1 if arguments are not in legal format.
    */
   @Override
   public int getMode() {
@@ -156,15 +156,19 @@ public class CMDHandler implements ICMDHandler {
     return userInput.get(MODE);
   }
 
+  /**
+   * Returns the number of rooms; -1 if arguments are not in legal format.
+   * @return the number of rooms; -1 if arguments are not in legal format.
+   */
   @Override
   public int getNumRooms() {
     if (!isLegalFormat()) return -1;
     return userInput.get(NUM_ROOMS);
   }
+
   /**
-   * Returns the name of a folder that will store all output; null if arguments are not in legal format.
-   *
-   * @return the name of a folder that will store all output; null if arguments are not in legal format.
+   * Returns the duration of simulation; null if arguments are not in legal format.
+   * @return the duration of simulation; null if arguments are not in legal format.
    */
   @Override
   public Duration getSimulationTime() {
@@ -173,9 +177,8 @@ public class CMDHandler implements ICMDHandler {
   }
 
   /**
-   * Returns the name of csv file; null if arguments are not in legal format
-   *
-   * @return the name of csv file; null if arguments are not in legal format
+   * Returns the max duration of treatment; null if arguments are not in legal format
+   * @return the max duration of treatment; null if arguments are not in legal format
    */
   @Override
   public Duration getMaxTreatment() {
@@ -184,9 +187,8 @@ public class CMDHandler implements ICMDHandler {
   }
 
   /**
-   * Returns the event details; null if arguments are not in legal format
-   *
-   * @return the event details; null if arguments are not in legal format
+   * Returns the max pause between patients generation; null if arguments are not in legal format
+   * @return the max pause between patients generation; null if arguments are not in legal format
    */
   @Override
   public Duration getMaxPause() {

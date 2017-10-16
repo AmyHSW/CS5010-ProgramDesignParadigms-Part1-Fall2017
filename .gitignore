@@ -24,13 +24,16 @@ assignment3/.DS_Store
 email-template.txt
 Flight3FromVancouverToSeattle.csv
 Flight363FromSeattleToBoston.csv
-
-
-
 assignment3/emails/email1.txt
-
 assignment3/emails/email2.txt
-
 assignment3/empty.csv
-
 assignment3/emails/email3.txt
+
+# assignment2 files #
+assignment2/src/main/java/edu/neu/ccs/cs5010/assignment2/section1/IQueue.java
+
+assignment2/src/main/java/edu/neu/ccs/cs5010/assignment2/section1/IStack.java
+
+assignment2/src/main/java/edu/neu/ccs/cs5010/assignment2/section1/MyQueue.java
+
+assignment2/src/main/java/edu/neu/ccs/cs5010/assignment2/section1/MyStack.java

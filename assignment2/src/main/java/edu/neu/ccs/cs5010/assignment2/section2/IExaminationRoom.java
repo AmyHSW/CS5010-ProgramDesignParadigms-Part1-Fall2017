@@ -9,16 +9,18 @@ import java.time.Duration;
  */
 public interface IExaminationRoom extends Comparable<IExaminationRoom> {
 
-    /**
-     * Adds busy time to this examination room and increments the number of patients by one.
-     * @param busyTime the length of treatment of one patient.
-     */
-    void addBusyTime(Duration busyTime);
+  /**
+   * Adds busy time to this examination room and increments the number of patients by one.
+   *
+   * @param busyTime the length of treatment of one patient.
+   */
+  void addBusyTime(Duration busyTime);
 
-    /**
-     * Return the busy time of this examination room.
-     * @return the busy time of this examination room.
-     */
-    Duration getBusyTime();
+  /**
+   * Return the busy time of this examination room.
+   *
+   * @return the busy time of this examination room.
+   */
+  Duration getBusyTime();
 
 }

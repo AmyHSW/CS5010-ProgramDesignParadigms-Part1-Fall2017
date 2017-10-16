@@ -6,13 +6,12 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 
 /**
- * The <code>Patient</code> class represents a patient by arrival time, urgency level and treat time.
- * It also provides a static method next() to generate a new Patient with random parameters.
- * When the Patient starts examination, an ExaminationRoom will be set for the patient, and the departure
- * time can be calculated according to the start time of examination.
+ * The <code>Patient</code> class represents a patient by arrival time, urgency and treat time.
+ * When the Patient starts examination, an ExaminationRoom will be set for the patient,
+ * and the departure time can be calculated according to the start time of examination.
  * <p>
- * The natural order of Patient is by urgency levels; if two Patients have the same urgency level, they
- * will be ordered by arrival time.
+ * The natural order of Patient is by urgency levels; if two Patients have the same
+ * urgency level, they will be ordered by arrival time.
  * <p>
  * Patient can also be ordered by departure time using the Comparator BY_DEPARTURE_TIME.
  *
@@ -30,36 +29,36 @@ public class Patient implements IPatient {
   private final Duration treatmentDuration;
   private final int id;
 
-  private LocalDateTime departureTime;
-  private Duration waitDuration;
-  private IExaminationRoom room;
+  private LocalDateTime departureTime = LocalDateTime.MAX;
+  private Duration waitDuration = null;
+  private IExaminationRoom room = null;
 
   /**
-   * Constructs a new Patient with the provided arrivalTime, urgencyLevel, and treatmentDuration.
+   * Constructs a new Patient with the provided arrivalTime, urgency, treatmentDuration, and id.
    *
    * @param arrivalTime       the time when Patient arrived.
-   * @param urgency           the urgency rating of Patient with 1 the highest priority and 10 the lowest.
-   * @param treatmentDuration the duration of treatment of this patient.
-   * @throws IllegalArgumentException     if arrivalTime or treatmentDuration is null.
-   * @throws InvalidUrgencyLevelException if urgency level is not between 1 to 10.
+   * @param urgency           the urgency rating of Patient.
+   * @param treatment the duration of treatment of this patient.
+   * @param id                the id of this patient .
+   * @throws IllegalArgumentException     if arrivalTime, treatmentDuration or urgency is null.
    */
-  public Patient(LocalDateTime arrivalTime, Urgency urgency, Duration treatmentDuration, int id) {
+  public Patient(LocalDateTime arrivalTime, Urgency urgency, Duration treatment, int id) {
     if (arrivalTime == null) {
       throw new IllegalArgumentException("arrivalTime is null.");
     }
 
-    if (treatmentDuration == null) {
+    if (treatment == null) {
       throw new IllegalArgumentException("treatTime is null.");
+    }
+
+    if (urgency == null) {
+      throw new IllegalArgumentException("urgency is null.");
     }
 
     this.arrivalTime = arrivalTime;
     this.urgency = urgency;
-    this.treatmentDuration = treatmentDuration;
+    this.treatmentDuration = treatment;
     this.id = id;
-
-    room = null;
-    departureTime = LocalDateTime.MAX;
-    waitDuration = null;
   }
 
   // compare patients according to their departure time.
@@ -86,7 +85,7 @@ public class Patient implements IPatient {
     if (startTime == null) {
       throw new IllegalArgumentException("startTime is null.");
     }
-    if (startTime.compareTo(arrivalTime) < 0) {
+    if (startTime.isBefore(arrivalTime)) {
       throw new InvalidStartTimeException("startTime is earlier than arrivalTime.");
     }
 
@@ -106,9 +105,9 @@ public class Patient implements IPatient {
   }
 
   /**
-   * Gets the urgency level of this patient.
+   * Gets the urgency of this patient.
    *
-   * @return an integer number that is the urgency level of this patient.
+   * @return the urgency of this patient.
    */
   @Override
   public Urgency getUrgency() {
@@ -147,8 +146,8 @@ public class Patient implements IPatient {
 
   /**
    * Returns the wait of this patient before getting treated.
-   *
-   * @return a Duration object that represents how long this patient has waited before getting treated.
+   * @return a Duration object that represents how long this patient has waited
+   * before getting treated.
    */
   @Override
   public Duration getWaitDuration() {
@@ -161,8 +160,8 @@ public class Patient implements IPatient {
    * has higher priority.
    *
    * @param that the other Patient to compare.
-   * @return a negative integer if this patient has higher priority and a positive integer if this has lower priority;
-   * the value 0 if this patient and that have equal priority.
+   * @return a negative integer if this patient has higher priority and a positive integer
+   * if this has lower priority; the value 0 if this patient and that have equal priority.
    */
   @Override
   public int compareTo(IPatient that) {
@@ -212,7 +211,7 @@ public class Patient implements IPatient {
   @Override
   public String toString() {
     return "Patient (ID-" + id
-        + "): Arrived at " + arrivalTime
+        + "): Arrived at " + arrivalTime.toLocalTime()
         + ", urgency level is " + urgency.getLevel()
         + ", treatment duration is " + treatmentDuration.toMinutes() + " min.";
   }
