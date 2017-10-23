@@ -5,6 +5,7 @@
 Assignment1/target/
 assignment2/target/
 assignment3/target/
+assignment4/target/
 
 # IntelliJ config files #
 Assignment1/.idea/
@@ -13,12 +14,15 @@ assignment2/.idea/
 assignment2/assignment2.iml
 assignment3/.idea/
 assignment3/assignment3.iml
+assignment4/.idea/
+assignment4/assignment4.iml
 
 # OS generated files #
 .DS_Store
 Assignment1/.DS_Store
 assignment2/.DS_Store
 assignment3/.DS_Store
+assignment4/.DS_Store
 
 # assignment3 sample files #
 email-template.txt
@@ -31,51 +35,11 @@ assignment3/emails/email3.txt
 
 # assignment2 files #
 assignment2/src/main/java/edu/neu/ccs/cs5010/assignment2/section1/IQueue.java
-
 assignment2/src/main/java/edu/neu/ccs/cs5010/assignment2/section1/IStack.java
-
 assignment2/src/main/java/edu/neu/ccs/cs5010/assignment2/section1/MyQueue.java
-
 assignment2/src/main/java/edu/neu/ccs/cs5010/assignment2/section1/MyStack.java
 
-assignment4/.idea/compiler.xml
-
-assignment4/.idea/encodings.xml
-
-assignment4/.idea/libraries/Maven__junit_junit_4_12.xml
-
-assignment4/.idea/libraries/Maven__org_hamcrest_hamcrest_core_1_3.xml
-
-*.xml
-
-assignment4/assignment4.iml
-
-assignment4/target/checkstyle-cachefile
-
-assignment4/target/javadoc-bundle-options/package-list
-
-*.lst
-
-*.html
-
-assignment4/target/site/apidocs/package-list
-
-*.js
-
-*.css
-
-*.rss
-
-*.gif
-
-*.png
-
+# assignment4 files #
 assignment4/DreamCandy1.csv
-
 assignment4/DreamCandy2.csv
-
 *.csv
-
-assignment4/target/surefire-reports/edu.neu.ccs.cs5010.assignment4.HalloweenNeighborhoodTraversalTest.txt
-
-assignment4/target/jacoco.exec
