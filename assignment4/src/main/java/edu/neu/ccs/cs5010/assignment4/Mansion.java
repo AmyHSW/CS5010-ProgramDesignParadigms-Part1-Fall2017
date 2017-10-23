@@ -1,5 +1,10 @@
 package edu.neu.ccs.cs5010.assignment4;
 
+/**
+ * The <code>Mansion</code> class represents a mansion household.
+ *
+ * @author Shuwan Huang
+ */
 public class Mansion implements Household {
 
   private static final String TYPE = "Mansion";
@@ -15,6 +20,11 @@ public class Mansion implements Household {
       new AlmondJoy(new FunSize())
   };
 
+  /**
+   * Returns true if this household offers the candy specified by the candy name.
+   * @param candyName a string representation of candy name
+   * @return true if this household offers the candy specified by the candy name.
+   */
   @Override
   public boolean hasCandy(String candyName) {
     return accept(new CandyVisitor(candyName));
@@ -29,6 +39,10 @@ public class Mansion implements Household {
     return false;
   }
 
+  /**
+   * Returns a string representation of mansion.
+   * @return a string representation of mansion.
+   */
   @Override
   public String toString() {
     return TYPE;

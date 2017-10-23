@@ -1,9 +1,5 @@
 package edu.neu.ccs.cs5010.assignment4;
 
-import edu.neu.ccs.cs5010.assignment4.bonuspart1.DetachedHouse2;
-import edu.neu.ccs.cs5010.assignment4.bonuspart1.Duplex2;
-import edu.neu.ccs.cs5010.assignment4.bonuspart1.Mansion2;
-import edu.neu.ccs.cs5010.assignment4.bonuspart1.Townhome2;
 import org.junit.Before;
 import org.junit.Test;
 

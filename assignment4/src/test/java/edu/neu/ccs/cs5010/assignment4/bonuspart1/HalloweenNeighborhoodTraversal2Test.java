@@ -1,5 +1,6 @@
 package edu.neu.ccs.cs5010.assignment4.bonuspart1;
 
+import edu.neu.ccs.cs5010.assignment4.HalloweenNeighborhoodTraversal2;
 import edu.neu.ccs.cs5010.assignment4.InvalidInputException;
 import org.junit.Test;
 
