@@ -1,7 +1,5 @@
 package edu.neu.ccs.cs5010.assignment4;
 
-import edu.neu.ccs.cs5010.assignment4.MainController;
-
 import java.io.IOException;
 
 /**

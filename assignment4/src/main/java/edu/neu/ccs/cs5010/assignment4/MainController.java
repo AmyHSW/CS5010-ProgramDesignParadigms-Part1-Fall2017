@@ -9,8 +9,8 @@ import java.io.IOException;
  * to dream candies lists. For each dream candy list, it checks if there exists a
  * traversal to achieve the all candies in the list. If yes, save the traversal to an
  * output file; if not prints the message to console, and continue on next dream candy list.
- * <p>
- * Depending on the design pattern that user decides to use, the main controller will choose
+ *
+ * <p>Depending on the design pattern that user decides to use, the main controller will choose
  * the corresponding implementation of neighborhood to find the traversal.
  *
  * @author Shuwan Huang

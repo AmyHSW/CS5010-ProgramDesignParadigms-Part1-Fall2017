@@ -1,5 +1,11 @@
 package edu.neu.ccs.cs5010.assignment4;
 
+/**
+ * The <code>Duplex2</code> class represents a duplex household implemented using
+ * interpreter pattern.
+ *
+ * @author Shuwan Huang
+ */
 public class Duplex2 implements Household {
 
   private static final String TYPE = "Duplex";
@@ -16,6 +22,11 @@ public class Duplex2 implements Household {
       new Crunch2(new FunSize())
   };
 
+  /**
+   * Returns true if this household offers the candy specified by the candy name.
+   * @param candyName a string representation of candy name
+   * @return true if this household offers the candy specified by the candy name.
+   */
   @Override
   public boolean hasCandy(String candyName) {
     for (Candy2 candy : CANDIES) {
@@ -26,6 +37,10 @@ public class Duplex2 implements Household {
     return false;
   }
 
+  /**
+   * Returns a string representation of Duplex.
+   * @return a string representation of Duplex.
+   */
   @Override
   public String toString() {
     return TYPE;

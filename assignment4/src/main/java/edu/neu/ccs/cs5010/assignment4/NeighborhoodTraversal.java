@@ -6,8 +6,8 @@ import java.util.Arrays;
  * The <code>NeighborhoodTraversal</code> class checks whether or not there exists a neighborhood
  * traversal that achieves the desired candy list. The neighborhood is represented by an array of
  * households. The candy list is represented by an array of strings of candy names.
- * <p>
- * For each candy in the candy list, the <code>NeighborhoodTraversal</code> traverses all
+ *
+ * <p>For each candy in the candy list, the <code>NeighborhoodTraversal</code> traverses all
  * households in the neighborhood until it finds the house that offers the desired candy.
  * If a candy cannot be found in the any households, then there does not exist a traversal to
  * achieve the entire candy list.

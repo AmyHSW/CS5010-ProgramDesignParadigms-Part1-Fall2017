@@ -1,5 +1,11 @@
 package edu.neu.ccs.cs5010.assignment4;
 
+/**
+ * The <code>Mansion2</code> class represents a mansion household implemented using
+ * interpreter pattern.
+ *
+ * @author Shuwan Huang
+ */
 public class Mansion2 implements Household {
 
   private static final String TYPE = "Mansion";
@@ -15,6 +21,11 @@ public class Mansion2 implements Household {
       new AlmondJoy2(new FunSize())
   };
 
+  /**
+   * Returns true if this household offers the candy specified by the candy name.
+   * @param candyName a string representation of candy name
+   * @return true if this household offers the candy specified by the candy name.
+   */
   @Override
   public boolean hasCandy(String candyName) {
     for (Candy2 candy : CANDIES) {
@@ -25,6 +36,10 @@ public class Mansion2 implements Household {
     return false;
   }
 
+  /**
+   * Returns a string representation of mansion.
+   * @return a string representation of mansion.
+   */
   @Override
   public String toString() {
     return TYPE;
