@@ -20,6 +20,9 @@ public class CandyVisitor implements GenericVisitor<Boolean> {
   }
 
   private String evaluate(String candyName) {
+    if (candyName == null) {
+      throw new IllegalArgumentException("candy name is null");
+    }
     candyName = candyName.toLowerCase();
     if (!candyName.contains("size")) {
       return "regular size " + candyName;
@@ -38,4 +41,31 @@ public class CandyVisitor implements GenericVisitor<Boolean> {
     return candyName.equals((candy.getSize() + " " + candy.getType()).toLowerCase());
   }
 
+  /**
+   * Compares this candy visitor to the specified object.
+   * @param other the other object
+   * @return true if this candy visitor equals the other
+   */
+  @Override
+  public boolean equals(Object other) {
+    if (this == other) {
+      return true;
+    }
+    if (other == null || getClass() != other.getClass()) {
+      return false;
+    }
+
+    CandyVisitor that = (CandyVisitor) other;
+
+    return candyName != null ? candyName.equals(that.candyName) : that.candyName == null;
+  }
+
+  /**
+   * Returns an integer that represents the hash code of this object.
+   * @return an integer that represents the hash code of this object.
+   */
+  @Override
+  public int hashCode() {
+    return candyName.hashCode();
+  }
 }
