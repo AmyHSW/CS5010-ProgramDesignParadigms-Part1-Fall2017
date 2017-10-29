@@ -6,6 +6,7 @@ Assignment1/target/
 assignment2/target/
 assignment3/target/
 assignment4/target/
+assignment5/target/
 
 # IntelliJ config files #
 Assignment1/.idea/
@@ -16,6 +17,8 @@ assignment3/.idea/
 assignment3/assignment3.iml
 assignment4/.idea/
 assignment4/assignment4.iml
+assignment5/assignment5.iml
+assignment5/.idea/
 
 # OS generated files #
 .DS_Store
@@ -23,6 +26,7 @@ Assignment1/.DS_Store
 assignment2/.DS_Store
 assignment3/.DS_Store
 assignment4/.DS_Store
+assignment5/.DS_Store
 
 # assignment3 sample files #
 email-template.txt
@@ -43,3 +47,6 @@ assignment2/src/main/java/edu/neu/ccs/cs5010/assignment2/section1/MyStack.java
 assignment4/DreamCandy1.csv
 assignment4/DreamCandy2.csv
 *.csv
+
+# assignment5 files #
+assignment5/*.csv
