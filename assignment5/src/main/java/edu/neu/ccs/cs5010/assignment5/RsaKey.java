@@ -3,6 +3,12 @@ package edu.neu.ccs.cs5010.assignment5;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 
+/**
+ * The RsaKey class represents a RSA key that contains a public key and a private key.
+ * The keys are generated using RSA key generation algorithm.
+ *
+ * @author Shuwan Huang
+ */
 public class RsaKey implements IRsaKey {
 
   private static final SecureRandom RANDOM = new SecureRandom();
@@ -11,13 +17,22 @@ public class RsaKey implements IRsaKey {
   private IKey publicKey;
   private IKey privateKey;
 
+  /**
+   * Constructs a RsaKey by creating a public key and private key pair.
+   */
   public RsaKey() {
     createKeys();
   }
 
   private void createKeys() {
     BigInteger primeQ = BigInteger.probablePrime(BIT_LENGTH, RANDOM);
-    BigInteger primeP = BigInteger.probablePrime(BIT_LENGTH, RANDOM);
+    BigInteger primeP;
+    while (true) {
+      primeP = BigInteger.probablePrime(BIT_LENGTH, RANDOM);
+      if (!primeP.equals(primeQ)) {
+        break;
+      }
+    }
     BigInteger phi = (primeP.subtract(BigInteger.ONE)).multiply(primeQ.subtract(BigInteger.ONE));
 
     BigInteger modulus = primeP.multiply(primeQ);
@@ -30,11 +45,19 @@ public class RsaKey implements IRsaKey {
     privateKey = new Key(random.modInverse(phi), modulus);
   }
 
+  /**
+   * Returns the private key.
+   * @return the private key.
+   */
   @Override
   public IKey getPrivateKey() {
     return privateKey;
   }
 
+  /**
+   * Returns the public key.
+   * @return the public key.
+   */
   @Override
   public IKey getPublicKey() {
     return publicKey;

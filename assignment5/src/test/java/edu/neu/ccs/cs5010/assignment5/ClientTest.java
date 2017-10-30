@@ -13,15 +13,7 @@ public class ClientTest {
 
   @Before
   public void setUp() throws Exception {
-    client = new Client(1, 1000, 1000);
-  }
-
-  @Test
-  public void compareTo() throws Exception {
-    assertTrue(client.compareTo(new Client(2, 10, 10)) == 0);
-    IClient client2 = new Client(2, 30, 30);
-    client2.addTransaction();
-    assertTrue(client.compareTo(client2) > 0);
+    client = new Client(1);
   }
 
   @Test
@@ -29,7 +21,7 @@ public class ClientTest {
     BigInteger message = new BigInteger("1111");
     BigInteger signature = client.provideSignature(message);
     IKey key = client.getPublicKey();
-    assertTrue(key.translate(signature).equals(message));
+    assertTrue(key.encryptOrDecrypt(signature).equals(message));
   }
 
   @Test
@@ -37,10 +29,13 @@ public class ClientTest {
     assertTrue(!client.equals(null));
     assertTrue(!client.equals(""));
     assertTrue(client.equals(client));
-    assertTrue(!client.equals(new Client(2, 1000, 1000)));
-    assertTrue(!client.equals(new Client(1, 500, 1000)));
-    assertTrue(!client.equals(new Client(1, 1000, 500)));
+    assertTrue(!client.equals(new Client(2)));
+    assertTrue(client.equals(new Client(1)));
   }
 
-
+  @Test
+  public void testHashCode() throws Exception {
+    IClient client2 = new Client(1);
+    assertTrue(client.hashCode() == client2.hashCode());
+  }
 }

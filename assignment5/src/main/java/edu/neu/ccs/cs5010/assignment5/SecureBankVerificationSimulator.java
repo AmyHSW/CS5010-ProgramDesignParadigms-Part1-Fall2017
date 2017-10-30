@@ -6,27 +6,46 @@ import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.PriorityQueue;
 import java.util.Random;
-import java.util.Set;
 
+/**
+ * The SecureBankVerificationSimulator class represents a simulator for secure bank verifications.
+ * This class accepts user inputs through command-line arguments, which includes information of
+ * number of bank clients, number of verifications, fraction of invalid messages, and the
+ * output file name.
+ *
+ * <p>The simulator creates the requested number of clients by assigning each client a unique ID.
+ * To generate requested number of verifications, the simulator randomly chooses clients to
+ * generate message and digital signature pairs, represented by Request objects. When generating
+ * the signatures, the fraction of invalid messages is taken into account.
+ *
+ * <p>To process the verifications, the simulator sends the requests to the bank, and get the
+ * transaction information from the bank. After all the verifications have been processed,
+ * the program prints to console some "metadata" using a printer, and stores the results to a
+ * csv file.
+ *
+ * @author Shuwan Huang
+ */
 public class SecureBankVerificationSimulator implements ISecureBankVerificationSimulator {
 
   private static final int MESSAGE_UPPER_BOUND = 30000;
   private static final int BIT_LENGTH = 32;
-  private static final int DEPOSIT_REQUEST = 4;
 
   private final String outputDir;
+  private final IBank bank = new Bank();
   private final Map<Integer, IClient> clientsMap = new HashMap<>();
-  private final Map<IClient, List<IRequest>> requestMap = new HashMap<>();
+  private final List<IRequest> requests = new ArrayList<>();
   private final List<IResult> results = new ArrayList<>();
-  private final Set<Integer> idDepositRejected = new HashSet<>();
-  private final Set<Integer> idWithdrawalRejected = new HashSet<>();
-  private final Map<IKey, Integer> publicKeyUsage = new HashMap<>();
 
+  /**
+   * Constructs a SecureBankVerificationSimulator with the required user inputs.
+   * @param numClients the number of unique clients
+   * @param numVerifications the number of verifications
+   * @param fraction the fraction of invalid messages
+   * @param outputDir the output file name
+   */
   public SecureBankVerificationSimulator(int numClients, int numVerifications,
                                          double fraction, String outputDir) {
     this.outputDir = outputDir;
@@ -36,10 +55,15 @@ public class SecureBankVerificationSimulator implements ISecureBankVerificationS
   }
 
   private void initClients(int numClients) {
-    IClientGenerator generator = new ClientGenerator();
+    Random random = new Random();
     for (int i = 0; i < numClients; i++) {
-      IClient client = generator.nextClient();
-      clientsMap.put(client.getID(), client);
+      int clientId = random.nextInt(Integer.MAX_VALUE);
+      while (clientsMap.containsKey(clientId)) {
+        clientId++;
+      }
+      IClient newClient = new Client(clientId);
+      clientsMap.put(clientId, newClient);
+      bank.addClient(clientId, newClient.getPublicKey());
     }
   }
 
@@ -51,98 +75,61 @@ public class SecureBankVerificationSimulator implements ISecureBankVerificationS
     for (int i = 0; i < numVerifications; i++) {
       int clientId = idArr[random.nextInt(idArr.length)];
       IClient client = clientsMap.get(clientId);
-      client.addTransaction();
 
       int msgInt = random.nextInt(MESSAGE_UPPER_BOUND + 1);
+      while (msgInt <= 10) {
+        msgInt++;
+      }
       BigInteger message = new BigInteger(msgInt + "");
+      BigInteger signature = createSignature(message, client, fraction);
 
-      IRequest request;
-      BigInteger signature;
-      if (isValidMessage(fraction)) {
-        signature = clientsMap.get(clientId).provideSignature(message);
-      } else {
-        signature = new BigInteger(BIT_LENGTH, new SecureRandom());
-      }
-
-      request = new Request(message, signature);
-      if (!requestMap.containsKey(client)) {
-        requestMap.put(client, new ArrayList<>());
-      }
-      requestMap.get(client).add(request);
+      requests.add(new Request(clientId, message, signature));
     }
   }
 
-  private boolean isValidMessage(double fraction) {
+  // creates a signature for the request. If the request is deemed invalid, the signature is
+  // just some randomly generated integer. If the request is deemed valid, the signature is
+  // generated using the RSA algorithm.
+  private BigInteger createSignature(BigInteger message, IClient client, double fraction) {
     Random random = new Random();
-    return random.nextDouble() >= fraction;
+    if (random.nextDouble() >= fraction) {
+      return client.provideSignature(message);
+    } else {
+      return new BigInteger(BIT_LENGTH, new SecureRandom());
+    }
   }
 
+  /**
+   * Processes the verifications by sending client requests to the bank and gathers
+   * the transaction information.
+   */
+  @Override
   public void processVerifications() {
     int transactionNum = 0;
-
-    for (Map.Entry<IClient, List<IRequest>> entry : requestMap.entrySet()) {
-      IClient client = entry.getKey();
-      IKey publicKey = client.getPublicKey();
-      if (publicKeyUsage.containsKey(publicKey)) {
-        publicKeyUsage.put(publicKey, publicKeyUsage.get(publicKey) + 1);
-      } else {
-        publicKeyUsage.put(publicKey, 1);
-      }
-
-      for (IRequest request : entry.getValue()) {
-        String status = "NA";
-        if (verify(request, publicKey)) {
-          status = identifyTransaction(request.getMessage(), client);
-        }
-        IResult result = new Result(++transactionNum,
-                                    LocalDateTime.now(),
-                                    client.getID(),
-                                    request,
-                                    status);
-        results.add(result);
-      }
+    for (IRequest request : requests) {
+      boolean isVerified = bank.receiveRequest(request);
+      String status = bank.getRequestStatus(request);
+      IResult result = new Result(++transactionNum,
+                                  LocalDateTime.now(),
+                                  request,
+                                  isVerified,
+                                  status);
+      results.add(result);
     }
   }
 
-  private boolean verify(IRequest request, IKey key) {
-    return key.translate(request.getSignature()).equals(request.getMessage());
-  }
-
-  private String identifyTransaction(BigInteger message, IClient client) {
-    int lastDigit = message.intValue() % 10;
-    int amount = message.intValue() / 10;
-    StringBuilder status = new StringBuilder();
-    if (isDepositRequest(lastDigit)) {
-      status.append("deposit ");
-      if (amount <= client.getDepositLimit()) {
-        status.append("accepted");
-      } else {
-        idDepositRejected.add(client.getID());
-        status.append("declined");
-      }
-    } else {
-      status.append("withdrawal ");
-      if (amount <= client.getWithdrawalLimit()) {
-        status.append("accepted");
-      } else {
-        idWithdrawalRejected.add(client.getID());
-        status.append("declined");
-      }
-    }
-    return status.toString();
-  }
-
-  private boolean isDepositRequest(int digit) {
-    return digit <= DEPOSIT_REQUEST;
-  }
-
+  /**
+   * Stores the results of simulation to a csv file, as well as prints to console some
+   * simulation information.
+   * @throws IOException if there exists an I/O failure
+   */
   @Override
   public void outputResults() throws IOException {
     IPrinter printer = new Printer();
-    printer.printPublicKeyUsage(publicKeyUsage);
-    printer.printTopClients(new PriorityQueue<>(requestMap.keySet()));
-    printer.printIDsDepositRejected(idDepositRejected);
-    printer.printIDsWithdrawalRejected(idWithdrawalRejected);
+    printer.printPublicKeyUsage(bank.getPublicKeyUsage());
+    printer.printTopTenClients(bank.getClientsSentRequest());
+    printer.printIDsDepositRejected(bank.getIdDepositRejected());
+    printer.printIDsWithdrawalRejected(bank.getIdWithdrawalRejected());
 
     ICsvFileGenerator csvFileGenerator = new CsvFileGenerator();
     csvFileGenerator.generateCsvFile(results, outputDir);
@@ -162,17 +149,23 @@ public class SecureBankVerificationSimulator implements ISecureBankVerificationS
     if (outputDir != null ? !outputDir.equals(that.outputDir) : that.outputDir != null) {
       return false;
     }
-    return clientsMap.equals(that.clientsMap) && requestMap.equals(that.requestMap);
+    return clientsMap.equals(that.clientsMap) && requests.equals(that.requests);
   }
 
   @Override
   public int hashCode() {
     int result = outputDir != null ? outputDir.hashCode() : 0;
     result = 31 * result + clientsMap.hashCode();
-    result = 31 * result + requestMap.hashCode();
+    result = 31 * result + requests.hashCode();
     return result;
   }
 
+  /**
+   * Accepts the user input through command-line arguments. Validates and parses the arguments
+   * using a CmdHandler, then passes the arguments to the simulator.
+   * @param args the command-line arguments
+   * @throws IOException if there exists an I/O failure
+   */
   public static void main(String[] args) throws IOException {
     ICmdHandler cmdHandler = new CmdHandler(args);
     if (!cmdHandler.isValid()) {

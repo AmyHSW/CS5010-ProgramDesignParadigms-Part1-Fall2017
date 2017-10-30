@@ -2,20 +2,31 @@ package edu.neu.ccs.cs5010.assignment5;
 
 import java.math.BigInteger;
 
-public interface IClient extends Comparable<IClient> {
+/**
+ * The IClient interface represents a client.
+ *
+ * @author Shuwan Huang
+ */
+public interface IClient {
 
-  int getID();
+  /**
+   * Returns the client ID.
+   * @return the client ID.
+   */
+  int getId();
 
-  int getDepositLimit();
-
-  int getWithdrawalLimit();
-
-  void addTransaction();
-
-  int getNumTransactions();
-
+  /**
+   * Returns the public key of this client.
+   * @return the public key of this client.
+   */
   IKey getPublicKey();
 
+  /**
+   * Provides a signature for the message using the private key. The underlying algorithm is
+   * RSA signature generation algorithm.
+   * @param message the message to be encrypted.
+   * @return the signature.
+   */
   BigInteger provideSignature(BigInteger message);
 
 }

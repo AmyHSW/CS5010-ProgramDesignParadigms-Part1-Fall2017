@@ -10,12 +10,23 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+/**
+ * The CsvFileGenerator class generates a csv file for the results of simulation.
+ *
+ * @author Shuwan Huang
+ */
 public class CsvFileGenerator implements ICsvFileGenerator {
 
   private static final String HEADERS = "Transaction number, Date, Time, Client ID, "
                                       + "Message, Digital signature, "
                                       + "Verified, Transaction status\n";
 
+  /**
+   * Generates a csv file with the provided file name for the results of simulation.
+   * @param results the results of simulation
+   * @param outputDir the csv file name
+   * @throws IOException if there exists an I/O failure
+   */
   @Override
   public void generateCsvFile(List<IResult> results, String outputDir) throws IOException {
     StringBuilder stringBuilder = new StringBuilder(HEADERS);
@@ -26,7 +37,7 @@ public class CsvFileGenerator implements ICsvFileGenerator {
           .append(", ")
           .append(result.getTime())
           .append(", ")
-          .append(result.getClientID())
+          .append(result.getClientId())
           .append(", ")
           .append(result.getMessage())
           .append(", ")
@@ -34,7 +45,7 @@ public class CsvFileGenerator implements ICsvFileGenerator {
           .append(", ")
           .append(result.getVerified())
           .append(", ")
-          .append(result.getStatus())
+          .append(result.getTransactionStatus())
           .append("\n");
     }
     writeStringToCsvFile(stringBuilder.toString(), outputDir);

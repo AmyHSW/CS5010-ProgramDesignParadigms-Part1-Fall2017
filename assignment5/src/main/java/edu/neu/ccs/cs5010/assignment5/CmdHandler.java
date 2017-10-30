@@ -1,5 +1,11 @@
 package edu.neu.ccs.cs5010.assignment5;
 
+/**
+ * The CmdHandler class validates the command-line arguments and parses them into
+ * the information needed for secure bank verification simulator.
+ *
+ * @author Shuwan Huang
+ */
 public class CmdHandler implements ICmdHandler {
 
   private static final int LENGTH_ARGS = 4;
@@ -13,6 +19,10 @@ public class CmdHandler implements ICmdHandler {
   private double fraction;
   private String outputDir;
 
+  /**
+   * Constructs a new CmdHandler with the command-line arguments.
+   * @param args the command-line arguments.
+   */
   public CmdHandler(String[] args) {
     valid = validate(args);
   }
@@ -96,31 +106,55 @@ public class CmdHandler implements ICmdHandler {
     return true;
   }
 
+  /**
+   * Return true if the input arguments are valid.
+   * @return true if the input arguments are valid, false otherwise.
+   */
   @Override
   public boolean isValid() {
     return valid;
   }
 
+  /**
+   * Returns the error message if the input arguments are invalid.
+   * @return the error message if the input arguments are invalid.
+   */
   @Override
   public String getErrorMessage() {
     return errorMsg.toString();
   }
 
+  /**
+   * Returns the number of distinct bank clients.
+   * @return the number of distinct bank clients.
+   */
   @Override
   public int getNumClients() {
     return numClients;
   }
 
+  /**
+   * Returns the number of verifications.
+   * @return the number of verifications.
+   */
   @Override
   public int getNumVerifications() {
     return numVerifications;
   }
 
+  /**
+   * Returns the fraction of invalid messages.
+   * @return the fraction of invalid messages.
+   */
   @Override
   public double getFraction() {
     return fraction;
   }
 
+  /**
+   * Returns the output file name.
+   * @return the output file name.
+   */
   @Override
   public String getOutputDir() {
     return outputDir;
@@ -157,10 +191,10 @@ public class CmdHandler implements ICmdHandler {
     int result;
     long temp;
     result = (valid ? 1 : 0);
-    result = 31 * result + numClients;
-    result = 31 * result + numVerifications;
     temp = Double.doubleToLongBits(fraction);
     result = 31 * result + (int) (temp ^ (temp >>> 32));
+    result = 31 * result + numClients;
+    result = 31 * result + numVerifications;
     result = 31 * result + (outputDir != null ? outputDir.hashCode() : 0);
     return result;
   }

@@ -2,21 +2,26 @@ package edu.neu.ccs.cs5010.assignment5;
 
 import java.math.BigInteger;
 
+/**
+ * The Client class represents a bank client. Each client object has a client ID, a RSA key
+ * pair (public key and private key). Given a message, the client can provide a signature for
+ * the message using the private key.
+ *
+ * @author Shuwan Huang
+ */
 public class Client implements IClient {
 
   private final int clientId;
-  private final int depositLimit;
-  private final int withdrawalLimit;
 
   private IKey publicKey;
   private IKey privateKey;
-  private int numTransactions = 0;
 
-  public Client(int clientId, int depositLimit, int withdrawalLimit) {
+  /**
+   * Constructs a new Client object with a client ID.
+   * @param clientId an integer
+   */
+  public Client(int clientId) {
     this.clientId = clientId;
-    this.depositLimit = depositLimit;
-    this.withdrawalLimit = withdrawalLimit;
-
     initKeys();
   }
 
@@ -26,44 +31,33 @@ public class Client implements IClient {
     privateKey = rsaKey.getPrivateKey();
   }
 
+  /**
+   * Returns the client ID.
+   * @return the client ID.
+   */
   @Override
-  public void addTransaction() {
-    numTransactions++;
-  }
-
-  @Override
-  public int getNumTransactions() {
-    return numTransactions;
-  }
-
-  @Override
-  public int compareTo(IClient that) {
-    return that.getNumTransactions() - this.getNumTransactions();
-  }
-
-  @Override
-  public int getID() {
+  public int getId() {
     return clientId;
   }
 
-  @Override
-  public int getDepositLimit() {
-    return depositLimit;
-  }
-
-  @Override
-  public int getWithdrawalLimit() {
-    return withdrawalLimit;
-  }
-
+  /**
+   * Returns the public key of this client.
+   * @return the public key of this client.
+   */
   @Override
   public IKey getPublicKey() {
     return publicKey;
   }
 
+  /**
+   * Provides a signature for the message using the private key. The underlying algorithm is
+   * RSA signature generation algorithm.
+   * @param message the message to be encrypted.
+   * @return the signature.
+   */
   @Override
   public BigInteger provideSignature(BigInteger message) {
-    return privateKey.translate(message);
+    return privateKey.encryptOrDecrypt(message);
   }
 
   @Override
@@ -77,29 +71,12 @@ public class Client implements IClient {
 
     Client client = (Client) other;
 
-    if (clientId != client.clientId) {
-      return false;
-    }
-    if (depositLimit != client.depositLimit) {
-      return false;
-    }
-    if (withdrawalLimit != client.withdrawalLimit) {
-      return false;
-    }
-    if (!publicKey.equals(client.publicKey)) {
-      return false;
-    }
-    return privateKey.equals(client.privateKey);
+    return clientId == client.clientId;
   }
 
   @Override
   public int hashCode() {
-    int result = clientId;
-    result = 31 * result + depositLimit;
-    result = 31 * result + withdrawalLimit;
-    result = 31 * result + publicKey.hashCode();
-    result = 31 * result + privateKey.hashCode();
-    return result;
+    return clientId;
   }
 
   @Override
